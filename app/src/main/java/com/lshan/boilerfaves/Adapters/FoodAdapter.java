@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by lshan on 12/16/2017.
@@ -48,13 +50,26 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
 
     public class AreaViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.food_card)
         CardView foodCard;
+
+        @BindView(R.id.removeButton)
+        ImageButton removeButton;
+
 
         public AreaViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
+        @OnClick(R.id.removeButton)
+        public void removeItem(){
+            int position = this.getLayoutPosition();
+            foods.remove(position);
+            notifyDataSetChanged();
+        }
+
     }
 
 }
