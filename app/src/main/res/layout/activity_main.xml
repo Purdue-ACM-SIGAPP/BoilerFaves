@@ -10,7 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/addNewButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add New Fave"/>
+
         <android.support.v7.widget.RecyclerView
+            android:layout_below="@id/addNewButton"
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
