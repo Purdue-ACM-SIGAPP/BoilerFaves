@@ -1,10 +1,12 @@
 package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
@@ -15,11 +17,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.mainRecyclerView)
     RecyclerView mainRecyclerView;
+
+    @BindView(R.id.addNewButton)
+    Button addButton;
 
 
     private FoodAdapter foodAdapter;
@@ -48,5 +54,12 @@ public class MainActivity extends AppCompatActivity {
         mainRecyclerView.setLayoutManager(linearLayoutManager);
 
         mainRecyclerView.setAdapter(foodAdapter);
+    }
+
+
+    @OnClick(R.id.addNewButton)
+    public void launchFoodSelect(){
+        Intent intent = new Intent(context, SelectFoodActivity.class);
+        context.startActivity(intent);
     }
 }
