@@ -8,4 +8,25 @@
     tools:context="com.lshan.boilerfaves.Activities.SelectFoodActivity"
     tools:showIn="@layout/activity_select_food">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search for food"
+            android:id="@+id/foodSearch"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/selectFoodRecyclerView"
+            android:layout_below="@id/foodSearch"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+
+
 </android.support.constraint.ConstraintLayout>

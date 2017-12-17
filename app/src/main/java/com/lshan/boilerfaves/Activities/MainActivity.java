@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             dummyList.add(new FoodModel());
         }
+
+
         startAdaptor(dummyList);
 
     }
