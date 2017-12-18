@@ -12,7 +12,10 @@ import android.util.Log;
 import android.widget.Button;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
+import com.lshan.boilerfaves.Models.BreakfastModel;
+import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
+import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.MenuModel;
 import com.lshan.boilerfaves.Networking.MenuApiHelper;
 import com.lshan.boilerfaves.R;
@@ -48,21 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         callRetrofit();
 
-        List<FoodModel> dummyList = new ArrayList<FoodModel>();
-        for (int i = 0; i < 10; i++) {
-            dummyList.add(new FoodModel());
-        }
-
-
-        startAdaptor(dummyList);
-
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void callRetrofit ()  {
@@ -72,6 +60,45 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
                Log.i("Retrofit", response.body().Breakfast.get(0).Items.get(0).Name);
+
+               MenuModel result = response.body();
+
+               ArrayList<FoodModel> foodList = new ArrayList<FoodModel>();
+
+                if (result.Breakfast != null) {
+                       for (BreakfastModel location : result.Breakfast) {
+                           for (FoodModel food : location.Items) {
+                               if (!foodList.contains(food)) {
+                                   foodList.add(food);
+                               }
+                           }
+                       }
+                }
+
+                if (result.Lunch != null) {
+                    for (LunchModel location : result.Lunch) {
+                        for (FoodModel food : location.Items) {
+                            if (!foodList.contains(food)) {
+                                foodList.add(food);
+                            }
+                        }
+                    }
+                }
+
+                if (result.Dinner != null) {
+                    for (DinnerModel location : result.Dinner) {
+                        for (FoodModel food : location.Items) {
+                            if (!foodList.contains(food)) {
+                                foodList.add(food);
+                            }
+                        }
+                    }
+                }
+
+
+                startAdaptor(foodList);
+
+
             }
 
             @Override

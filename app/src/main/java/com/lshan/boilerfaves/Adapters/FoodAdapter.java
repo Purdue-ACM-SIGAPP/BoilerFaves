@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
@@ -40,7 +41,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
-
+        holder.cardTitle.setText(foods.get(position).Name);
     }
 
     @Override
@@ -53,6 +54,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
         @BindView(R.id.food_card)
         CardView foodCard;
+
+        @BindView(R.id.title)
+        TextView cardTitle;
 
         @BindView(R.id.removeButton)
         ImageButton removeButton;
