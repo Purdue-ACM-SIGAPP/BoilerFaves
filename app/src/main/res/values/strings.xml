@@ -2,4 +2,6 @@
     <string name="app_name">BoilerFaves</string>
     <string name="PopcornChicken">Popcorn Chicken</string>
     <string name="title_activity_select_food">SelectFoodActivity</string>
+    <string name="channel_name">BoilerFaves</string>
+    <string name="channel_description">Alerts from BoilerFaves that tell you when your favorite foods are at the dining courts.</string>
 </resources>

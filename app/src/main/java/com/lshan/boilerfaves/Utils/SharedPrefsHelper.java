@@ -24,7 +24,7 @@ public class SharedPrefsHelper {
         Gson gson = new Gson();
         String json = gson.toJson(foodList);
         sharedPreferences.edit().putString("FaveList", json).commit();
-    }
+}
 
     public static List<FoodModel> getFaveList(Context context){
         SharedPreferences sharedPreferences = getSharedPrefs(context);

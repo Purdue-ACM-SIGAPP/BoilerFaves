@@ -1,5 +1,6 @@
 package com.lshan.boilerfaves.Activities;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,6 +20,7 @@ import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.MenuModel;
 import com.lshan.boilerfaves.Networking.MenuApiHelper;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         if(faveList != null){
             startAdaptor(faveList);
         }
+
+        NotificationHelper.sendNotification(context, "Test", "Beep bloop this is a test");
+
 
     }
 
