@@ -68,7 +68,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
         @OnClick(R.id.select_food_card)
         public void onClickCard() {
             FoodModel foodModel = foods.get(this.getLayoutPosition());
-            List<FoodModel> faveList = SharedPrefsHelper.getFoodList(context);
+            List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
 
             if(faveList == null){
                 faveList = new ArrayList<FoodModel>();
@@ -76,7 +76,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
 
             if(!faveList.contains(foodModel)){
                 faveList.add(foodModel);
-                SharedPrefsHelper.storeFoodList(faveList, context);
+                SharedPrefsHelper.storeFaveList(faveList, context);
             }
         }
 

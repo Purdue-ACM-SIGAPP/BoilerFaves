@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         //callRetrofit();
 
-        List<FoodModel> faveList = SharedPrefsHelper.getFoodList(context);
+        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         if(faveList != null){
             startAdaptor(faveList);
         }
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         //TODO maybe I should just call notfity dataset changed or something
-        List<FoodModel> faveList = SharedPrefsHelper.getFoodList(context);
+        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         if(faveList != null){
             startAdaptor(faveList);
         }

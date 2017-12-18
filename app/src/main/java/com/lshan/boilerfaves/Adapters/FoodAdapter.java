@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -70,9 +72,18 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         @OnClick(R.id.removeButton)
         public void removeItem(){
             int position = this.getLayoutPosition();
+
+            FoodModel foodModel = foods.get(position);
+            List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+            if(faveList != null && faveList.contains(foodModel)){
+                faveList.remove(foodModel);
+                SharedPrefsHelper.storeFaveList(faveList, context);
+            }
+
             foods.remove(position);
             notifyDataSetChanged();
         }
+
 
     }
 

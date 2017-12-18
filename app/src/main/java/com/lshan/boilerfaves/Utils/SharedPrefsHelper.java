@@ -19,14 +19,14 @@ public class SharedPrefsHelper {
         return context.getSharedPreferences("com.lshan.boilerfaves", Context.MODE_PRIVATE);
     }
 
-    public static void storeFoodList(List<FoodModel> foodList, Context context){
+    public static void storeFaveList(List<FoodModel> foodList, Context context){
         SharedPreferences sharedPreferences = getSharedPrefs(context);
         Gson gson = new Gson();
         String json = gson.toJson(foodList);
         sharedPreferences.edit().putString("FaveList", json).commit();
     }
 
-    public static List<FoodModel> getFoodList(Context context){
+    public static List<FoodModel> getFaveList(Context context){
         SharedPreferences sharedPreferences = getSharedPrefs(context);
         Type type = new TypeToken<List<FoodModel>>(){}.getType();
         Gson gson = new Gson();
