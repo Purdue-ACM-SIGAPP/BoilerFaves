@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,7 +43,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
 
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
-
+        holder.cardTitle.setText(foods.get(position).Name);
     }
 
     @Override
@@ -54,10 +57,27 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
         @BindView(R.id.select_food_card)
         CardView selectFoodCard;
 
+        @BindView(R.id.title)
+        TextView cardTitle;
 
         public AreaViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.select_food_card)
+        public void onClickCard() {
+            FoodModel foodModel = foods.get(this.getLayoutPosition());
+            List<FoodModel> faveList = SharedPrefsHelper.getFoodList(context);
+
+            if(faveList == null){
+                faveList = new ArrayList<FoodModel>();
+            }
+
+            if(!faveList.contains(foodModel)){
+                faveList.add(foodModel);
+                SharedPrefsHelper.storeFoodList(faveList, context);
+            }
         }
 
 

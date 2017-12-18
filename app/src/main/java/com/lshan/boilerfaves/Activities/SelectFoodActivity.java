@@ -10,11 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Adapters.SelectFoodAdapter;
+import com.lshan.boilerfaves.Models.BreakfastModel;
+import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
+import com.lshan.boilerfaves.Models.LunchModel;
+import com.lshan.boilerfaves.Models.MenuModel;
 import com.lshan.boilerfaves.Networking.MenuApiHelper;
 import com.lshan.boilerfaves.R;
 
@@ -48,17 +53,81 @@ public class SelectFoodActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
-        List<FoodModel> dummyList = new ArrayList<FoodModel>();
-        for (int i = 0; i < 10; i++) {
-            dummyList.add(new FoodModel());
-        }
-
-        startAdaptor(dummyList);
+        callRetrofit();
     }
 
 
+    private void callRetrofit ()  {
+
+
+        MenuApiHelper.getInstance().testGet().enqueue(new Callback<MenuModel>(){
+            @Override
+            public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
+                Log.i("Retrofit", response.body().Breakfast.get(0).Items.get(0).Name);
+
+                MenuModel result = response.body();
+
+                ArrayList<FoodModel> foodList = new ArrayList<FoodModel>();
+
+                if (result.Breakfast != null) {
+                    for (BreakfastModel location : result.Breakfast) {
+                        for (FoodModel food : location.Items) {
+                            if (!foodList.contains(food)) {
+                                foodList.add(food);
+                            }
+                        }
+                    }
+                }
+
+                if (result.Lunch != null) {
+                    for (LunchModel location : result.Lunch) {
+                        for (FoodModel food : location.Items) {
+                            if (!foodList.contains(food)) {
+                                foodList.add(food);
+                            }
+                        }
+                    }
+                }
+
+                if (result.Dinner != null) {
+                    for (DinnerModel location : result.Dinner) {
+                        for (FoodModel food : location.Items) {
+                            if (!foodList.contains(food)) {
+                                foodList.add(food);
+                            }
+                        }
+                    }
+                }
+
+
+                startAdaptor(foodList);
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MenuModel> call, Throwable t) {
+                /*AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                        .setTitle("Data retrieval failed")
+                        .setMessage("Unable to connect to the Internet")
+                        .setCancelable(false)
+                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                callRetrofit();
+                            }
+                        });
+                AlertDialog failure = alertDialogBuilder.create();
+                failure.show();
+                */
+                Log.e("Retrofit", "Unable to connect to api or something");
+                Log.e("Retrofit", t.getMessage());
+            }
+        });
+
+
+
+    }
 
 
 

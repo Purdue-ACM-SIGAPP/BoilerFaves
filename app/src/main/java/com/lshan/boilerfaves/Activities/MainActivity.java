@@ -19,6 +19,7 @@ import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.MenuModel;
 import com.lshan.boilerfaves.Networking.MenuApiHelper;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,24 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        callRetrofit();
+        //callRetrofit();
+
+        List<FoodModel> faveList = SharedPrefsHelper.getFoodList(context);
+        if(faveList != null){
+            startAdaptor(faveList);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //TODO maybe I should just call notfity dataset changed or something
+        List<FoodModel> faveList = SharedPrefsHelper.getFoodList(context);
+        if(faveList != null){
+            startAdaptor(faveList);
+        }
 
     }
 
