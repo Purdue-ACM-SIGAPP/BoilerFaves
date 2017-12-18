@@ -2,19 +2,22 @@ package com.lshan.boilerfaves.Models;
 
 import android.support.annotation.NonNull;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 /**
  * Created by lshan on 12/16/2017.
  */
 
-public class FoodModel implements Comparable{
-    public String name;
-    public boolean isVegetarian;
+
+public class FoodModel implements Comparable<FoodModel>{
+
+    public String Name;
+
+    public boolean IsVegetarian;
 
 
-    public FoodModel(String name, boolean isVegetarian){
-        this.name = name;
-        this.isVegetarian = isVegetarian;
-    }
+    public FoodModel(){}
 
 
     @Override
@@ -24,7 +27,7 @@ public class FoodModel implements Comparable{
         }
 
         FoodModel other = (FoodModel) obj;
-        if(other.name.equals(this.name)){
+        if(other.Name.equals(this.Name)){
             return true;
         }else{
             return false;
@@ -33,9 +36,7 @@ public class FoodModel implements Comparable{
 
 
     @Override
-    public int compareTo(@NonNull Object o) {
-        FoodModel other = (FoodModel)o;
-
-        return this.name.compareTo(other.name);
+    public int compareTo(@NonNull FoodModel other) {
+        return this.Name.compareTo(other.Name);
     }
 }

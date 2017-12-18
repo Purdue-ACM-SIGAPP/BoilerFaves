@@ -28,7 +28,14 @@ dependencies {
     implementation 'com.android.support:cardview-v7:26.1.0'
     //Retrofit and related libraries for REST client.
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation  'com.squareup.retrofit2:converter-simplexml:2.3.0'
+    implementation('org.simpleframework:simple-xml:2.7.+'){
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
     //Image rendering.
     implementation 'com.squareup.picasso:picasso:2.5.2'
     //Butterknife for view binding

@@ -2,14 +2,19 @@ package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
+import com.lshan.boilerfaves.Models.MenuModel;
+import com.lshan.boilerfaves.Networking.MenuApiHelper;
 import com.lshan.boilerfaves.R;
 
 import java.util.ArrayList;
@@ -18,6 +23,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,11 +40,13 @@ public class MainActivity extends AppCompatActivity {
     final private Context context = this;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        callRetrofit();
 
         List<FoodModel> dummyList = new ArrayList<FoodModel>();
         for (int i = 0; i < 10; i++) {
@@ -45,6 +55,46 @@ public class MainActivity extends AppCompatActivity {
 
 
         startAdaptor(dummyList);
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void callRetrofit ()  {
+
+
+        MenuApiHelper.getInstance().testGet().enqueue(new Callback<MenuModel>(){
+            @Override
+            public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
+               Log.i("Retrofit", response.body().Breakfast.get(0).Items.get(0).Name);
+            }
+
+            @Override
+            public void onFailure(Call<MenuModel> call, Throwable t) {
+                /*AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                        .setTitle("Data retrieval failed")
+                        .setMessage("Unable to connect to the Internet")
+                        .setCancelable(false)
+                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                callRetrofit();
+                            }
+                        });
+                AlertDialog failure = alertDialogBuilder.create();
+                failure.show();
+                */
+                Log.e("Retrofit", "Unable to connect to api or something");
+                Log.e("Retrofit", t.getMessage());
+            }
+        });
+
+
 
     }
 
