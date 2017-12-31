@@ -1,9 +1,11 @@
 package com.lshan.boilerfaves.Utils;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -58,4 +60,24 @@ public class NotificationHelper {
         }
     }
 
+    public static void scheduleNofication(Context context, long triggerAtMillis, String message, String title){
+        Intent intentAlarm = new Intent(context, NotificationAlarmReciever.class);
+        intentAlarm.putExtra("message", message);
+        intentAlarm.putExtra("title", title);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis,
+                PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+    }
+
+    public static class NotificationAlarmReciever extends BroadcastReceiver{
+
+        //Will execute when alarm is triggered
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            sendNotification(context, intent.getStringExtra("title"),
+                    intent.getStringExtra("message"));
+        }
+    }
 }

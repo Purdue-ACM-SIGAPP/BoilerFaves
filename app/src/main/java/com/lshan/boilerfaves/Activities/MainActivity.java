@@ -24,6 +24,7 @@ import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
             startAdaptor(faveList);
         }
 
-        NotificationHelper.sendNotification(context, "Test", "Beep bloop this is a test");
-
+        Long time = new GregorianCalendar().getTimeInMillis()+10000;
+        NotificationHelper.scheduleNofication(context, time, "Test", "test");
 
     }
 
