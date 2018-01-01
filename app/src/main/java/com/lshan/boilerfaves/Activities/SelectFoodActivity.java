@@ -60,7 +60,7 @@ public class SelectFoodActivity extends AppCompatActivity {
     private void callRetrofit ()  {
 
 
-        MenuApiHelper.getInstance().testGet().enqueue(new Callback<MenuModel>(){
+        MenuApiHelper.getInstance().getMenu("earhart", "12-01-2017").enqueue(new Callback<MenuModel>(){
             @Override
             public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
                 Log.i("Retrofit", response.body().Breakfast.get(0).Items.get(0).Name);
@@ -107,7 +107,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MenuModel> call, Throwable t) {
-                /*AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                         .setTitle("Data retrieval failed")
                         .setMessage("Unable to connect to the Internet")
                         .setCancelable(false)
@@ -119,12 +119,10 @@ public class SelectFoodActivity extends AppCompatActivity {
                         });
                 AlertDialog failure = alertDialogBuilder.create();
                 failure.show();
-                */
-                Log.e("Retrofit", "Unable to connect to api or something");
+                                Log.e("Retrofit", "Unable to connect to api or something");
                 Log.e("Retrofit", t.getMessage());
             }
         });
-
 
 
     }

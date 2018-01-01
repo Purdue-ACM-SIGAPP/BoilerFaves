@@ -20,6 +20,7 @@ import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.MenuModel;
 import com.lshan.boilerfaves.Networking.MenuApiHelper;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Utils.MenuChecker;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         Long time = new GregorianCalendar().getTimeInMillis()+10000;
         NotificationHelper.scheduleNofication(context, time, "Test", "test");
 
+        ArrayList<FoodModel> availableFaves = MenuChecker.getAvailableFaves(context);
+
     }
 
     @Override
@@ -78,74 +81,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void callRetrofit ()  {
-
-
-        MenuApiHelper.getInstance().testGet().enqueue(new Callback<MenuModel>(){
-            @Override
-            public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
-               Log.i("Retrofit", response.body().Breakfast.get(0).Items.get(0).Name);
-
-               MenuModel result = response.body();
-
-               ArrayList<FoodModel> foodList = new ArrayList<FoodModel>();
-
-                if (result.Breakfast != null) {
-                       for (BreakfastModel location : result.Breakfast) {
-                           for (FoodModel food : location.Items) {
-                               if (!foodList.contains(food)) {
-                                   foodList.add(food);
-                               }
-                           }
-                       }
-                }
-
-                if (result.Lunch != null) {
-                    for (LunchModel location : result.Lunch) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
-
-                if (result.Dinner != null) {
-                    for (DinnerModel location : result.Dinner) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
-
-
-                startAdaptor(foodList);
-
-
-            }
-
-            @Override
-            public void onFailure(Call<MenuModel> call, Throwable t) {
-                /*AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-                        .setTitle("Data retrieval failed")
-                        .setMessage("Unable to connect to the Internet")
-                        .setCancelable(false)
-                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                callRetrofit();
-                            }
-                        });
-                AlertDialog failure = alertDialogBuilder.create();
-                failure.show();
-                */
-                Log.e("Retrofit", "Unable to connect to api or something");
-                Log.e("Retrofit", t.getMessage());
-            }
-        });
-
-
 
     }
 
