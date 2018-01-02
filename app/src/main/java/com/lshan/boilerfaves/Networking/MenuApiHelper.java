@@ -1,5 +1,7 @@
 package com.lshan.boilerfaves.Networking;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import org.simpleframework.xml.convert.AnnotationStrategy;
 import org.simpleframework.xml.core.Persister;
 
@@ -20,6 +22,7 @@ public class MenuApiHelper {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.hfs.purdue.edu/menus/v1/locations/")
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
 
             menuApi = retrofit.create(MenuApi.class);

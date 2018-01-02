@@ -8,6 +8,7 @@ import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.MenuModel;
+import com.lshan.boilerfaves.Networking.MenuApi;
 import com.lshan.boilerfaves.Networking.MenuApiHelper;
 
 import java.lang.reflect.Array;
@@ -17,9 +18,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import rx.Subscriber;
+
 
 /**
  * Created by lshan on 12/31/2017.
@@ -28,7 +31,7 @@ import retrofit2.Response;
 public class MenuChecker {
     private Context context;
     private static ArrayList<FoodModel> todayFood;
-    private static int menuCompleCounter;
+    private static int menuCompleteCounter;
 
     public static void initalizeRepeatingCheck() {
         /*
@@ -50,40 +53,90 @@ public class MenuChecker {
         DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
         String date = dateFormat.format(new Date());
 
+        date = "12-01-2017";
+
         String[] diningCourts = {"earhart", "ford", "wiley", "windsor", "hillenbrand"};
-        ArrayList<FoodModel> foodList = new ArrayList<>();
 
-        menuCompleCounter = 0;
-        todayFood = null;
+        menuCompleteCounter = 0;
 
+        MenuApi menuApi = MenuApiHelper.getInstance();
         for(String diningCourt: diningCourts){
-            callMenuApi(diningCourt, date);
+            menuApi.getMenu(diningCourt, date)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(responseData -> {
+                        System.out.println(responseData.Lunch.get(0).Items.get(0).Name);
+                        addFoods(responseData);
+                        menuCompleteCounter++;
+
+                        if(menuCompleteCounter >= 5){
+                            processMenu();
+                        }
+
+                    });
         }
 
-        while(menuCompleCounter < 5){
-            //do nothing
-        }
+        System.out.println("Done");
 
-        List<FoodModel> favesList = SharedPrefsHelper.getFaveList(context);
+        return new ArrayList<>();
 
-        if(todayFood != null) {
-            ArrayList<FoodModel> availableFaves = (ArrayList) todayFood.clone();
-            for (FoodModel foodModel : availableFaves) {
-                if (!favesList.contains(foodModel)) {
-                    availableFaves.remove(foodModel);
-                }
-            }
+    }
 
-            return availableFaves;
-        }else{
-            return null;
+    public static void processMenu(){
+        System.out.println("DONE");
+        for(FoodModel foodModel : todayFood){
+            System.out.println(foodModel.Name);
         }
     }
 
+    public static void addFoods(MenuModel menuModel){
+        ArrayList <FoodModel> foodList = new ArrayList<>();
+        todayFood = new ArrayList<>();
+        MenuModel result = menuModel;
+
+        if (result.Breakfast != null) {
+            for (BreakfastModel location : result.Breakfast) {
+                for (FoodModel food : location.Items) {
+                    if (!foodList.contains(food)) {
+
+                        foodList.add(food);
+                    }
+                }
+            }
+        }
+
+        if (result.Lunch != null) {
+            for (LunchModel location : result.Lunch) {
+                for (FoodModel food : location.Items) {
+                    if (!foodList.contains(food)) {
+                        foodList.add(food);
+                    }
+                }
+            }
+        }
+
+        if (result.Dinner != null) {
+            for (DinnerModel location : result.Dinner) {
+                for (FoodModel food : location.Items) {
+                    if (!foodList.contains(food)) {
+                        foodList.add(food);
+                    }
+                }
+            }
+        }
+
+        for(FoodModel foodModel: foodList){
+            if(!todayFood.contains(foodModel)){
+                todayFood.add(foodModel);
+            }
+        }
+    }
 
     public static void callMenuApi(final String diningCourt, final String date) {
 
-        MenuApiHelper.getInstance().getMenu(diningCourt, date).enqueue(new Callback<MenuModel>() {
+
+
+        /*MenuApiHelper.getInstance().getMenu(diningCourt, date).enqueue(new Callback<MenuModel>() {
             @Override
             public void onResponse(Call<MenuModel> call, Response<MenuModel> response) {
                 Log.i("Retrofit", "Found menu for " + diningCourt + " on " + date);
@@ -94,6 +147,7 @@ public class MenuChecker {
                     for (BreakfastModel location : result.Breakfast) {
                         for (FoodModel food : location.Items) {
                             if (!foodList.contains(food)) {
+
                                 foodList.add(food);
                             }
                         }
@@ -120,19 +174,13 @@ public class MenuChecker {
                     }
                 }
 
-                for(FoodModel foodModel: foodList){
-                    if(!todayFood.contains(foodModel)){
-                        todayFood.add(foodModel);
-                    }
-                }
-
                 addToTodayList(foodList);
-
+                incrementMenuCompleteCounter();
             }
 
             @Override
             public void onFailure(Call<MenuModel> call, Throwable t) {
-            /*AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                     .setTitle("Data retrieval failed")
                     .setMessage("Unable to connect to the Internet")
                     .setCancelable(false)
@@ -144,23 +192,24 @@ public class MenuChecker {
                     });
             AlertDialog failure = alertDialogBuilder.create();
             failure.show();
-            */
+
                 Log.e("Retrofit", "Unable to connect to api or something");
                 Log.e("Retrofit", t.getMessage());
+
+                incrementMenuCompleteCounter();
             }
         });
-
-        incrementMenuCompleteCounter();
+*/
 
         }
 
 
         synchronized static void incrementMenuCompleteCounter(){
-            menuCompleCounter++;
+            menuCompleteCounter++;
         }
 
         synchronized static void addToTodayList(ArrayList<FoodModel> list){
-            if(todayFood == null){
+            if(todayFood.isEmpty()){
                 for(FoodModel foodModel: list){
                     todayFood.add(foodModel);
                 }

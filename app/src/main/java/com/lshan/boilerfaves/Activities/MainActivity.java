@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         Long time = new GregorianCalendar().getTimeInMillis()+10000;
         NotificationHelper.scheduleNofication(context, time, "Test", "test");
 
-        ArrayList<FoodModel> availableFaves = MenuChecker.getAvailableFaves(context);
+        MenuChecker.getAvailableFaves(context);
+
 
     }
 
