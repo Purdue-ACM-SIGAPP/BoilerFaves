@@ -5,16 +5,23 @@ import android.util.Log;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.lshan.boilerfaves.Models.BreakfastModel;
+import com.lshan.boilerfaves.Models.DinnerModel;
+import com.lshan.boilerfaves.Models.FoodModel;
+import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.MenuModel;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.http.HTTP;
 
@@ -22,7 +29,7 @@ import retrofit2.http.HTTP;
  * Created by lshan on 1/4/2018.
  */
 
-public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<MenuModel>>{
+public class MenuRetrievalTask extends AsyncTask<Void, Void, HashMap<String, HashMap<String, ArrayList<FoodModel>>>>{
 
     private static final String API_URL = "https://api.hfs.purdue.edu/menus/v1/locations/";
 
@@ -32,7 +39,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<MenuModel
     }
 
     @Override
-    protected ArrayList<MenuModel> doInBackground(Void... voids) {
+    protected HashMap<String, HashMap<String, ArrayList<FoodModel>>> doInBackground(Void... voids) {
 
         String[] diningCourts = {"earhart", "ford", "wiley", "windsor", "hillenbrand"};
 
@@ -41,7 +48,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<MenuModel
 
         date = "12-01-2017";
 
-        ArrayList<MenuModel> menus = new ArrayList<>();
+        HashMap<String, HashMap<String, ArrayList<FoodModel>>> menus = new HashMap<>();
 
         for(String court: diningCourts) {
 
@@ -60,7 +67,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<MenuModel
                     bufferedReader.close();
                     Gson g = new Gson();
                     MenuModel menu = g.fromJson(stringBuilder.toString(), MenuModel.class);
-                    menus.add(menu);
+                    menus.put(court, processMenu(menu));
 
                 } finally {
                     urlConnection.disconnect();
@@ -72,13 +79,56 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<MenuModel
 
         }
 
-
-
         return menus;
     }
 
+    private HashMap<String, ArrayList<FoodModel>> processMenu(MenuModel menuModel){
+        ArrayList <FoodModel> breakfast, lunch, dinner;
+
+        breakfast = new ArrayList<>();
+        if (menuModel.Breakfast != null) {
+            for (BreakfastModel location : menuModel.Breakfast) {
+                for (FoodModel food : location.Items) {
+                    if (!breakfast.contains(food)) {
+                        breakfast.add(food);
+                    }
+                }
+            }
+        }
+
+        lunch = new ArrayList<>();
+        if (menuModel.Lunch != null) {
+            for (LunchModel location : menuModel.Lunch) {
+                for (FoodModel food : location.Items) {
+                    if (!lunch.contains(food)) {
+                        lunch.add(food);
+                    }
+                }
+            }
+        }
+
+        dinner = new ArrayList<>();
+        if (menuModel.Dinner != null) {
+            for (DinnerModel location : menuModel.Dinner) {
+                for (FoodModel food : location.Items) {
+                    if (!dinner.contains(food)) {
+                        dinner.add(food);
+                    }
+                }
+            }
+        }
+
+
+        HashMap<String, ArrayList<FoodModel>> result = new HashMap<>();
+        result.put("breakfast", breakfast);
+        result.put("lunch", lunch);
+        result.put("dinner", dinner);
+
+        return result;
+    }
+
     @Override
-    protected void onPostExecute(ArrayList<MenuModel> menuModels) {
+    protected void onPostExecute(HashMap<String, HashMap<String, ArrayList<FoodModel>>> menus) {
         System.out.println("here");
     }
 }
