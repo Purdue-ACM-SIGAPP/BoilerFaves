@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import rx.Subscriber;
 
 
 /**
@@ -60,26 +60,42 @@ public class MenuChecker {
         menuCompleteCounter = 0;
 
         MenuApi menuApi = MenuApiHelper.getInstance();
+        List<Observable<MenuModel>> observables = new ArrayList<>();
+
         for(String diningCourt: diningCourts){
-            menuApi.getMenu(diningCourt, date)
+            /*menuApi.getMenu(diningCourt, date)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(responseData -> {
-                        System.out.println(responseData.Lunch.get(0).Items.get(0).Name);
-                        addFoods(responseData);
-                        menuCompleteCounter++;
-
-                        if(menuCompleteCounter >= 5){
-                            processMenu();
-                        }
 
                     });
+                    */
+            observables.add(
+                    menuApi
+                    .getMenu(diningCourt, date)
+                    .observeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
+                    );
         }
 
-        System.out.println("Done");
+        for(Observable observable : observables){
+            System.out.println("Subscribing");
+            observable.subscribe();
+        }
+
+
+        Observable.combineLatest(observables.get(0), observables.get(1), (result1, result2) -> {
+            System.out.println("HERE");
+            return null;
+        });
+
+        Observable.combineLatest(observables, args -> {
+            System.out.println("here");
+            return null;
+        });
+
 
         return new ArrayList<>();
-
     }
 
     public static void processMenu(){
@@ -98,7 +114,6 @@ public class MenuChecker {
             for (BreakfastModel location : result.Breakfast) {
                 for (FoodModel food : location.Items) {
                     if (!foodList.contains(food)) {
-
                         foodList.add(food);
                     }
                 }
@@ -125,6 +140,12 @@ public class MenuChecker {
             }
         }
 
+        addToTodayFood(foodList);
+
+        menuCompleteCounter++;
+    }
+
+    public static synchronized void addToTodayFood(ArrayList<FoodModel> foodList){
         for(FoodModel foodModel: foodList){
             if(!todayFood.contains(foodModel)){
                 todayFood.add(foodModel);

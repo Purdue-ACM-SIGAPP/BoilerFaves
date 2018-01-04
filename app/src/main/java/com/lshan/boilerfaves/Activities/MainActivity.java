@@ -1,39 +1,26 @@
 package com.lshan.boilerfaves.Activities;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Button;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
-import com.lshan.boilerfaves.Models.BreakfastModel;
-import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
-import com.lshan.boilerfaves.Models.LunchModel;
-import com.lshan.boilerfaves.Models.MenuModel;
-import com.lshan.boilerfaves.Networking.MenuApiHelper;
+import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
-import com.lshan.boilerfaves.Utils.MenuChecker;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Long time = new GregorianCalendar().getTimeInMillis()+10000;
         NotificationHelper.scheduleNofication(context, time, "Test", "test");
 
-        MenuChecker.getAvailableFaves(context);
-
+        new MenuRetrievalTask().execute();
 
     }
 
