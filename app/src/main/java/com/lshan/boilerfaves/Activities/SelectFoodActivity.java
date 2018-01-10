@@ -59,7 +59,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     private void callRetrofit ()  {
 
-/*
+
         MenuApiHelper.getInstance().getMenu("earhart", "12-01-2017").enqueue(new Callback<MenuModel>(){
             @Override
             public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
@@ -123,7 +123,7 @@ public class SelectFoodActivity extends AppCompatActivity {
                 Log.e("Retrofit", t.getMessage());
             }
         });
-*/
+
 
     }
 

@@ -16,7 +16,7 @@ import retrofit2.http.Path;
 public interface MenuApi {
     //12-01-2017
     @GET("{diningCourt}/{date}")
-    Observable<MenuModel> getMenu(@Path("diningCourt") String diningCourt,
+    Call<MenuModel> getMenu(@Path("diningCourt") String diningCourt,
                                   @Path("date") String date);
 
 }

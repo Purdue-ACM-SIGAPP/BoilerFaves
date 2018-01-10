@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Long time = new GregorianCalendar().getTimeInMillis()+10000;
         NotificationHelper.scheduleNofication(context, time, "Test", "test");
 
-        new MenuRetrievalTask().execute();
+        new MenuRetrievalTask(context).execute();
 
     }
 

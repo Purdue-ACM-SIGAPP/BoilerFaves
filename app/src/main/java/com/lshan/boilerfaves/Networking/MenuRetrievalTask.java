@@ -9,7 +9,9 @@ import com.lshan.boilerfaves.Models.BreakfastModel;
 import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Models.LunchModel;
+import com.lshan.boilerfaves.Models.DiningCourtMenu;
 import com.lshan.boilerfaves.Models.MenuModel;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,16 +24,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.http.HTTP;
+import java.util.Map;
 
 /**
  * Created by lshan on 1/4/2018.
  */
 
-public class MenuRetrievalTask extends AsyncTask<Void, Void, HashMap<String, HashMap<String, ArrayList<FoodModel>>>>{
+public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCourtMenu>>{
 
     private static final String API_URL = "https://api.hfs.purdue.edu/menus/v1/locations/";
+    private Context context;
+
+
+    public MenuRetrievalTask(Context context){
+        this.context = context;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -39,7 +46,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, HashMap<String, Has
     }
 
     @Override
-    protected HashMap<String, HashMap<String, ArrayList<FoodModel>>> doInBackground(Void... voids) {
+    protected ArrayList<DiningCourtMenu> doInBackground(Void... voids) {
 
         String[] diningCourts = {"earhart", "ford", "wiley", "windsor", "hillenbrand"};
 
@@ -48,7 +55,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, HashMap<String, Has
 
         date = "12-01-2017";
 
-        HashMap<String, HashMap<String, ArrayList<FoodModel>>> menus = new HashMap<>();
+        ArrayList<DiningCourtMenu> menus = new ArrayList<>();
 
         for(String court: diningCourts) {
 
@@ -67,7 +74,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, HashMap<String, Has
                     bufferedReader.close();
                     Gson g = new Gson();
                     MenuModel menu = g.fromJson(stringBuilder.toString(), MenuModel.class);
-                    menus.put(court, processMenu(menu));
+                    menus.add(processMenu(court, menu));
 
                 } finally {
                     urlConnection.disconnect();
@@ -82,7 +89,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, HashMap<String, Has
         return menus;
     }
 
-    private HashMap<String, ArrayList<FoodModel>> processMenu(MenuModel menuModel){
+    private DiningCourtMenu processMenu(String courtName, MenuModel menuModel){
         ArrayList <FoodModel> breakfast, lunch, dinner;
 
         breakfast = new ArrayList<>();
@@ -119,16 +126,55 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, HashMap<String, Has
         }
 
 
-        HashMap<String, ArrayList<FoodModel>> result = new HashMap<>();
-        result.put("breakfast", breakfast);
-        result.put("lunch", lunch);
-        result.put("dinner", dinner);
+        DiningCourtMenu result = new DiningCourtMenu(courtName, breakfast, lunch, dinner);
 
         return result;
     }
 
     @Override
-    protected void onPostExecute(HashMap<String, HashMap<String, ArrayList<FoodModel>>> menus) {
-        System.out.println("here");
+    protected void onPostExecute(ArrayList<DiningCourtMenu> menus) {
+        List<FoodModel> faves = SharedPrefsHelper.getFaveList(context);
+        ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
+
+        for(DiningCourtMenu menu: menus){
+            availableFaves.add(checkForFaves(faves, menu));
+        }
+
+
+
+    }
+
+    //Returns a DiningCourtMenu with only that court's available faves
+    //If a court has no available faves, returns null
+    private DiningCourtMenu checkForFaves(List<FoodModel> faves, DiningCourtMenu menu){
+        ArrayList<FoodModel> breakfast, lunch, dinner;
+
+        breakfast = new ArrayList<>();
+        for(FoodModel foodModel: menu.getBreakfast()){
+            if(faves.contains(foodModel)){
+                breakfast.add(foodModel);
+            }
+        }
+
+        lunch = new ArrayList<>();
+        for(FoodModel foodModel: menu.getLunch()){
+            if(faves.contains(foodModel)){
+                lunch.add(foodModel);
+            }
+        }
+
+        dinner = new ArrayList<>();
+        for(FoodModel foodModel: menu.getDinner()){
+            if(faves.contains(foodModel)){
+                dinner.add(foodModel);
+            }
+        }
+
+        if(breakfast.size() == 0 && lunch.size() == 0 && dinner.size() == 0){
+            return null;
+        }else{
+            return new DiningCourtMenu(menu.getCourtName(), breakfast, lunch, dinner);
+        }
+
     }
 }
