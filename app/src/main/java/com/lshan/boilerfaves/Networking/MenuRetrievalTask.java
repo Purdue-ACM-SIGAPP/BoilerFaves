@@ -11,6 +11,7 @@ import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.DiningCourtMenu;
 import com.lshan.boilerfaves.Models.MenuModel;
+import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.io.BufferedReader;
@@ -140,7 +141,45 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             availableFaves.add(checkForFaves(faves, menu));
         }
 
+        StringBuilder breakfastMessageBuilder = new StringBuilder().append("Faves available at ");
+        StringBuilder lunchMessageBuilder = new StringBuilder().append("Faves available at ");
+        StringBuilder dinnerMessageBuilder = new StringBuilder().append("Faves available at ");
 
+        boolean breakfastAvailable = false, lunchAvailable = false, dinnerAvailable = false;
+
+        for(DiningCourtMenu menu : availableFaves){
+            if(menu != null){
+                if(menu.getBreakfast().size() > 0){
+                    breakfastMessageBuilder.append(menu.getCourtName() + " ");
+                    breakfastAvailable = true;
+                }
+
+                if(menu.getLunch().size() > 0){
+                    lunchMessageBuilder.append(menu.getCourtName() + " ");
+                    lunchAvailable = true;
+                }
+
+                if(menu.getDinner().size() > 0){
+                    dinnerMessageBuilder.append(menu.getCourtName() + " ");
+                    dinnerAvailable = true;
+                }
+            }
+        }
+
+        if(breakfastAvailable){
+            breakfastMessageBuilder.append("for breakfast!");
+            NotificationHelper.scheduleNofication(context, 0, breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
+        }
+
+        if(lunchAvailable){
+            lunchMessageBuilder.append("for lunch!");
+            NotificationHelper.scheduleNofication(context, 0, lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
+        }
+
+        if(dinnerAvailable){
+            dinnerMessageBuilder.append("for dinner!");
+            NotificationHelper.scheduleNofication(context, 0, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
+        }
 
     }
 

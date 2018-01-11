@@ -17,6 +17,9 @@ import android.util.Log;
 import com.lshan.boilerfaves.Activities.MainActivity;
 import com.lshan.boilerfaves.R;
 
+import java.util.GregorianCalendar;
+import java.util.Random;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -25,9 +28,12 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationHelper {
 
+    //These are for the notification channels/code numbers
+public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
+
     private static NotificationCompat.Builder mBuilder;
 
-    public static void sendNotification(Context context, String title, String content){
+    public static void sendNotification(Context context, String title, String content, int notificationID){
 
         //https://developer.android.com/training/notify-user/build-notification.html#click
 
@@ -50,25 +56,27 @@ public class NotificationHelper {
 
         mBuilder.setContentIntent(resultPendingIntent);
 
-        int mNotificationId = 1;
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         if(mNotifyMgr != null) {
-            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            System.out.println(notificationID);
+            mNotifyMgr.notify(notificationID, mBuilder.build());
         }else{
             Log.e("Notification", "Notification manager is null.");
         }
     }
 
-    public static void scheduleNofication(Context context, long triggerAtMillis, String message, String title){
+    public static void scheduleNofication(Context context, long delayInMillis, String message, String title, int notificationID){
         Intent intentAlarm = new Intent(context, NotificationAlarmReciever.class);
         intentAlarm.putExtra("message", message);
         intentAlarm.putExtra("title", title);
+        intentAlarm.putExtra("notificationID", notificationID);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        Long triggerAtMillis = new GregorianCalendar().getTimeInMillis() + delayInMillis;
         alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis,
-                PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+                PendingIntent.getBroadcast(context, notificationID, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     public static class NotificationAlarmReciever extends BroadcastReceiver{
@@ -77,7 +85,7 @@ public class NotificationHelper {
         @Override
         public void onReceive(Context context, Intent intent) {
             sendNotification(context, intent.getStringExtra("title"),
-                    intent.getStringExtra("message"));
+                    intent.getStringExtra("message"), intent.getIntExtra("notificationID",0));
         }
     }
 }

@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
             startAdaptor(faveList);
         }
 
-        Long time = new GregorianCalendar().getTimeInMillis()+10000;
-        NotificationHelper.scheduleNofication(context, time, "Test", "test");
 
         new MenuRetrievalTask(context).execute();
 
