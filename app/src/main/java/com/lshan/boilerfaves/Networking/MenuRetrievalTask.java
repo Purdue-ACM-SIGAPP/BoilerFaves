@@ -54,8 +54,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
         String date = dateFormat.format(new Date());
 
-        date = "12-01-2017";
-
         ArrayList<DiningCourtMenu> menus = new ArrayList<>();
 
         for(String court: diningCourts) {

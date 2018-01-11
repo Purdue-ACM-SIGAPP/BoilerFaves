@@ -10,6 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+
         <Button
             android:id="@+id/addNewButton"
             android:layout_width="match_parent"

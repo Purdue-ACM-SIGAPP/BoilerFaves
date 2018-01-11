@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
@@ -22,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     @BindView(R.id.mainRecyclerView)
     RecyclerView mainRecyclerView;
@@ -30,12 +33,14 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.addNewButton)
     Button addButton;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private FoodAdapter foodAdapter;
     final private Context context = this;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -43,11 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
         //callRetrofit();
 
+        setSupportActionBar(toolbar);
+
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         if(faveList != null){
             startAdaptor(faveList);
         }
-
 
         new MenuRetrievalTask(context).execute();
 
@@ -63,6 +69,30 @@ public class MainActivity extends AppCompatActivity {
             startAdaptor(faveList);
         }
 
+    }
+
+
+    //Shameless copy paste from https://stackoverflow.com/questions/31231609/creating-a-button-in-android-toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_notifications) {
+            System.out.println("Notification Button Clicked");
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void callRetrofit ()  {
@@ -85,4 +115,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(context, SelectFoodActivity.class);
         context.startActivity(intent);
     }
+
+
+
 }
