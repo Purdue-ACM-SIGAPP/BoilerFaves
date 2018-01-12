@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lshan.boilerfaves.Activities.MainActivity">
 
-    <RelativeLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
+    </android.support.design.widget.AppBarLayout>
 
-        <Button
-            android:id="@+id/addNewButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add New Fave"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_below="@id/addNewButton"
-            android:id="@+id/mainRecyclerView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mainRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    </RelativeLayout>
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+    </FrameLayout>
 
 
 
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

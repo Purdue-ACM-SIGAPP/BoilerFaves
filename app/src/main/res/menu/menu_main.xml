@@ -7,6 +7,13 @@
         android:id="@+id/action_notifications"
         android:icon="@drawable/ic_notifications_white_24dp"
         android:title="@string/action_notification"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="action_add"
         app:showAsAction="always"
         />
 

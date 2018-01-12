@@ -30,9 +30,6 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.mainRecyclerView)
     RecyclerView mainRecyclerView;
 
-    @BindView(R.id.addNewButton)
-    Button addButton;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -92,6 +89,10 @@ public class MainActivity extends AppCompatActivity{
             System.out.println("Notification Button Clicked");
         }
 
+        if(id == R.id.action_add){
+            launchFoodSelect();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -110,7 +111,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    @OnClick(R.id.addNewButton)
     public void launchFoodSelect(){
         Intent intent = new Intent(context, SelectFoodActivity.class);
         context.startActivity(intent);
