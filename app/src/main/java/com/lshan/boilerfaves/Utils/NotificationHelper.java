@@ -1,6 +1,7 @@
 package com.lshan.boilerfaves.Utils;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -35,34 +36,59 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
 
     public static void sendNotification(Context context, String title, String content, int notificationID){
 
-        //https://developer.android.com/training/notify-user/build-notification.html#click
-
-        mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_notification_icon)
-                .setContentTitle(title)
-                .setContentText(content);
-
-        Intent resultIntent = new Intent(context, MainActivity.class);
-        //TODO Actually should have the back stack ... do later
-        // Because clicking the notification opens a new ("special") activity, there's
-        // no need to create an artificial back stack.
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        context,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-
-        mBuilder.setContentIntent(resultPendingIntent);
-
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        if(mNotifyMgr != null) {
-            System.out.println(notificationID);
-            mNotifyMgr.notify(notificationID, mBuilder.build());
-        }else{
-            Log.e("Notification", "Notification manager is null.");
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            //Need to do channel stuff for android oreo ugh
+            String CHANNEL_ID = "boiler_faves_01";
+            CharSequence name = "BoilerFaves";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            mNotifyMgr.createNotificationChannel(channel);
+
+            Notification notification = new Notification.Builder(context, CHANNEL_ID)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
+                    .setChannelId(CHANNEL_ID)
+                    .build();
+
+            if (mNotifyMgr != null) {
+                mNotifyMgr.notify(notificationID, notification);
+            } else {
+                Log.e("Notification", "Notification manager is null.");
+            }
+
+        }else {
+
+            //https://developer.android.com/training/notify-user/build-notification.html#click
+            mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
+                    .setContentTitle(title)
+                    .setContentText(content);
+
+            Intent resultIntent = new Intent(context, MainActivity.class);
+            //TODO Actually should have the back stack ... do later
+            // Because clicking the notification opens a new ("special") activity, there's
+            // no need to create an artificial back stack.
+            PendingIntent resultPendingIntent =
+                    PendingIntent.getActivity(
+                            context,
+                            0,
+                            resultIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            if (mNotifyMgr != null) {
+                System.out.println(notificationID);
+                mNotifyMgr.notify(notificationID, mBuilder.build());
+            } else {
+                Log.e("Notification", "Notification manager is null.");
+            }
         }
     }
 
