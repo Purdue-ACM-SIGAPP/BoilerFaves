@@ -13,6 +13,7 @@ import com.lshan.boilerfaves.Models.DiningCourtMenu;
 import com.lshan.boilerfaves.Models.MenuModel;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
+import com.lshan.boilerfaves.Utils.TimeHelper;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -166,7 +167,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
         if(breakfastAvailable){
             breakfastMessageBuilder.append("for breakfast!");
-            NotificationHelper.scheduleNofication(context, 0, breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
+            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(11, 05), breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
         }
 
         if(lunchAvailable){

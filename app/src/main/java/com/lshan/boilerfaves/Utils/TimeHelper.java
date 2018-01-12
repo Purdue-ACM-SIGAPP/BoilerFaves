@@ -15,7 +15,6 @@ public class TimeHelper {
 
         //https://stackoverflow.com/questions/11989555/get-milliseconds-until-midnight
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, 1);
         c.set(Calendar.HOUR_OF_DAY, hour);
         c.set(Calendar.MINUTE, minute);
         c.set(Calendar.SECOND, 0);
