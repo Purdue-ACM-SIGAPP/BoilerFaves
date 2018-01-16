@@ -167,17 +167,17 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
         if(breakfastAvailable){
             breakfastMessageBuilder.append("for breakfast!");
-            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(11, 05), breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
+            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(6, 0), breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
         }
 
         if(lunchAvailable){
             lunchMessageBuilder.append("for lunch!");
-            NotificationHelper.scheduleNofication(context, 0, lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
+            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(11, 0), lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
         }
 
         if(dinnerAvailable){
             dinnerMessageBuilder.append("for dinner!");
-            NotificationHelper.scheduleNofication(context, 0, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
+            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(16, 0), dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
         }
 
     }
