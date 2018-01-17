@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +34,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     private List<FoodModel> foods;
     private Context context;
 
+    //Used to edit the appropriate parts of the availability gridlayout
+    private final int BREAKFAST_OFFSET = 0;
+    private final int LUNCH_OFFSET = 6;
+    private final int DINNER_OFFSET = 12;
+
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
         this.context = context;
@@ -49,6 +56,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         FoodModel food = foods.get(position);
         holder.cardTitle.setText(food.Name);
 
+
+        //Update card layout based on availability
         if(food.isAvailable){
             holder.availabilityLayout.setVisibility(View.VISIBLE);
         }else{
@@ -56,7 +65,80 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         }
 
         HashMap<String, ArrayList<String>> availableCourts = food.getAvailableCourts();
+        GridLayout grid = holder.availabilityGrid;
 
+        if(availableCourts != null) {
+
+            if (availableCourts.containsKey("Breakfast")) {
+                grid.getChildAt(0).setVisibility(View.VISIBLE);
+
+                ArrayList<String> courtList = availableCourts.get("Breakfast");
+                displayDiningCourts(grid, courtList, BREAKFAST_OFFSET);
+            } else {
+                for (int i = 0; i < 6; i++) {
+                    grid.getChildAt(i).setVisibility(View.GONE);
+                }
+            }
+
+            if (availableCourts.containsKey("Lunch")) {
+                grid.getChildAt(6).setVisibility(View.VISIBLE);
+
+                ArrayList<String> courtList = availableCourts.get("Lunch");
+                displayDiningCourts(grid, courtList, LUNCH_OFFSET);
+            } else {
+                for (int i = 6; i < 12; i++) {
+                    grid.getChildAt(i).setVisibility(View.GONE);
+                }
+            }
+
+            if (availableCourts.containsKey("Dinner")) {
+                grid.getChildAt(12).setVisibility(View.VISIBLE);
+
+                ArrayList<String> courtList = availableCourts.get("Dinner");
+                displayDiningCourts(grid, courtList, DINNER_OFFSET);
+            } else {
+                for (int i = 12; i < 18; i++) {
+                    grid.getChildAt(i).setVisibility(View.GONE);
+                }
+            }
+        }
+
+    }
+
+    public void displayDiningCourts(GridLayout grid, ArrayList<String> courtList, int offset){
+
+        //Use i to select spot in gridlayout, j to iterate through courtsList
+        int j =0;
+        for (int i = 1 + offset; i < 6 + offset; i++) {
+            ImageView icon = (ImageView) grid.getChildAt(i);
+
+            if(j<courtList.size()){
+                String court = courtList.get(j);
+                icon.setVisibility(View.VISIBLE);
+                switch(court){
+                    case "windsor":
+                        icon.setImageResource(R.drawable.ic_windsor);
+                        break;
+                    case "ford":
+                        icon.setImageResource(R.drawable.ic_ford);
+                        break;
+                    case "wiley":
+                        icon.setImageResource(R.drawable.ic_wiley);
+                        break;
+                    case "earhart":
+                        icon.setImageResource(R.drawable.ic_earhart);
+                        break;
+                    case "hillenbrand":
+                        icon.setImageResource(R.drawable.ic_hillenbrand);
+                        break;
+                }
+
+               j++;
+
+            }else{
+                icon.setVisibility(View.GONE);
+            }
+        }
 
     }
 
@@ -87,6 +169,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
         @BindView(R.id.availability)
         RelativeLayout availabilityLayout;
+
+        @BindView(R.id.availabilityGrid)
+        GridLayout availabilityGrid;
 
         public AreaViewHolder(View itemView){
             super(itemView);

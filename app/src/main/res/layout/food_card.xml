@@ -45,6 +45,7 @@
             android:layout_below="@+id/title">
 
             <GridLayout
+                android:id="@+id/availabilityGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:rowCount="3"
