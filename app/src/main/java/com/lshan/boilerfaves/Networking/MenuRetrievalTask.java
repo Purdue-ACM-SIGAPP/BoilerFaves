@@ -1,16 +1,21 @@
 package com.lshan.boilerfaves.Networking;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.os.AsyncTask;
+import android.view.View;
 
 import com.google.gson.Gson;
+import com.lshan.boilerfaves.Activities.MainActivity;
+import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.BreakfastModel;
 import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.DiningCourtMenu;
 import com.lshan.boilerfaves.Models.MenuModel;
+import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 import com.lshan.boilerfaves.Utils.TimeHelper;
@@ -28,6 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by lshan on 1/4/2018.
  */
@@ -35,11 +43,14 @@ import java.util.Map;
 public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCourtMenu>>{
 
     private static final String API_URL = "https://api.hfs.purdue.edu/menus/v1/locations/";
+    private RecyclerView mainRecyclerView;
     private Context context;
 
 
-    public MenuRetrievalTask(Context context){
+
+    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView){
         this.context = context;
+        this.mainRecyclerView = mainRecyclerView;
     }
 
     @Override
@@ -140,6 +151,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             availableFaves.add(checkForFaves(faves, menu));
         }
 
+
         StringBuilder breakfastMessageBuilder = new StringBuilder().append("Faves available at ");
         StringBuilder lunchMessageBuilder = new StringBuilder().append("Faves available at ");
         StringBuilder dinnerMessageBuilder = new StringBuilder().append("Faves available at ");
@@ -148,20 +160,50 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
         for(DiningCourtMenu menu : availableFaves){
             if(menu != null){
+
+                String courtName = menu.getCourtName();
                 if(menu.getBreakfast().size() > 0){
-                    breakfastMessageBuilder.append(menu.getCourtName() + " ");
+
+                    //Needed to update availability on the cardViews
+                    for(FoodModel foodModel: menu.getBreakfast()){
+                        faves.get(faves.indexOf(foodModel)).setAvailable(true);
+
+                        addAvailableCourt("Breakfast", courtName, faves.get(faves.indexOf(foodModel)));
+
+                    }
+
+                    breakfastMessageBuilder.append(courtName + " ");
                     breakfastAvailable = true;
                 }
 
                 if(menu.getLunch().size() > 0){
-                    lunchMessageBuilder.append(menu.getCourtName() + " ");
+
+                    for(FoodModel foodModel: menu.getLunch()){
+                        faves.get(faves.indexOf(foodModel)).setAvailable(true);
+
+                        addAvailableCourt("Lunch", courtName, faves.get(faves.indexOf(foodModel)));
+                    }
+
+                    lunchMessageBuilder.append(courtName + " ");
                     lunchAvailable = true;
                 }
 
                 if(menu.getDinner().size() > 0){
-                    dinnerMessageBuilder.append(menu.getCourtName() + " ");
+
+                    for(FoodModel foodModel: menu.getDinner()){
+                        faves.get(faves.indexOf(foodModel)).setAvailable(true);
+
+                        addAvailableCourt("Dinner", courtName, faves.get(faves.indexOf(foodModel)));
+                    }
+
+                    dinnerMessageBuilder.append(courtName + " ");
                     dinnerAvailable = true;
                 }
+
+                FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
+                foodAdapter.setFoods(faves);
+                foodAdapter.notifyDataSetChanged();
+
             }
         }
 
@@ -214,5 +256,23 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             return new DiningCourtMenu(menu.getCourtName(), breakfast, lunch, dinner);
         }
 
+    }
+
+    private void addAvailableCourt(String meal, String court, FoodModel foodModel){
+        HashMap<String, ArrayList<String>> availableCourts = foodModel.getAvailableCourts();
+        if(availableCourts == null){
+            availableCourts = new HashMap<>();
+
+            if(!availableCourts.containsKey(meal)){
+                availableCourts.put(meal, new ArrayList<>());
+                availableCourts.get(meal).add(court);
+            }else{
+                if(!availableCourts.get(meal).contains(court)){
+                    availableCourts.get(meal).add(court);
+                }
+            }
+        }
+
+        foodModel.setAvailableCourts(availableCourts);
     }
 }

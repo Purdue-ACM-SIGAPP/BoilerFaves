@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
             startAdaptor(faveList);
         }
 
-        new MenuRetrievalTask(context).execute();
+        new MenuRetrievalTask(context, mainRecyclerView).execute();
 
     }
 

@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lshan.boilerfaves.Models.FoodModel;
@@ -14,6 +16,7 @@ import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,14 +46,33 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
-        holder.cardTitle.setText(foods.get(position).Name);
+        FoodModel food = foods.get(position);
+        holder.cardTitle.setText(food.Name);
+
+        if(food.isAvailable){
+            holder.availabilityLayout.setVisibility(View.VISIBLE);
+        }else{
+            holder.availabilityLayout.setVisibility(View.GONE);
+        }
+
+        HashMap<String, ArrayList<String>> availableCourts = food.getAvailableCourts();
+
+
     }
+
 
     @Override
     public int getItemCount(){
         return foods.size();
     }
 
+    public List<FoodModel> getFoods() {
+        return foods;
+    }
+
+    public void setFoods(List<FoodModel> foods){
+        this.foods = foods;
+    }
 
     public class AreaViewHolder extends RecyclerView.ViewHolder {
 
@@ -63,11 +85,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         @BindView(R.id.removeButton)
         ImageButton removeButton;
 
+        @BindView(R.id.availability)
+        RelativeLayout availabilityLayout;
 
         public AreaViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
 
         @OnClick(R.id.removeButton)
         public void removeItem(){
