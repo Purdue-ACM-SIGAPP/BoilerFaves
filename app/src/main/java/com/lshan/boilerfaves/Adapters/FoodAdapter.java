@@ -60,8 +60,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         //Update card layout based on availability
         if(food.isAvailable){
             holder.availabilityLayout.setVisibility(View.VISIBLE);
+            holder.unavailableMessage.setVisibility(View.GONE);
         }else{
             holder.availabilityLayout.setVisibility(View.GONE);
+            holder.unavailableMessage.setVisibility(View.VISIBLE);
         }
 
         HashMap<String, ArrayList<String>> availableCourts = food.getAvailableCourts();
@@ -172,6 +174,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
         @BindView(R.id.availabilityGrid)
         GridLayout availabilityGrid;
+
+        @BindView(R.id.unavailableMessage)
+        TextView unavailableMessage;
 
         public AreaViewHolder(View itemView){
             super(itemView);

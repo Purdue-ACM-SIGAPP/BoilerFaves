@@ -42,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/availability"
-            android:layout_below="@+id/title">
+            android:layout_below="@+id/title"
+            android:visibility="gone">
 
             <GridLayout
                 android:id="@+id/availabilityGrid"
@@ -211,6 +212,15 @@
             </GridLayout>
 
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unavailable Today"
+            android:layout_below="@+id/availability"
+            android:id="@+id/unavailableMessage"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"/>
 
     </RelativeLayout>
 
