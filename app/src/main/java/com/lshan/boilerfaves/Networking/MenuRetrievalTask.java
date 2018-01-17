@@ -204,6 +204,9 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 foodAdapter.setFoods(faves);
                 foodAdapter.notifyDataSetChanged();
 
+                //Need to call this so when main activity resumes it remembers availability
+                SharedPrefsHelper.storeFaveList(faves, context);
+
             }
         }
 
@@ -263,6 +266,12 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         if(availableCourts == null){
             availableCourts = new HashMap<>();
 
+            availableCourts.put(meal, new ArrayList<>());
+            availableCourts.get(meal).add(court);
+
+            foodModel.setAvailableCourts(availableCourts);
+
+        }else{
             if(!availableCourts.containsKey(meal)){
                 availableCourts.put(meal, new ArrayList<>());
                 availableCourts.get(meal).add(court);
@@ -273,6 +282,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             }
         }
 
-        foodModel.setAvailableCourts(availableCourts);
+
     }
 }
