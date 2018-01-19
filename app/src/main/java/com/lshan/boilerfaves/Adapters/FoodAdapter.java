@@ -43,7 +43,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         this.foods = data;
         this.context = context;
 
-        reorderList();
     }
 
     @Override
@@ -146,13 +145,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     }
 
-    public void reorderList(){
-        for (int i = 0; i < foods.size(); i++) {
-            if(!foods.get(i).isAvailable){
-                foods.add(foods.remove(i));
-            }
-        }
-    }
 
 
     @Override

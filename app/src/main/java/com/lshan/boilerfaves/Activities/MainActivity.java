@@ -18,6 +18,7 @@ import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -43,13 +44,13 @@ public class MainActivity extends AppCompatActivity{
 
         ButterKnife.bind(this);
 
-        //callRetrofit();
-
         setSupportActionBar(toolbar);
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         if(faveList != null){
             startAdaptor(faveList);
+        }else{
+            SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
         }
 
         new MenuRetrievalTask(context, mainRecyclerView).execute();
