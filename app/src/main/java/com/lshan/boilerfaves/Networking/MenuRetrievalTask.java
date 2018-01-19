@@ -272,6 +272,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             foodModel.setAvailableCourts(availableCourts);
 
         }else{
+
             if(!availableCourts.containsKey(meal)){
                 availableCourts.put(meal, new ArrayList<>());
                 availableCourts.get(meal).add(court);
