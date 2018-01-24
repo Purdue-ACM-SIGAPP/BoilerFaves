@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
+import com.lshan.boilerfaves.Networking.SelectionRetrievalTask;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity{
             SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
         }
 
+        new SelectionRetrievalTask().execute();
         new MenuRetrievalTask(context, mainRecyclerView).execute();
 
     }
