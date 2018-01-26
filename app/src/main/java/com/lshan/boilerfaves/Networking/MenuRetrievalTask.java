@@ -86,6 +86,9 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
     @Override
     protected void onPostExecute(ArrayList<DiningCourtMenu> menus) {
+
+        //TODO Do I need to move the notifications stuff to doInBackground so it can be called without passing the recyclerView?
+
         List<FoodModel> faves = SharedPrefsHelper.getFaveList(context);
         ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
 
