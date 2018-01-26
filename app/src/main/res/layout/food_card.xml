@@ -51,6 +51,8 @@
                 android:layout_height="wrap_content"
                 android:rowCount="3"
                 android:columnCount="6"
+                android:layout_gravity="center"
+                android:stretchMode="columnWidth"
                 >
 
                 
@@ -60,7 +62,7 @@
                     android:text="Breakfast:"
                     android:textSize="24sp"
                     android:layout_marginRight="5dp"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:layout_row="0"
                     android:layout_column="0"/>
 
@@ -71,7 +73,8 @@
                     android:src="@drawable/ic_windsor"
                     android:layout_marginRight="6dp"
                     android:layout_row="0"
-                    android:layout_column="1"/>
+                    android:layout_column="1"
+                  />
 
                 <ImageView
                     android:layout_width="wrap_content"

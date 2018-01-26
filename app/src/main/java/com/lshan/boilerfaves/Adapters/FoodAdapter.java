@@ -119,21 +119,23 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 String court = courtList.get(j);
                 icon.setVisibility(View.VISIBLE);
                 switch(court){
-                    case "windsor":
+                    case "Windsor":
                         icon.setImageResource(R.drawable.ic_windsor);
                         break;
-                    case "ford":
+                    case "Ford":
                         icon.setImageResource(R.drawable.ic_ford);
                         break;
-                    case "wiley":
+                    case "Wiley":
                         icon.setImageResource(R.drawable.ic_wiley);
                         break;
-                    case "earhart":
+                    case "Earhart":
                         icon.setImageResource(R.drawable.ic_earhart);
                         break;
-                    case "hillenbrand":
+                    case "Hillenbrand":
                         icon.setImageResource(R.drawable.ic_hillenbrand);
                         break;
+                    default:
+                        icon.setImageResource(R.drawable.ic_launcher_foreground);
                 }
 
                j++;
