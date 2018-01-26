@@ -19,6 +19,48 @@ public class DiningCourtMenu {
         this.courtName = courtName;
     }
 
+    public DiningCourtMenu(String courtName, MenuModel model){
+        this.courtName = courtName;
+
+        ArrayList<FoodModel> newBreakfast = new ArrayList<>();
+        if(model.Breakfast != null) {
+            for (BreakfastModel bModel : model.Breakfast) {
+                for (FoodModel foodModel : bModel.Items) {
+                    if (!newBreakfast.contains(foodModel)) {
+                        newBreakfast.add(foodModel);
+                    }
+                }
+            }
+        }
+        this.breakfast = newBreakfast;
+
+
+        ArrayList<FoodModel> newLunch = new ArrayList<>();
+        if(model.Lunch != null) {
+            for (LunchModel lModel : model.Lunch) {
+                for (FoodModel foodModel : lModel.Items) {
+                    if (!newLunch.contains(foodModel)) {
+                        newLunch.add(foodModel);
+                    }
+                }
+            }
+        }
+        this.lunch = newLunch;
+
+        ArrayList<FoodModel> newDinner = new ArrayList<>();
+        if(model.Dinner != null) {
+            for (DinnerModel dModel : model.Dinner) {
+                for (FoodModel foodModel : dModel.Items) {
+                    if (!newDinner.contains(foodModel)) {
+                        newDinner.add(foodModel);
+                    }
+                }
+            }
+        }
+        this.dinner = newDinner;
+
+    }
+
 
     public String getCourtName() {
         return courtName;
