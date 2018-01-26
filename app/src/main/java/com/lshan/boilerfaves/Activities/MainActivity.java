@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
+import com.lshan.boilerfaves.Models.MenuModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.Networking.RetrofitAsyncTask;
 import com.lshan.boilerfaves.Networking.SelectionRetrievalTask;
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity{
         }
 
         //new SelectionRetrievalTask().execute();
-        //new MenuRetrievalTask(context, mainRecyclerView).execute();
-        new RetrofitAsyncTask().execute();
+        new MenuRetrievalTask(context, mainRecyclerView).execute();
+        //new RetrofitAsyncTask().execute();
 
     }
 

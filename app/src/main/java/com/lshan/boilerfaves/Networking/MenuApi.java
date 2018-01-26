@@ -19,7 +19,7 @@ public interface MenuApi {
     Call<List<String>> getLocations();
 
     //12-01-2017
-    @GET("/{diningCourt}/{date}")
+    @GET("{diningCourt}/{date}")
     Call<MenuModel> getMenu(@Path("diningCourt") String diningCourt,
                                   @Path("date") String date);
 

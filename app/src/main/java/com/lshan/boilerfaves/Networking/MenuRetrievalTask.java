@@ -21,6 +21,7 @@ import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 import com.lshan.boilerfaves.Utils.TimeHelper;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
@@ -35,6 +36,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Response;
 
 /**
  * Created by lshan on 1/4/2018.
@@ -61,85 +63,25 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     @Override
     protected ArrayList<DiningCourtMenu> doInBackground(Void... voids) {
 
-        String[] diningCourts = {"earhart", "ford", "wiley", "windsor", "hillenbrand"};
-
         DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
         String date = dateFormat.format(new Date());
 
-        ArrayList<DiningCourtMenu> menus = new ArrayList<>();
+        ArrayList<DiningCourtMenu> diningCourtMenus = new ArrayList<>();
 
-        for(String court: diningCourts) {
+        try {
+            //Synchronous retrofit call
+            Response<List<String>> locationsResponse = MenuApiHelper.getInstance().getLocations().execute();
 
-            try {
-                URL url = new URL(API_URL + court + "/" + date);
-                HttpURLConnection urlConnection= (HttpURLConnection) url.openConnection();
-
-                try {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    StringBuilder stringBuilder = new StringBuilder();
-                    String line;
-                    while((line = bufferedReader.readLine()) != null){
-                        stringBuilder.append(line);
-                    }
-
-                    bufferedReader.close();
-                    Gson g = new Gson();
-                    MenuModel menu = g.fromJson(stringBuilder.toString(), MenuModel.class);
-                    menus.add(processMenu(court, menu));
-
-                } finally {
-                    urlConnection.disconnect();
-                }
-
-            } catch (Exception e) {
-                Log.e("ERROR", e.getMessage(), e);
+            for (String diningCourt:locationsResponse.body()){
+                Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt, date).execute();
+                diningCourtMenus.add(new DiningCourtMenu(diningCourt, menuResponse.body()));
             }
 
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return menus;
-    }
-
-    private DiningCourtMenu processMenu(String courtName, MenuModel menuModel){
-        ArrayList <FoodModel> breakfast, lunch, dinner;
-
-        breakfast = new ArrayList<>();
-        if (menuModel.Breakfast != null) {
-            for (BreakfastModel location : menuModel.Breakfast) {
-                for (FoodModel food : location.Items) {
-                    if (!breakfast.contains(food)) {
-                        breakfast.add(food);
-                    }
-                }
-            }
-        }
-
-        lunch = new ArrayList<>();
-        if (menuModel.Lunch != null) {
-            for (LunchModel location : menuModel.Lunch) {
-                for (FoodModel food : location.Items) {
-                    if (!lunch.contains(food)) {
-                        lunch.add(food);
-                    }
-                }
-            }
-        }
-
-        dinner = new ArrayList<>();
-        if (menuModel.Dinner != null) {
-            for (DinnerModel location : menuModel.Dinner) {
-                for (FoodModel food : location.Items) {
-                    if (!dinner.contains(food)) {
-                        dinner.add(food);
-                    }
-                }
-            }
-        }
-
-
-        DiningCourtMenu result = new DiningCourtMenu(courtName, breakfast, lunch, dinner);
-
-        return result;
+        return diningCourtMenus;
     }
 
     @Override
@@ -150,7 +92,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         for(DiningCourtMenu menu: menus){
             availableFaves.add(checkForFaves(faves, menu));
         }
-
 
         StringBuilder breakfastMessageBuilder = new StringBuilder().append("Faves available at ");
         StringBuilder lunchMessageBuilder = new StringBuilder().append("Faves available at ");
@@ -169,7 +110,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         faves.get(faves.indexOf(foodModel)).setAvailable(true);
 
                         addAvailableCourt("Breakfast", courtName, faves.get(faves.indexOf(foodModel)));
-
                     }
 
                     breakfastMessageBuilder.append(courtName + " ");
@@ -226,6 +166,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         }
 
     }
+
 
     //Returns a DiningCourtMenu with only that court's available faves
     //If a court has no available faves, returns null

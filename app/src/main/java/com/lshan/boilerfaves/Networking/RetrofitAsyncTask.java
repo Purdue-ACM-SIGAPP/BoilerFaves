@@ -2,7 +2,10 @@ package com.lshan.boilerfaves.Networking;
 
 import android.os.AsyncTask;
 
+import com.lshan.boilerfaves.Models.MenuModel;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Response;
@@ -13,29 +16,25 @@ import retrofit2.Response;
 public class RetrofitAsyncTask extends AsyncTask{
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
+    protected ArrayList<MenuModel> doInBackground(Object[] objects) {
 
-    @Override
-    protected Object doInBackground(Object[] objects) {
 
+        ArrayList<MenuModel> menus = new ArrayList<>();
 
         try {
             //Synchronous retrofit call
             Response<List<String>> locationsResponse = MenuApiHelper.getInstance().getLocations().execute();
-            for (String location:locationsResponse.body()){
-                System.out.println(location);
+
+            for (String diningCourt:locationsResponse.body()){
+                Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt, "12-01-2017").execute();
+                menus.add(menuResponse.body());
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return menus;
     }
 
-    @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-    }
 }
