@@ -33,16 +33,28 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     private List<FoodModel> foods;
     private Context context;
+    private OnListEmptyListener mOnListEmptyListener;
 
     //Used to edit the appropriate parts of the availability gridlayout
     private final int BREAKFAST_OFFSET = 0;
     private final int LUNCH_OFFSET = 6;
     private final int DINNER_OFFSET = 12;
 
+
+
+
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
         this.context = context;
+    }
 
+    //Used to display the "No faves selected" message
+    public interface OnListEmptyListener{
+        public void onListEmpty();
+    }
+
+    public void setmOnListEmptyListener(OnListEmptyListener onListEmptyListener){
+        mOnListEmptyListener = onListEmptyListener;
     }
 
     @Override
@@ -154,13 +166,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         return foods.size();
     }
 
-    public List<FoodModel> getFoods() {
-        return foods;
-    }
-
     public void setFoods(List<FoodModel> foods){
         this.foods = foods;
     }
+
+
 
     public class AreaViewHolder extends RecyclerView.ViewHolder {
 
@@ -196,14 +206,22 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
             List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
             if(faveList != null && faveList.contains(foodModel)){
                 faveList.remove(foodModel);
+                if(faveList.size() == 0){
+                    //Need to display the no faves selected screen
+                    if(mOnListEmptyListener != null){
+                        mOnListEmptyListener.onListEmpty();
+                    }
+                }
+
                 SharedPrefsHelper.storeFaveList(faveList, context);
             }
+
 
             foods.remove(position);
             notifyDataSetChanged();
         }
 
-
     }
+
 
 }
