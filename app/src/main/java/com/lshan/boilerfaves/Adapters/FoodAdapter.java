@@ -37,8 +37,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     //Used to edit the appropriate parts of the availability gridlayout
     private final int BREAKFAST_OFFSET = 0;
-    private final int LUNCH_OFFSET = 6;
-    private final int DINNER_OFFSET = 12;
+    private final int LUNCH_OFFSET = 8;
+    private final int DINNER_OFFSET = 16;
 
 
 
@@ -90,29 +90,29 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 ArrayList<String> courtList = availableCourts.get("Breakfast");
                 displayDiningCourts(grid, courtList, BREAKFAST_OFFSET);
             } else {
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 8; i++) {
                     grid.getChildAt(i).setVisibility(View.GONE);
                 }
             }
 
             if (availableCourts.containsKey("Lunch")) {
-                grid.getChildAt(6).setVisibility(View.VISIBLE);
+                grid.getChildAt(8).setVisibility(View.VISIBLE);
 
                 ArrayList<String> courtList = availableCourts.get("Lunch");
                 displayDiningCourts(grid, courtList, LUNCH_OFFSET);
             } else {
-                for (int i = 6; i < 12; i++) {
+                for (int i = 8; i < 16; i++) {
                     grid.getChildAt(i).setVisibility(View.GONE);
                 }
             }
 
             if (availableCourts.containsKey("Dinner")) {
-                grid.getChildAt(12).setVisibility(View.VISIBLE);
+                grid.getChildAt(16).setVisibility(View.VISIBLE);
 
                 ArrayList<String> courtList = availableCourts.get("Dinner");
                 displayDiningCourts(grid, courtList, DINNER_OFFSET);
             } else {
-                for (int i = 12; i < 18; i++) {
+                for (int i = 16; i < 24; i++) {
                     grid.getChildAt(i).setVisibility(View.GONE);
                 }
             }
@@ -124,7 +124,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
         //Use i to select spot in gridlayout, j to iterate through courtsList
         int j =0;
-        for (int i = 1 + offset; i < 6 + offset; i++) {
+        for (int i = 1 + offset; i < 7 + offset; i++) {
             ImageView icon = (ImageView) grid.getChildAt(i);
 
             if(j<courtList.size()){
@@ -146,8 +146,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                     case "Hillenbrand":
                         icon.setImageResource(R.drawable.ic_hillenbrand);
                         break;
+                    case "The Gathering Place":
+                        icon.setImageResource(R.drawable.ic_gatheringplace);
                     default:
-                        icon.setImageResource(R.drawable.ic_launcher_foreground);
+                        icon.setVisibility(View.GONE);
                 }
 
                j++;
