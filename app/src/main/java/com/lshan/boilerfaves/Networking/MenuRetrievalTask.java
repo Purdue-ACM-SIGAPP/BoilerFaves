@@ -214,14 +214,13 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             availableCourts.get(meal).add(court);
 
             foodModel.setAvailableCourts(availableCourts);
-
         }else{
 
             if(!availableCourts.containsKey(meal)){
                 availableCourts.put(meal, new ArrayList<>());
                 availableCourts.get(meal).add(court);
             }else{
-                if(!availableCourts.get(meal).contains(court)){
+                if(!(availableCourts.get(meal).contains(court))){
                     availableCourts.get(meal).add(court);
                 }
             }

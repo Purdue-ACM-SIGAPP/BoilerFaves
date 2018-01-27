@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
@@ -22,6 +24,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.GONE;
+
 public class MainActivity extends AppCompatActivity{
 
     @BindView(R.id.mainRecyclerView)
@@ -29,6 +33,13 @@ public class MainActivity extends AppCompatActivity{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.availableFavesLayout)
+    RelativeLayout availableFavesLayout;
+
+    @BindView(R.id.noFavesLayout)
+    RelativeLayout noFavesLayout;
+
 
     private FoodAdapter foodAdapter;
     final private Context context = this;
@@ -43,6 +54,7 @@ public class MainActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        checkForFaves(faveList);
         if(faveList != null){
             startAdaptor(faveList);
         }else{
@@ -54,16 +66,28 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    private void checkForFaves(List<FoodModel> faveList){
+        if(faveList.size() == 0 || faveList == null){
+            noFavesLayout.setVisibility(View.VISIBLE);
+            availableFavesLayout.setVisibility(View.GONE);
+        }else{
+            noFavesLayout.setVisibility(View.GONE);
+            availableFavesLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         //TODO maybe I should just call notfity dataset changed or something
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        checkForFaves(faveList);
         if(faveList != null){
             startAdaptor(faveList);
         }
 
+        new MenuRetrievalTask(context, mainRecyclerView).execute();
     }
 
 
@@ -100,6 +124,13 @@ public class MainActivity extends AppCompatActivity{
 
     private void startAdaptor(List<FoodModel> data){
         foodAdapter = new FoodAdapter(this, data);
+        foodAdapter.setmOnListEmptyListener(new FoodAdapter.OnListEmptyListener() {
+            @Override
+            public void onListEmpty() {
+                noFavesLayout.setVisibility(View.VISIBLE);
+                availableFavesLayout.setVisibility(View.GONE);
+            }
+        });
         foodAdapter.notifyDataSetChanged();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
