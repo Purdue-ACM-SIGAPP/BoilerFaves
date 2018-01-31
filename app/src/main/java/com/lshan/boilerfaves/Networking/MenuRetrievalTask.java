@@ -143,9 +143,11 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                     dinnerAvailable = true;
                 }
 
-                FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
-                foodAdapter.setFoods(faves);
-                foodAdapter.notifyDataSetChanged();
+                if(mainRecyclerView != null) {
+                    FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
+                    foodAdapter.setFoods(faves);
+                    foodAdapter.notifyDataSetChanged();
+                }
 
                 //Need to call this so when main activity resumes it remembers availability
                 SharedPrefsHelper.storeFaveList(faves, context);
