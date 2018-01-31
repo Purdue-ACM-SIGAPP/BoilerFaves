@@ -78,4 +78,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="action_notification">action_notification</string>
+    <string name = "NotifTime">Notification Settings</string>
 </resources>
