@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity{
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         checkForFaves(faveList);
+
         if(faveList != null){
             startAdaptor(faveList);
         }else{
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void checkForFaves(List<FoodModel> faveList){
-        if(faveList.size() == 0 || faveList == null){
+        if(faveList == null || faveList.size() == 0){
             noFavesLayout.setVisibility(View.VISIBLE);
             availableFavesLayout.setVisibility(View.GONE);
         }else{
