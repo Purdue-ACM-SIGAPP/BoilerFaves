@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity{
             System.out.println("Notification Button Clicked");
         }
 
+
         if(id == R.id.action_add){
             launchFoodSelect();
         }
