@@ -81,4 +81,5 @@
     <string name="breakfast">Breakfast:</string>
     <string name="lunch">Lunch:</string>
     <string name="dinner">Dinner:</string>
+    <string name="search">search</string>
 </resources>
