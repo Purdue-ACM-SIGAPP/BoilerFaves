@@ -33,16 +33,28 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     private List<FoodModel> foods;
     private Context context;
+    private OnListEmptyListener mOnListEmptyListener;
 
     //Used to edit the appropriate parts of the availability gridlayout
     private final int BREAKFAST_OFFSET = 0;
-    private final int LUNCH_OFFSET = 6;
-    private final int DINNER_OFFSET = 12;
+    private final int LUNCH_OFFSET = 8;
+    private final int DINNER_OFFSET = 16;
+
+
+
 
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
         this.context = context;
+    }
 
+    //Used to display the "No faves selected" message
+    public interface OnListEmptyListener{
+        public void onListEmpty();
+    }
+
+    public void setmOnListEmptyListener(OnListEmptyListener onListEmptyListener){
+        mOnListEmptyListener = onListEmptyListener;
     }
 
     @Override
@@ -78,29 +90,29 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 ArrayList<String> courtList = availableCourts.get("Breakfast");
                 displayDiningCourts(grid, courtList, BREAKFAST_OFFSET);
             } else {
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 8; i++) {
                     grid.getChildAt(i).setVisibility(View.GONE);
                 }
             }
 
             if (availableCourts.containsKey("Lunch")) {
-                grid.getChildAt(6).setVisibility(View.VISIBLE);
+                grid.getChildAt(8).setVisibility(View.VISIBLE);
 
                 ArrayList<String> courtList = availableCourts.get("Lunch");
                 displayDiningCourts(grid, courtList, LUNCH_OFFSET);
             } else {
-                for (int i = 6; i < 12; i++) {
+                for (int i = 8; i < 16; i++) {
                     grid.getChildAt(i).setVisibility(View.GONE);
                 }
             }
 
             if (availableCourts.containsKey("Dinner")) {
-                grid.getChildAt(12).setVisibility(View.VISIBLE);
+                grid.getChildAt(16).setVisibility(View.VISIBLE);
 
                 ArrayList<String> courtList = availableCourts.get("Dinner");
                 displayDiningCourts(grid, courtList, DINNER_OFFSET);
             } else {
-                for (int i = 12; i < 18; i++) {
+                for (int i = 16; i < 24; i++) {
                     grid.getChildAt(i).setVisibility(View.GONE);
                 }
             }
@@ -112,28 +124,32 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
         //Use i to select spot in gridlayout, j to iterate through courtsList
         int j =0;
-        for (int i = 1 + offset; i < 6 + offset; i++) {
+        for (int i = 1 + offset; i < 7 + offset; i++) {
             ImageView icon = (ImageView) grid.getChildAt(i);
 
             if(j<courtList.size()){
                 String court = courtList.get(j);
                 icon.setVisibility(View.VISIBLE);
                 switch(court){
-                    case "windsor":
+                    case "Windsor":
                         icon.setImageResource(R.drawable.ic_windsor);
                         break;
-                    case "ford":
+                    case "Ford":
                         icon.setImageResource(R.drawable.ic_ford);
                         break;
-                    case "wiley":
+                    case "Wiley":
                         icon.setImageResource(R.drawable.ic_wiley);
                         break;
-                    case "earhart":
+                    case "Earhart":
                         icon.setImageResource(R.drawable.ic_earhart);
                         break;
-                    case "hillenbrand":
+                    case "Hillenbrand":
                         icon.setImageResource(R.drawable.ic_hillenbrand);
                         break;
+                    case "The Gathering Place":
+                        icon.setImageResource(R.drawable.ic_gatheringplace);
+                    default:
+                        icon.setVisibility(View.GONE);
                 }
 
                j++;
@@ -152,13 +168,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         return foods.size();
     }
 
-    public List<FoodModel> getFoods() {
-        return foods;
-    }
-
     public void setFoods(List<FoodModel> foods){
         this.foods = foods;
     }
+
+
 
     public class AreaViewHolder extends RecyclerView.ViewHolder {
 
@@ -194,14 +208,22 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
             List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
             if(faveList != null && faveList.contains(foodModel)){
                 faveList.remove(foodModel);
+                if(faveList.size() == 0){
+                    //Need to display the no faves selected screen
+                    if(mOnListEmptyListener != null){
+                        mOnListEmptyListener.onListEmpty();
+                    }
+                }
+
                 SharedPrefsHelper.storeFaveList(faveList, context);
             }
+
 
             foods.remove(position);
             notifyDataSetChanged();
         }
 
-
     }
+
 
 }
