@@ -2,6 +2,7 @@ package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.support.v7.widget.SearchView;
 
 public class SelectFoodActivity extends AppCompatActivity {
 
@@ -102,7 +104,6 @@ public class SelectFoodActivity extends AppCompatActivity {
                     }
                 }
 
-
                 startAdaptor(foodList);
 
 
@@ -130,6 +131,19 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_back:
+                Intent intent = new Intent(this, MainActivity.class);
+                this.startActivity(intent);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu( Menu menu) {
@@ -150,6 +164,24 @@ public class SelectFoodActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // Detect SearchView open/close to make back button disappear while search bar is visible
+        myActionMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                MenuItem back_button = menu.findItem(R.id.action_back);
+                back_button.setVisible(false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                MenuItem back_button = menu.findItem(R.id.action_back);
+                back_button.setVisible(true);
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -162,5 +194,6 @@ public class SelectFoodActivity extends AppCompatActivity {
 
         selectFoodRecyclerView.setAdapter(selectFoodAdapter);
     }
+
 
 }

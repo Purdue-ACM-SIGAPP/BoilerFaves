@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BoilerFaves.iml" filepath="$PROJECT_DIR$/BoilerFaves.iml" />
-      <module fileurl="file://C:\Users\kevin\Desktop\SIGAPP\BoilerFaves\BoilerFaves.iml" filepath="C:\Users\kevin\Desktop\SIGAPP\BoilerFaves\BoilerFaves.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\kevin\Desktop\SIGAPP\BoilerFaves\app\app.iml" filepath="C:\Users\kevin\Desktop\SIGAPP\BoilerFaves\app\app.iml" />
     </modules>
   </component>
 </project>
