@@ -2,6 +2,7 @@ package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,8 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
@@ -31,6 +35,8 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.support.v7.widget.SearchView;
+import android.view.inputmethod.InputMethodManager;
 
 public class SelectFoodActivity extends AppCompatActivity {
 
@@ -40,6 +46,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     private SelectFoodAdapter selectFoodAdapter;
     private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,11 +106,11 @@ public class SelectFoodActivity extends AppCompatActivity {
                     }
                 }
 
-
                 startAdaptor(foodList);
 
 
             }
+
 
             @Override
             public void onFailure(Call<MenuModel> call, Throwable t) {
@@ -127,8 +134,68 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_back:
+                Intent intent = new Intent(this, MainActivity.class);
+                this.startActivity(intent);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
 
 
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu) {
+        getMenuInflater().inflate( R.menu.menu_items, menu);
+
+        MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                selectFoodAdapter.searchFoods(query);
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if(imm != null) {
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        searchView.clearFocus();
+                    }
+                }
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                //change adapter model to fit query
+                selectFoodAdapter.searchFoods(s);
+                return false;
+            }
+        });
+
+        // Detect SearchView open/close to make back button disappear while search bar is visible
+        myActionMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                MenuItem back_button = menu.findItem(R.id.action_back);
+                back_button.setVisible(false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                MenuItem back_button = menu.findItem(R.id.action_back);
+                back_button.setVisible(true);
+                return true;
+            }
+        });
+
+        return true;
+    }
 
     private void startAdaptor(List<FoodModel> data){
         selectFoodAdapter = new SelectFoodAdapter(this, data);
@@ -139,5 +206,6 @@ public class SelectFoodActivity extends AppCompatActivity {
 
         selectFoodRecyclerView.setAdapter(selectFoodAdapter);
     }
+
 
 }
