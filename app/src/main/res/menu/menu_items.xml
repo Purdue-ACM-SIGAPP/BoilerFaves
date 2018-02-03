@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_back"
-        android:icon="@drawable/ic_arrow_back_white_24dp"
-        android:title="Back"
-        app:showAsAction="always|collapseActionView" />
     <item android:id="@+id/action_search"
             android:title="@string/search"
             android:icon="@drawable/ic_action_search"

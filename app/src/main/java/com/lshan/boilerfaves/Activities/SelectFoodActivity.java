@@ -60,6 +60,8 @@ public class SelectFoodActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         callRetrofit();
     }
 
@@ -136,15 +138,14 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.action_back:
-                Intent intent = new Intent(this, MainActivity.class);
-                this.startActivity(intent);
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == android.R.id.home ) {
+            finish();
+            return true;
         }
-        return true;
+
+        return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -177,22 +178,6 @@ public class SelectFoodActivity extends AppCompatActivity {
             }
         });
 
-        // Detect SearchView open/close to make back button disappear while search bar is visible
-        myActionMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                MenuItem back_button = menu.findItem(R.id.action_back);
-                back_button.setVisible(false);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                MenuItem back_button = menu.findItem(R.id.action_back);
-                back_button.setVisible(true);
-                return true;
-            }
-        });
 
         return true;
     }

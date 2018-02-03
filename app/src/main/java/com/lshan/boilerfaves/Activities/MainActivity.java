@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity{
 
         //new SelectionRetrievalTask().execute();
         new MenuRetrievalTask(context, mainRecyclerView).execute();
-
     }
 
     private void checkForFaves(List<FoodModel> faveList){
