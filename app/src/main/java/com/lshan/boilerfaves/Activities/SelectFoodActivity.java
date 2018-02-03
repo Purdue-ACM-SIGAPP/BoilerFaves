@@ -36,6 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.support.v7.widget.SearchView;
+import android.view.inputmethod.InputMethodManager;
 
 public class SelectFoodActivity extends AppCompatActivity {
 
@@ -45,6 +46,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     private SelectFoodAdapter selectFoodAdapter;
     private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,12 +157,21 @@ public class SelectFoodActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Toast like print
+                selectFoodAdapter.searchFoods(query);
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if(imm != null) {
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        searchView.clearFocus();
+                    }
+                }
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+                //change adapter model to fit query
+                selectFoodAdapter.searchFoods(s);
                 return false;
             }
         });
