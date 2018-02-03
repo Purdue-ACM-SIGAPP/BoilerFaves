@@ -111,6 +111,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
             }
 
+
             @Override
             public void onFailure(Call<MenuModel> call, Throwable t) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
