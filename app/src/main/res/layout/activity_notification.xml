@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lshan.boilerfaves.Activities.NotificationActivity">
+    tools:context="com.lshan.boilerfaves.Activities.NotificationActivity"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -17,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="@string/NotifTime"
-            android:textSize="25sp"/>
+            android:textSize="30dp"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,5 +30,23 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/breakfast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/breakfast"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" />
+
+    </GridLayout>
+
+
     <include layout="@layout/content_notification" />
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
