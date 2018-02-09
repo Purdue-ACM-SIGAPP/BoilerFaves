@@ -27,11 +27,28 @@ import butterknife.OnClick;
 public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.AreaViewHolder>{
 
     private List<FoodModel> foods;
+    private List<FoodModel> filteredFoods;
     private Context context;
 
     public SelectFoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
+        this.filteredFoods = foods;
         this.context = context;
+    }
+
+    //set model within search parameters
+    public void searchFoods(String searchText){
+        if(searchText.length() != 0){
+            this.filteredFoods = new ArrayList<>();
+            for(FoodModel f : this.foods){
+                if(f.Name.toLowerCase().contains(searchText.toLowerCase())){
+                    this.filteredFoods.add(f);
+                }
+            }
+        }else{
+            this.filteredFoods = this.foods;
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -43,12 +60,12 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
 
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
-        holder.cardTitle.setText(foods.get(position).Name);
+        holder.cardTitle.setText(filteredFoods.get(position).Name);
     }
 
     @Override
     public int getItemCount(){
-        return foods.size();
+        return filteredFoods.size();
     }
 
 
