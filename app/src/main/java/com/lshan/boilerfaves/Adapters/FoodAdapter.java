@@ -18,6 +18,7 @@ import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +47,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
         this.context = context;
+        Collections.sort(this.foods);
+        SharedPrefsHelper.storeFaveList(this.foods, context);
     }
 
     //Used to display the "No faves selected" message
