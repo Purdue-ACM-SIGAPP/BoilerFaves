@@ -110,9 +110,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
                 startAdaptor(foodList);
 
-
             }
-
 
             @Override
             public void onFailure(Call<MenuModel> call, Throwable t) {
