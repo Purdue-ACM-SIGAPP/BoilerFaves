@@ -84,14 +84,12 @@ public class MainActivity extends AppCompatActivity{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_notifications) {
-            System.out.println("Notification Button Clicked");
-        }
-
         if(id == R.id.action_add){
             launchFoodSelect();
+        }
+        if(id == R.id.action_notifications){
+            launchNotifications();
         }
 
         return super.onOptionsItemSelected(item);
@@ -115,6 +113,12 @@ public class MainActivity extends AppCompatActivity{
     public void launchFoodSelect(){
         Intent intent = new Intent(context, SelectFoodActivity.class);
         context.startActivity(intent);
+    }
+
+    public void launchNotifications(){
+        Intent intent = new Intent(context, NotificationActivity.class);
+        context.startActivity(intent);
+
     }
 
 

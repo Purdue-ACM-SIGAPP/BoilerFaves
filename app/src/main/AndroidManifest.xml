@@ -24,6 +24,10 @@
             android:label="@string/title_activity_select_food"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".Activities.NotificationActivity" />
+
+
         <receiver android:name=".Utils.NotificationHelper$NotificationAlarmReciever" />
 
     </application>
