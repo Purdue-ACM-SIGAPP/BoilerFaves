@@ -18,7 +18,10 @@ import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
