@@ -45,6 +45,7 @@
             android:textSize="20dp" />
 
         <android.support.v7.widget.SwitchCompat
+            android:id="@+id/breakfastSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />
@@ -72,6 +73,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />
+
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"/>
 
     </GridLayout>
 
