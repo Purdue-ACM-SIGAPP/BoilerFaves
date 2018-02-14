@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lshan.boilerfaves.Activities.MainActivity"
+    android:id="@+id/activity_main">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+        <RelativeLayout
+            android:id="@+id/availableFavesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+         >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mainRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/noFavesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorMaterialGray400"
+            android:gravity="center"
+            android:visibility="gone"
+           >
+
+            <ImageView
+                android:id="@+id/foodIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_food_icon"
+
+                android:layout_centerHorizontal="true"/>
+
+
+            <TextView
+                android:id="@+id/noSelectLine1"
+
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/foodIcon"
+
+                android:textAlignment="center"
+
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+
+                android:text="No faves selected."
+                />
+
+            <TextView
+                android:id="@+id/noSelectLine2"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/noSelectLine1"
+                android:layout_centerHorizontal="true"
+
+                android:textAlignment="center"
+
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+
+                android:text="Tap the + icon to add some foods you like."
+                />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
