@@ -30,58 +30,108 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <GridLayout
+    <RelativeLayout
+        android:id="@+id/listParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnCount="2"
         android:rowCount="3"
         android:useDefaultMargins="true">
 
-        <TextView
-            android:id="@+id/breakfast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/breakfast"
-            android:textSize="20dp" />
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/breakfastSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end" />
-
-        <TextView
-            android:id="@+id/lunch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lunch"
-            android:textSize="20dp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end" />
-
-        <TextView
-            android:id="@+id/dinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dinner"
-            android:textSize="20dp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end" />
-
-
-            <TimePicker
-                android:id="@+id/timePicker"
+        <LinearLayout
+            android:id="@+id/breakfastLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/breakfast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="2"/>
+                android:text="@string/breakfast"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                />
 
-    </GridLayout>
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/breakfastSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lunchLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/breakfastLine">
+            <TextView
+                android:id="@+id/lunch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lunch"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/lunchSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dinnerLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lunchLine">
+            <TextView
+                android:id="@+id/dinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dinner"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/dinnerSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="right"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/timeParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"/>
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timePicker"
+            android:text="Ok"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/submit"
+            android:text="Cancel"
+            android:gravity="center"/>
+    </RelativeLayout>
 
 
     <include layout="@layout/content_notification" />
