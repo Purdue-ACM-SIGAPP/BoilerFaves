@@ -1,6 +1,8 @@
 package com.lshan.boilerfaves.Networking;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -21,6 +23,14 @@ public class SelectionRetrievalTask extends AsyncTask <Void, Void, ArrayList<Foo
 
     //Note: for local testing, run ipconfig in windows terminal and copy the IPv4 Address
     private String API_URL = "http://10.186.116.11:3000/";
+
+    private Context context;
+    private RecyclerView selectFoodsRecyclerView;
+
+    public SelectionRetrievalTask(Context context, RecyclerView selectFoodsRecyclerView){
+        this.context = context;
+        this.selectFoodsRecyclerView = selectFoodsRecyclerView;
+    }
 
     @Override
     protected void onPreExecute() {
