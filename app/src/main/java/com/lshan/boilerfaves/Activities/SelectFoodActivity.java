@@ -55,7 +55,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        context = this.context;
+        context = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -126,7 +126,6 @@ public class SelectFoodActivity extends AppCompatActivity {
                         });
                 AlertDialog failure = alertDialogBuilder.create();
                 failure.show();
-                                Log.e("Retrofit", "Unable to connect to api or something");
                 Log.e("Retrofit", t.getMessage());
             }
         });
