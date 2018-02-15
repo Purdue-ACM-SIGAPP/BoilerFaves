@@ -2,10 +2,7 @@ package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Adapters.SelectFoodAdapter;
 import com.lshan.boilerfaves.Models.BreakfastModel;
 import com.lshan.boilerfaves.Models.DinnerModel;
@@ -35,7 +31,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import android.support.v7.widget.SearchView;
+
 import android.view.inputmethod.InputMethodManager;
 
 public class SelectFoodActivity extends AppCompatActivity {
@@ -148,10 +144,14 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu( Menu menu) {
-        getMenuInflater().inflate( R.menu.menu_items, menu);
+        getMenuInflater().inflate( R.menu.menu_search, menu);
 
         MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
         SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+
+        searchView.setIconifiedByDefault(false);
+        searchView.requestFocus();
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
