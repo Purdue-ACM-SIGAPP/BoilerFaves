@@ -1,5 +1,6 @@
 package com.lshan.boilerfaves.Activities;
 
+import android.app.job.JobService;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Utils.JobUtil;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.lang.reflect.Array;
@@ -74,6 +76,9 @@ public class MainActivity extends AppCompatActivity{
         } else {
             showNoInternetDialog();
         }
+
+        JobUtil.scheduleJob(context);
+
     }
 
     //https://stackoverflow.com/questions/9521232/how-to-catch-an-exception-if-the-internet-or-signal-is-down
