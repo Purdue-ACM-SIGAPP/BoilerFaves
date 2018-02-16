@@ -73,7 +73,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         mealTime = NOTSELECTED;
 
-
+        getSupportActionBar().setTitle("Notifications");
         timeParent.setVisibility(View.GONE);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
