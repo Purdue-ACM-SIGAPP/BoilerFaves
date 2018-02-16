@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="@string/NotifTime"
-            android:textSize="30dp"/>
+            android:textSize="40sp"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -42,21 +42,22 @@
         <LinearLayout
             android:id="@+id/breakfastLine"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="90dp">
             <TextView
                 android:id="@+id/breakfast"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/breakfast"
-                android:textSize="20dp"
+                android:textSize="70sp"
                 android:layout_weight="1"
+                android:layout_gravity="start"
                 />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/breakfastSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end" />
+                android:layout_gravity="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -66,18 +67,19 @@
             android:layout_below="@+id/breakfastLine">
             <TextView
                 android:id="@+id/lunch"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/lunch"
-                android:textSize="20dp"
+                android:textSize="70sp"
                 android:layout_weight="1"
+                android:gravity="start"
                 />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/lunchSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end" />
+                android:layout_gravity="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,19 +89,19 @@
             android:layout_below="@+id/lunchLine">
             <TextView
                 android:id="@+id/dinner"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/dinner"
-                android:textSize="20dp"
+                android:textSize="70sp"
                 android:layout_weight="1"
+                android:gravity="start"
                 />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/dinnerSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:gravity="right"/>
+                android:layout_gravity="center"/>
         </LinearLayout>
 
 
