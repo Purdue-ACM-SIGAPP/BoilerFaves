@@ -12,7 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:theme="@style/AppTheme.AppBarOverlay">
-        
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="@string/NotifTime"
+            android:textSize="40sp"/>
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -34,13 +42,13 @@
         <LinearLayout
             android:id="@+id/breakfastLine"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="90dp">
             <TextView
                 android:id="@+id/breakfast"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/breakfast"
-                android:textSize="45sp"
+                android:textSize="70sp"
                 android:layout_weight="1"
                 android:layout_gravity="start"
                 />
@@ -62,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/lunch"
-                android:textSize="45sp"
+                android:textSize="70sp"
                 android:layout_weight="1"
                 android:gravity="start"
                 />
@@ -84,7 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/dinner"
-                android:textSize="45sp"
+                android:textSize="70sp"
                 android:layout_weight="1"
                 android:gravity="start"
                 />
