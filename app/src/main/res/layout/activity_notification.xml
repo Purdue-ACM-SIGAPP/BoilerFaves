@@ -12,14 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:theme="@style/AppTheme.AppBarOverlay">
-
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:text="@string/notification_time"
-            android:textSize="40sp"/>
+        
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
