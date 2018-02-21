@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="@string/NotifTime"
+            android:text="@string/notification_time"
             android:textSize="40sp"/>
 
         <android.support.v7.widget.Toolbar
