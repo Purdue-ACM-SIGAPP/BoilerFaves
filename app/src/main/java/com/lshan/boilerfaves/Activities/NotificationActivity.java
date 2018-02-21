@@ -1,11 +1,14 @@
 package com.lshan.boilerfaves.Activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.EventLog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -15,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.sql.SQLOutput;
 
@@ -129,10 +133,17 @@ public class NotificationActivity extends AppCompatActivity {
         mealTime = NOTSELECTED;
         timeParent.setVisibility(View.GONE);
         listParent.setVisibility(View.VISIBLE);
-
         //figure out time on time picker and associate it with given mealtime
+        //don't forget to get am or pm
+        int hour = timePicker.getCurrentHour();
+        int minute = timePicker.getCurrentMinute();
 
-        //dont forget to get am or pm
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("Hour", hour);
+        editor.putInt("Minute", minute);
+        editor.apply();
+
         System.out.println("time: " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
     }
 
