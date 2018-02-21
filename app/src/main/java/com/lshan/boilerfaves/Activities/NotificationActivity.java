@@ -140,8 +140,10 @@ public class NotificationActivity extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("Hour", hour);
-        editor.putInt("Minute", minute);
+        String SHour = mealTime + "Hour";
+        String MHour = mealTime + "Minute";
+        editor.putInt(SHour, hour);
+        editor.putInt(MHour, minute);
         editor.apply();
 
         System.out.println("time: " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
