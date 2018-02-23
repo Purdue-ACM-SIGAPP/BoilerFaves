@@ -78,16 +78,8 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="action_notification">action_notification</string>
-<<<<<<< HEAD
-    <!-- <string name = "NotifTime">Notification Settings</string> -->
-    <string name = "breakfast">Breakfast</string>
-    <string name = "lunch">Lunch</string>
-    <string name="dinner">Dinner</string>
-    <string name="notification_time">Notification Time</string>
-=======
     <string name="search">Search</string>
     <string name="breakfast">Breakfast:</string>
     <string name="lunch">Lunch:</string>
     <string name="dinner">Dinner:</string>
->>>>>>> 8f8b919090669b3aab8cd4943a3ba7134fc12813
 </resources>

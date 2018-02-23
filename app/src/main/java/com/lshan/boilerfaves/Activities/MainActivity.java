@@ -109,14 +109,7 @@ public class MainActivity extends AppCompatActivity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-<<<<<<< HEAD
-=======
-        if (id == R.id.action_notifications) {
-            System.out.println("Notification Button Clicked");
-        }
 
-
->>>>>>> 8f8b919090669b3aab8cd4943a3ba7134fc12813
         if(id == R.id.action_add){
             launchFoodSelect();
         }
