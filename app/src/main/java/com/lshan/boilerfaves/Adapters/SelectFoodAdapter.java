@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
@@ -27,11 +29,34 @@ import butterknife.OnClick;
 public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.AreaViewHolder>{
 
     private List<FoodModel> foods;
+    private List<FoodModel> filteredFoods;
     private Context context;
+    private List<FoodModel> faveList;
 
     public SelectFoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
+        this.filteredFoods = foods;
         this.context = context;
+        this.faveList = SharedPrefsHelper.getFaveList(context);
+
+        if(faveList == null){
+            faveList = new ArrayList<FoodModel>();
+        }
+    }
+
+    //set model within search parameters
+    public void searchFoods(String searchText){
+        if(searchText.length() != 0){
+            this.filteredFoods = new ArrayList<>();
+            for(FoodModel f : this.foods){
+                if(f.Name.toLowerCase().contains(searchText.toLowerCase())){
+                    this.filteredFoods.add(f);
+                }
+            }
+        }else{
+            this.filteredFoods = this.foods;
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -43,12 +68,19 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
 
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
-        holder.cardTitle.setText(foods.get(position).Name);
+        holder.cardTitle.setText(filteredFoods.get(position).Name);
+
+        FoodModel foodModel = filteredFoods.get(position);
+        if(!faveList.contains(foodModel)){
+            holder.faved.setVisibility(View.GONE);
+        }else{
+            holder.faved.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public int getItemCount(){
-        return foods.size();
+        return filteredFoods.size();
     }
 
 
@@ -60,6 +92,9 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
         @BindView(R.id.title)
         TextView cardTitle;
 
+        @BindView(R.id.faved)
+        ImageView faved;
+
         public AreaViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -67,16 +102,24 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
 
         @OnClick(R.id.select_food_card)
         public void onClickCard() {
-            FoodModel foodModel = foods.get(this.getLayoutPosition());
-            List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
-
-            if(faveList == null){
-                faveList = new ArrayList<FoodModel>();
-            }
+            FoodModel foodModel = filteredFoods.get(this.getLayoutPosition());
 
             if(!faveList.contains(foodModel)){
                 faveList.add(foodModel);
                 SharedPrefsHelper.storeFaveList(faveList, context);
+
+                //create toast that food has been added
+                Toast.makeText(context, foodModel.Name + " added to faves", Toast.LENGTH_LONG).show();
+                //make checkmark visible
+
+                notifyDataSetChanged();
+            }else{
+                faveList.remove(foodModel);
+                SharedPrefsHelper.storeFaveList(faveList, context);
+
+                Toast.makeText(context, foodModel.Name + " removed from faves", Toast.LENGTH_LONG).show();
+
+                notifyDataSetChanged();
             }
         }
 
