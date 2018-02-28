@@ -15,13 +15,16 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.app.TimePickerDialog;
+import java.util.Calendar;
 
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.sql.SQLOutput;
+import java.util.Date;
 
 import butterknife.BindDrawable;
 import butterknife.BindView;
@@ -57,6 +60,15 @@ public class NotificationActivity extends AppCompatActivity {
     @BindView(R.id.cancel)
     Button cancel;
 
+    @BindView(R.id.breakfast)
+    TextView breakfast;
+
+    @BindView(R.id.lunch)
+    TextView lunch;
+
+    @BindView(R.id.dinner)
+    TextView dinner;
+
     @BindView(R.id.timePicker)
     TimePicker timePicker;
 
@@ -66,7 +78,15 @@ public class NotificationActivity extends AppCompatActivity {
     public static final int BREAKFAST = 1;
     public static final int LUNCH = 2;
     public static final int DINNER = 3;
+    Calendar calendar = Calendar.getInstance();
 
+    TimePickerDialog.OnTimeSetListener time_listener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+            String time = String.valueOf(hour) + ":" + String.valueOf(minute);
+            System.out.println(time);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +111,35 @@ public class NotificationActivity extends AppCompatActivity {
         });
         */
 
+
+
+        breakfast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                new TimePickerDialog(NotificationActivity.this, time_listener, hour, minute, false).show();
+            }
+        });
+
+        lunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                new TimePickerDialog(NotificationActivity.this, time_listener, hour, minute, false).show();
+            }
+        });
+
+        dinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                new TimePickerDialog(NotificationActivity.this, time_listener, hour, minute, false).show();
+            }
+        });
+
     }
 
     @OnCheckedChanged(R.id.breakfastSwitch)
@@ -101,13 +150,6 @@ public class NotificationActivity extends AppCompatActivity {
             timeParent.setVisibility(View.VISIBLE);
             listParent.setVisibility(View.GONE);
             */
-            TimePickerDialog.OnTimeSetListener time_listener = new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    String breeakfast = String.valueOf(hour) + ":" + String.valueOf(minute);
-                    
-                }
-            };
         } else {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
