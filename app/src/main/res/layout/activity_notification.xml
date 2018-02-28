@@ -56,10 +56,22 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/breakfast_time_pick"
+            android:layout_below="@+id/breakfastLine">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="50sp"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/lunchLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/breakfastLine">
+            android:layout_below="@+id/breakfast_time_pick">
             <TextView
                 android:id="@+id/lunch"
                 android:layout_width="0dp"
@@ -79,10 +91,22 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lunch_time_pick"
+            android:layout_below="@+id/lunchLine">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="50sp"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/dinnerLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lunchLine">
+            android:layout_below="@+id/lunch_time_pick">
             <TextView
                 android:id="@+id/dinner"
                 android:layout_width="0dp"
@@ -101,6 +125,17 @@
                 android:layout_gravity="center"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dinner_time_pick"
+            android:layout_below="@+id/dinnerLine">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="50sp"/>
+        </LinearLayout>
 
     </RelativeLayout>
 
