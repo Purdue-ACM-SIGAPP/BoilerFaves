@@ -16,6 +16,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TimePicker;
+import android.app.TimePickerDialog;
 
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
@@ -96,8 +97,17 @@ public class NotificationActivity extends AppCompatActivity {
     public void breakfeastClicked(SwitchCompat buttonView, boolean isChecked) {
         if (isChecked) {
             mealTime = BREAKFAST;
+            /*
             timeParent.setVisibility(View.VISIBLE);
             listParent.setVisibility(View.GONE);
+            */
+            TimePickerDialog.OnTimeSetListener time_listener = new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                    String breeakfast = String.valueOf(hour) + ":" + String.valueOf(minute);
+                    
+                }
+            };
         } else {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
@@ -108,8 +118,10 @@ public class NotificationActivity extends AppCompatActivity {
     public void lunchClicked(SwitchCompat buttonView, boolean isChecked) {
         if (isChecked) {
             mealTime = LUNCH;
+            /*
             timeParent.setVisibility(View.VISIBLE);
             listParent.setVisibility(View.GONE);
+            */
         } else {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
@@ -120,21 +132,27 @@ public class NotificationActivity extends AppCompatActivity {
     public void dinnerClicked(SwitchCompat buttonView, boolean isChecked) {
         if (isChecked) {
             mealTime = DINNER;
+            /*
             timeParent.setVisibility(View.VISIBLE);
             listParent.setVisibility(View.GONE);
+            */
         } else {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
         }
     }
 
+    /*
     @OnClick(R.id.submit)
     public void submitClicked(Button button){
         mealTime = NOTSELECTED;
+
+
         timeParent.setVisibility(View.GONE);
         listParent.setVisibility(View.VISIBLE);
         //figure out time on time picker and associate it with given mealtime
         //don't forget to get am or pm
+
         int hour = timePicker.getCurrentHour();
         int minute = timePicker.getCurrentMinute();
 
@@ -147,7 +165,9 @@ public class NotificationActivity extends AppCompatActivity {
         editor.apply();
 
         System.out.println("time: " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
+
     }
+    */
 
     @OnClick(R.id.cancel)
     public void cancelClicked(Button button){
