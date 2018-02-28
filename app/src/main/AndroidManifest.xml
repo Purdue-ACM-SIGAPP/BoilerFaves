@@ -26,22 +26,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
-        <service
-            android:name=".Services.DailyJob"
-            android:label="Daily service"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
-
-        </service>
         <receiver android:name=".Utils.NotificationHelper$NotificationAlarmReciever" />
 
-
-
-        <receiver android:name=".Utils.JobServiceReceiver" >
+        <receiver android:name=".Receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".Receivers.AlarmReceiver"/>
 
 
     </application>

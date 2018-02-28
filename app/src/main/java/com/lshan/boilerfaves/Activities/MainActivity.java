@@ -1,6 +1,7 @@
 package com.lshan.boilerfaves.Activities;
 
-import android.app.job.JobService;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,19 +22,14 @@ import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
-import com.lshan.boilerfaves.Utils.JobUtil;
+import com.lshan.boilerfaves.Receivers.AlarmReceiver;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -65,19 +61,24 @@ public class MainActivity extends AppCompatActivity{
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         checkForFaves(faveList);
 
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000, pendingIntent);
+
         if(faveList != null){
             startAdaptor(faveList);
         }else{
             SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
         }
         //new SelectionRetrievalTask().execute();
-        if (isOnline()) {
+        /*if (isOnline()) {
             new MenuRetrievalTask(context, mainRecyclerView).execute();
         } else {
             showNoInternetDialog();
-        }
+        }*/
 
-        JobUtil.scheduleJob(context);
+        //JobUtil.scheduleJob(context);
 
     }
 
