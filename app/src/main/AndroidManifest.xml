@@ -26,7 +26,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
-        <receiver android:name=".Utils.NotificationHelper$NotificationAlarmReciever" />
+        <receiver android:name=".Utils.NotificationHelper$NotificationAlarmReciever"
+                    android:process=":remote">
+
+        </receiver>
 
         <receiver android:name=".Receivers.BootReceiver">
             <intent-filter>
@@ -35,6 +38,10 @@
         </receiver>
 
         <receiver android:name=".Receivers.AlarmReceiver"/>
+
+        <service android:name=".Services.NotificationService"/>
+        <service android:name=".Services.NotificationJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
 
     </application>
