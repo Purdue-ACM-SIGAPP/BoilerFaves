@@ -118,7 +118,14 @@ public class NotificationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
-                new TimePickerDialog(NotificationActivity.this, time_listener, hour, minute, false).show();
+                new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        System.out.println("Hour: " + hour);
+                        System.out.println("Minute: " + minute);
+                        storeTimeFromTimePicker("breakfast", hour, minute);
+                    }
+                }, hour, minute, false).show();
             }
         });
 
@@ -127,7 +134,14 @@ public class NotificationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
-                new TimePickerDialog(NotificationActivity.this, time_listener, hour, minute, false).show();
+                new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        System.out.println("Hour: " + hour);
+                        System.out.println("Minute: " + minute);
+                        storeTimeFromTimePicker("lunch", hour, minute);
+                    }
+                }, hour, minute, false).show();
             }
         });
 
@@ -136,7 +150,14 @@ public class NotificationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
-                new TimePickerDialog(NotificationActivity.this, time_listener, hour, minute, false).show();
+                new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        System.out.println("Hour: " + hour);
+                        System.out.println("Minute: " + minute);
+                        storeTimeFromTimePicker("dinner", hour, minute);
+                    }
+                }, hour, minute, false).show();
             }
         });
 
@@ -228,4 +249,19 @@ public class NotificationActivity extends AppCompatActivity {
         mealTime = NOTSELECTED;
     }
 
+    public void storeTimeFromTimePicker(String meal, int hour, int minute){
+        String Shour = Integer.toString(hour);
+        String Sminute = Integer.toString(minute);
+        if(hour < 10){
+            Shour = "0" + Shour;
+        }
+        if(minute < 10){
+            Sminute = "0" + Sminute;
+        }
+        String time = Shour + ":" + Sminute;
+        SharedPreferences prefs = SharedPrefsHelper.getSharedPrefs(getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(meal, time);
+        editor.apply();
+    }
 }
