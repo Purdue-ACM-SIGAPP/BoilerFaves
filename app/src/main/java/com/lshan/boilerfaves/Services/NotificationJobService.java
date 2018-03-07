@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.widget.Toast;
 
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.Receivers.AlarmReceiver;
+import com.lshan.boilerfaves.Utils.TimeHelper;
 
 /**
  * Created by lshan on 3/1/2018.
@@ -25,12 +27,14 @@ public class NotificationJobService extends JobService{
 
         Context context = getApplicationContext();
 
+        Toast.makeText(context, "In Job Service", Toast.LENGTH_LONG);
+
         new MenuRetrievalTask(context, null).execute();
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(1, 0), pendingIntent);
 
         return false;
     }

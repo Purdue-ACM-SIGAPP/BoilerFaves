@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity{
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
         if(faveList != null){
             startAdaptor(faveList);
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         //new SelectionRetrievalTask().execute();
+
 
         if (isOnline()) {
             new MenuRetrievalTask(context, mainRecyclerView).execute();
