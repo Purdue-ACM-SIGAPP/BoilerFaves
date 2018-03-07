@@ -1,5 +1,6 @@
 package com.lshan.boilerfaves.Activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -72,6 +73,14 @@ public class NotificationActivity extends AppCompatActivity {
     @BindView(R.id.timePicker)
     TimePicker timePicker;
 
+    @BindView(R.id.breakfast_time)
+    TextView breakfastTime;
+
+    @BindView(R.id.lunch_time)
+    TextView lunchTime;
+
+    @BindView(R.id.dinner_time)
+    TextView dinnerTime;
 
     public int mealTime;
     public static final int NOTSELECTED = 0;
@@ -101,6 +110,29 @@ public class NotificationActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Notifications");
         timeParent.setVisibility(View.GONE);
 
+        SharedPreferences prefs = SharedPrefsHelper.getSharedPrefs(getApplicationContext());
+
+        String toPrint = prefs.getString("breakfast", null);
+        if(toPrint == null) {
+            breakfastTime.setText("00:00");
+        } else {
+            breakfastTime.setText(toPrint);
+        }
+
+        toPrint = prefs.getString("lunch", null);
+        if(toPrint == null) {
+            lunchTime.setText("00:00");
+        } else {
+            lunchTime.setText(toPrint);
+        }
+
+        toPrint = prefs.getString("dinner", null);
+        if(toPrint == null) {
+            dinnerTime.setText("00:00");
+        } else {
+            dinnerTime.setText(toPrint);
+        }
+
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +156,7 @@ public class NotificationActivity extends AppCompatActivity {
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         storeTimeFromTimePicker("breakfast", hour, minute);
+                        breakfastTime.setText(hour + ":" + minute);
                     }
                 }, hour, minute, false).show();
             }
@@ -139,7 +172,9 @@ public class NotificationActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
+                        lunchTime.setText(hour + ":" + minute);
                         storeTimeFromTimePicker("lunch", hour, minute);
+                        lunchTime.setText(hour + ":" + minute);
                     }
                 }, hour, minute, false).show();
             }
@@ -155,7 +190,9 @@ public class NotificationActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
+                        dinnerTime.setText(hour + ":" + minute);
                         storeTimeFromTimePicker("dinner", hour, minute);
+                        dinnerTime.setText(hour + ":" + minute);
                     }
                 }, hour, minute, false).show();
             }

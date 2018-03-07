@@ -61,6 +61,7 @@
             android:id="@+id/breakfast_time_pick"
             android:layout_below="@+id/breakfastLine">
             <TextView
+                android:id="@+id/breakfast_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="00:00"
@@ -96,6 +97,7 @@
             android:id="@+id/lunch_time_pick"
             android:layout_below="@+id/lunchLine">
             <TextView
+                android:id="@+id/lunch_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="00:00"
@@ -131,6 +133,7 @@
             android:id="@+id/dinner_time_pick"
             android:layout_below="@+id/dinnerLine">
             <TextView
+                android:id="@+id/dinner_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="00:00"
