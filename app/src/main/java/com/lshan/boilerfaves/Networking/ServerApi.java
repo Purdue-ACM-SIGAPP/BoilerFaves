@@ -1,6 +1,9 @@
 package com.lshan.boilerfaves.Networking;
 
 
+import com.lshan.boilerfaves.Models.FoodModel;
+import com.lshan.boilerfaves.Models.POJOFoodModel;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -13,5 +16,5 @@ import retrofit2.http.Path;
 
 public interface ServerApi {
     @GET(".")
-    Call<List<String>> getFoods();
+    Call<List<POJOFoodModel>> getFoods();
 }

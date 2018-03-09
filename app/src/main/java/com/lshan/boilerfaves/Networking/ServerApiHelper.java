@@ -14,7 +14,7 @@ public class ServerApiHelper {
     public static ServerApi getInstance() {
         if(serverApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.hfs.purdue.edu/menus/v1/locations/")
+                    .baseUrl("http://192.168.99.1:8080/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

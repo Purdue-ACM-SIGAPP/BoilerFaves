@@ -24,7 +24,9 @@ import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.MenuModel;
+import com.lshan.boilerfaves.Models.POJOFoodModel;
 import com.lshan.boilerfaves.Networking.MenuApiHelper;
+import com.lshan.boilerfaves.Networking.ServerApiHelper;
 import com.lshan.boilerfaves.R;
 
 import java.util.ArrayList;
@@ -69,6 +71,21 @@ public class SelectFoodActivity extends AppCompatActivity {
     private void callRetrofit ()  {
 
 
+        ServerApiHelper.getInstance().getFoods().enqueue(new Callback<List<POJOFoodModel>>() {
+            @Override
+            public void onResponse(Call<List<POJOFoodModel>> call, Response<List<POJOFoodModel>> response) {
+                List<POJOFoodModel> foods = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<List<POJOFoodModel>> call, Throwable t) {
+                Log.e("Retrofit", t.getMessage());
+                Log.e("Retrofit", "Retrofit select foods error");
+            }
+        });
+
+
+        /*
         MenuApiHelper.getInstance().getMenu("earhart", "12-01-2017").enqueue(new Callback<MenuModel>(){
             @Override
             public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
@@ -130,7 +147,7 @@ public class SelectFoodActivity extends AppCompatActivity {
                 Log.e("Retrofit", t.getMessage());
             }
         });
-
+*/
 
     }
 
