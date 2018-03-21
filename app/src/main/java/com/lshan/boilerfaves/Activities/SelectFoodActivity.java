@@ -1,7 +1,11 @@
 package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
+
 import android.os.Bundle;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -141,7 +145,6 @@ public class SelectFoodActivity extends AppCompatActivity {
                         });
                 AlertDialog failure = alertDialogBuilder.create();
                 failure.show();
-                                Log.e("Retrofit", "Unable to connect to api or something");
                 Log.e("Retrofit", t.getMessage());
             }
         });
@@ -164,10 +167,14 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu( Menu menu) {
-        getMenuInflater().inflate( R.menu.menu_items, menu);
+        getMenuInflater().inflate( R.menu.menu_search, menu);
 
         MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
         SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+
+        searchView.setIconifiedByDefault(false);
+        searchView.requestFocus();
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
