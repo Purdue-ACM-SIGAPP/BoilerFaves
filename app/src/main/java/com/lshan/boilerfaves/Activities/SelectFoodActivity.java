@@ -32,12 +32,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 
 public class SelectFoodActivity extends AppCompatActivity {
 
 
     @BindView(R.id.selectFoodRecyclerView)
     RecyclerView selectFoodRecyclerView;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     private SelectFoodAdapter selectFoodAdapter;
     private Context context;
@@ -63,11 +67,15 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     private void callRetrofit ()  {
 
-
+        progressBar.setVisibility(View.VISIBLE);
+        selectFoodRecyclerView.setVisibility(View.GONE);
 
         ServerApiHelper.getInstance().getFoods().enqueue(new Callback<List<SelectFoodModel>>() {
              @Override
              public void onResponse(Call<List<SelectFoodModel>> call, Response<List<SelectFoodModel>> response) {
+                 progressBar.setVisibility(View.GONE);
+                 selectFoodRecyclerView.setVisibility(View.VISIBLE);
+
                  List<SelectFoodModel> selectFoodModels = response.body();
                  List<FoodModel> foods = new ArrayList<FoodModel>();
 
@@ -75,80 +83,15 @@ public class SelectFoodActivity extends AppCompatActivity {
                      foods.add(new FoodModel(selectFoodModel));
                  }
 
-                 selectFoodAdapter = new SelectFoodAdapter(context, foods);
-                 selectFoodRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-                 selectFoodRecyclerView.setAdapter(selectFoodAdapter);
+                 startAdaptor(foods);
              }
 
              @Override
              public void onFailure(Call<List<SelectFoodModel>> call, Throwable t) {
+                 //TODO: Display error message if our server goes down or something
                 Log.e("Retrofit", t.getMessage());
              }
          });
-
-
-        /*
-        MenuApiHelper.getInstance().getMenu("earhart", "12-01-2017").enqueue(new Callback<MenuModel>(){
-            @Override
-            public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
-                Log.i("Retrofit", response.body().Breakfast.get(0).Items.get(0).Name);
-
-                MenuModel result = response.body();
-
-                ArrayList<FoodModel> foodList = new ArrayList<FoodModel>();
-
-                if (result.Breakfast != null) {
-                    for (BreakfastModel location : result.Breakfast) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
-
-                if (result.Lunch != null) {
-                    for (LunchModel location : result.Lunch) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
-
-                if (result.Dinner != null) {
-                    for (DinnerModel location : result.Dinner) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
-
-                startAdaptor(foodList);
-
-            }
-
-            @Override
-            public void onFailure(Call<MenuModel> call, Throwable t) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-                        .setTitle("Data retrieval failed")
-                        .setMessage("Unable to connect to the Internet")
-                        .setCancelable(false)
-                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                callRetrofit();
-                            }
-                        });
-                AlertDialog failure = alertDialogBuilder.create();
-                failure.show();
-                Log.e("Retrofit", t.getMessage());
-            }
-        });
-*/
 
     }
 
