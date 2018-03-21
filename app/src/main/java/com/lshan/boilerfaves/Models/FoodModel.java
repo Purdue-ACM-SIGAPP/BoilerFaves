@@ -1,10 +1,9 @@
 package com.lshan.boilerfaves.Models;
 
-import android.hardware.camera2.CameraManager;
 import android.support.annotation.NonNull;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +15,13 @@ import java.util.HashMap;
 
 public class FoodModel implements Comparable<FoodModel>{
 
-    public String Name;
+    @SerializedName("Name")
+    @Expose
+    private String Name;
+    @SerializedName("IsVegetarian")
+    @Expose
+    private boolean IsVegetarian;
 
-    public boolean IsVegetarian;
     public boolean isAvailable;
     public HashMap<String, ArrayList<String>> availableCourts;
 
@@ -26,6 +29,15 @@ public class FoodModel implements Comparable<FoodModel>{
     public FoodModel(){
         isAvailable =  false;
         availableCourts = null;
+    }
+
+    public FoodModel(SelectFoodModel selectFoodModel){
+        this.Name = selectFoodModel.getName();
+        if(selectFoodModel.isVegetarian() == 1){
+            this.IsVegetarian = true;
+        }else{
+            this.IsVegetarian = false;
+        }
     }
 
     public void setAvailable(boolean available) {
@@ -52,7 +64,7 @@ public class FoodModel implements Comparable<FoodModel>{
         }
 
         FoodModel other = (FoodModel) obj;
-        if(other.Name.equals(this.Name)){
+        if(other.getName().equals(this.Name)){
             return true;
         }else{
             return false;
@@ -62,6 +74,10 @@ public class FoodModel implements Comparable<FoodModel>{
 
     @Override
     public int compareTo(@NonNull FoodModel other) {
-        return this.Name.compareTo(other.Name);
+        return this.Name.compareTo(other.getName());
+    }
+
+    public String getName() {
+        return Name;
     }
 }

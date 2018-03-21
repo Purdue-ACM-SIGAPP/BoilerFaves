@@ -50,8 +50,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     private RecyclerView mainRecyclerView;
     private Context context;
 
-
-
     public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView){
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;

@@ -1,6 +1,8 @@
 package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
+
+import android.os.Bundle;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -15,12 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lshan.boilerfaves.Adapters.SelectFoodAdapter;
-import com.lshan.boilerfaves.Models.BreakfastModel;
-import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
-import com.lshan.boilerfaves.Models.LunchModel;
-import com.lshan.boilerfaves.Models.MenuModel;
-import com.lshan.boilerfaves.Networking.MenuApiHelper;
+import com.lshan.boilerfaves.Models.SelectFoodModel;
+import com.lshan.boilerfaves.Networking.ServerApiHelper;
 import com.lshan.boilerfaves.R;
 
 import java.util.ArrayList;
@@ -33,12 +32,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 
 public class SelectFoodActivity extends AppCompatActivity {
 
 
     @BindView(R.id.selectFoodRecyclerView)
     RecyclerView selectFoodRecyclerView;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     private SelectFoodAdapter selectFoodAdapter;
     private Context context;
@@ -64,68 +67,31 @@ public class SelectFoodActivity extends AppCompatActivity {
 
     private void callRetrofit ()  {
 
+        progressBar.setVisibility(View.VISIBLE);
+        selectFoodRecyclerView.setVisibility(View.GONE);
 
-        MenuApiHelper.getInstance().getMenu("earhart", "12-01-2017").enqueue(new Callback<MenuModel>(){
-            @Override
-            public void onResponse(Call<MenuModel> call, Response<MenuModel> response){
-                Log.i("Retrofit", response.body().Breakfast.get(0).Items.get(0).Name);
+        ServerApiHelper.getInstance().getFoods().enqueue(new Callback<List<SelectFoodModel>>() {
+             @Override
+             public void onResponse(Call<List<SelectFoodModel>> call, Response<List<SelectFoodModel>> response) {
+                 progressBar.setVisibility(View.GONE);
+                 selectFoodRecyclerView.setVisibility(View.VISIBLE);
 
-                MenuModel result = response.body();
+                 List<SelectFoodModel> selectFoodModels = response.body();
+                 List<FoodModel> foods = new ArrayList<FoodModel>();
 
-                ArrayList<FoodModel> foodList = new ArrayList<FoodModel>();
+                 for(SelectFoodModel selectFoodModel: selectFoodModels){
+                     foods.add(new FoodModel(selectFoodModel));
+                 }
 
-                if (result.Breakfast != null) {
-                    for (BreakfastModel location : result.Breakfast) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
+                 startAdaptor(foods);
+             }
 
-                if (result.Lunch != null) {
-                    for (LunchModel location : result.Lunch) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
-
-                if (result.Dinner != null) {
-                    for (DinnerModel location : result.Dinner) {
-                        for (FoodModel food : location.Items) {
-                            if (!foodList.contains(food)) {
-                                foodList.add(food);
-                            }
-                        }
-                    }
-                }
-
-                startAdaptor(foodList);
-
-            }
-
-            @Override
-            public void onFailure(Call<MenuModel> call, Throwable t) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-                        .setTitle("Data retrieval failed")
-                        .setMessage("Unable to connect to the Internet")
-                        .setCancelable(false)
-                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                callRetrofit();
-                            }
-                        });
-                AlertDialog failure = alertDialogBuilder.create();
-                failure.show();
+             @Override
+             public void onFailure(Call<List<SelectFoodModel>> call, Throwable t) {
+                 //TODO: Display error message if our server goes down or something
                 Log.e("Retrofit", t.getMessage());
-            }
-        });
-
+             }
+         });
 
     }
 
