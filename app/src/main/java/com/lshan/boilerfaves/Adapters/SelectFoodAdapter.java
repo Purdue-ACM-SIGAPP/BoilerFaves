@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +48,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
         if(searchText.length() != 0){
             this.filteredFoods = new ArrayList<>();
             for(FoodModel f : this.foods){
-                if(f.Name.toLowerCase().contains(searchText.toLowerCase())){
+                if(f.getName().toLowerCase().contains(searchText.toLowerCase())){
                     this.filteredFoods.add(f);
                 }
             }
@@ -68,7 +67,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
 
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
-        holder.cardTitle.setText(filteredFoods.get(position).Name);
+        holder.cardTitle.setText(filteredFoods.get(position).getName());
 
         FoodModel foodModel = filteredFoods.get(position);
         if(!faveList.contains(foodModel)){
@@ -109,7 +108,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
                 SharedPrefsHelper.storeFaveList(faveList, context);
 
                 //create toast that food has been added
-                Toast.makeText(context, foodModel.Name + " added to faves", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, foodModel.getName() + " added to faves", Toast.LENGTH_LONG).show();
                 //make checkmark visible
 
                 notifyDataSetChanged();
@@ -117,7 +116,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
                 faveList.remove(foodModel);
                 SharedPrefsHelper.storeFaveList(faveList, context);
 
-                Toast.makeText(context, foodModel.Name + " removed from faves", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, foodModel.getName() + " removed from faves", Toast.LENGTH_LONG).show();
 
                 notifyDataSetChanged();
             }

@@ -1,12 +1,7 @@
 package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,15 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Adapters.SelectFoodAdapter;
-import com.lshan.boilerfaves.Models.BreakfastModel;
-import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
-import com.lshan.boilerfaves.Models.LunchModel;
-import com.lshan.boilerfaves.Models.MenuModel;
-import com.lshan.boilerfaves.Models.POJOFoodModel;
-import com.lshan.boilerfaves.Networking.MenuApiHelper;
+import com.lshan.boilerfaves.Models.SelectFoodModel;
 import com.lshan.boilerfaves.Networking.ServerApiHelper;
 import com.lshan.boilerfaves.R;
 
@@ -37,7 +26,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import android.support.v7.widget.SearchView;
+
 import android.view.inputmethod.InputMethodManager;
 
 public class SelectFoodActivity extends AppCompatActivity {
@@ -57,7 +46,7 @@ public class SelectFoodActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        context = this.context;
+        context = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,18 +60,27 @@ public class SelectFoodActivity extends AppCompatActivity {
     private void callRetrofit ()  {
 
 
-        ServerApiHelper.getInstance().getFoods().enqueue(new Callback<List<POJOFoodModel>>() {
-            @Override
-            public void onResponse(Call<List<POJOFoodModel>> call, Response<List<POJOFoodModel>> response) {
-                List<POJOFoodModel> foods = response.body();
-            }
 
-            @Override
-            public void onFailure(Call<List<POJOFoodModel>> call, Throwable t) {
+        ServerApiHelper.getInstance().getFoods().enqueue(new Callback<List<SelectFoodModel>>() {
+             @Override
+             public void onResponse(Call<List<SelectFoodModel>> call, Response<List<SelectFoodModel>> response) {
+                 List<SelectFoodModel> selectFoodModels = response.body();
+                 List<FoodModel> foods = new ArrayList<FoodModel>();
+
+                 for(SelectFoodModel selectFoodModel: selectFoodModels){
+                     foods.add(new FoodModel(selectFoodModel));
+                 }
+
+                 selectFoodAdapter = new SelectFoodAdapter(context, foods);
+                 selectFoodRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                 selectFoodRecyclerView.setAdapter(selectFoodAdapter);
+             }
+
+             @Override
+             public void onFailure(Call<List<SelectFoodModel>> call, Throwable t) {
                 Log.e("Retrofit", t.getMessage());
-                Log.e("Retrofit", "Retrofit select foods error");
-            }
-        });
+             }
+         });
 
 
         /*

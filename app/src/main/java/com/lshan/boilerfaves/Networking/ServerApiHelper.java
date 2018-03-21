@@ -14,7 +14,7 @@ public class ServerApiHelper {
     public static ServerApi getInstance() {
         if(serverApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.99.1:8080/")
+                    .baseUrl("http://boilerfaves-api.sigapp.club/v1/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
