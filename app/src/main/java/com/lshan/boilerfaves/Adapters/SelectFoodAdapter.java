@@ -102,7 +102,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
 
         @OnClick(R.id.select_food_card)
         public void onClickCard() {
-            FoodModel foodModel = foods.get(this.getLayoutPosition());
+            FoodModel foodModel = filteredFoods.get(this.getLayoutPosition());
 
             if(!faveList.contains(foodModel)){
                 faveList.add(foodModel);

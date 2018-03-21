@@ -1,6 +1,8 @@
 package com.lshan.boilerfaves.Networking;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.os.AsyncTask;
@@ -69,14 +71,17 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         try {
             //Synchronous retrofit call
             Response<List<String>> locationsResponse = MenuApiHelper.getInstance().getLocations().execute();
-
-            for (String diningCourt:locationsResponse.body()){
-                Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt, date).execute();
-                diningCourtMenus.add(new DiningCourtMenu(diningCourt, menuResponse.body()));
+            if (locationsResponse.isSuccessful()) {
+                for (String diningCourt : locationsResponse.body()) {
+                    Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt, date).execute();
+                    diningCourtMenus.add(new DiningCourtMenu(diningCourt, menuResponse.body()));
+                }
+            } else {
+                Log.e("Retrofit synch call: ", locationsResponse.message());
             }
-
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e("Retrofit synch call: ", e.getMessage());
         }
 
         return diningCourtMenus;

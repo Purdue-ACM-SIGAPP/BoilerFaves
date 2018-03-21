@@ -1,7 +1,11 @@
 package com.lshan.boilerfaves.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,9 +68,41 @@ public class MainActivity extends AppCompatActivity{
         }else{
             SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
         }
-
         //new SelectionRetrievalTask().execute();
-        new MenuRetrievalTask(context, mainRecyclerView).execute();
+        if (isOnline()) {
+            new MenuRetrievalTask(context, mainRecyclerView).execute();
+        } else {
+            showNoInternetDialog();
+        }
+    }
+
+    //https://stackoverflow.com/questions/9521232/how-to-catch-an-exception-if-the-internet-or-signal-is-down
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void showNoInternetDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                .setTitle("Data retrieval failed")
+                .setMessage("Unable to connect to the Internet")
+                .setCancelable(false)
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (isOnline()){
+                            new MenuRetrievalTask(context, mainRecyclerView).execute();
+                        } else {
+                            showNoInternetDialog();
+                        }
+                    }
+                });
+        AlertDialog failure = alertDialogBuilder.create();
+        failure.show();
     }
 
     private void checkForFaves(List<FoodModel> faveList){
