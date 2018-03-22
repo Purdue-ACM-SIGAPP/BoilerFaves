@@ -153,10 +153,15 @@ public class NotificationActivity extends AppCompatActivity {
                 new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        String amorpm = "AM";
+                        if(hour > 12){
+                            hour-=12;
+                            amorpm = "PM";
+                        }
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         storeTimeFromTimePicker("breakfast", hour, minute);
-                        breakfastTime.setText(hour + ":" + minute);
+                        breakfastTime.setText(hour + ":" + minute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
             }
@@ -170,11 +175,16 @@ public class NotificationActivity extends AppCompatActivity {
                 new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        String amorpm = "AM";
+                        if(hour > 12){
+                            hour -= 12;
+                            amorpm = "PM";
+                        }
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
-                        lunchTime.setText(hour + ":" + minute);
+                        //lunchTime.setText(hour + ":" + minute);
                         storeTimeFromTimePicker("lunch", hour, minute);
-                        lunchTime.setText(hour + ":" + minute);
+                        lunchTime.setText(hour + ":" + minute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
             }
@@ -188,11 +198,16 @@ public class NotificationActivity extends AppCompatActivity {
                 new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        String amorpm = "AM";
+                        if(hour > 12){
+                            hour -= 12;
+                            amorpm = "PM";
+                        }
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
-                        dinnerTime.setText(hour + ":" + minute);
+                        //dinnerTime.setText(hour + ":" + minute);
                         storeTimeFromTimePicker("dinner", hour, minute);
-                        dinnerTime.setText(hour + ":" + minute);
+                        dinnerTime.setText(hour + ":" + minute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
             }
