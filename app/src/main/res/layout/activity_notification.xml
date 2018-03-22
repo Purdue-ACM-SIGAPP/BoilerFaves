@@ -36,7 +36,11 @@
         <LinearLayout
             android:id="@+id/breakfastLine"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
             <TextView
                 android:id="@+id/breakfast"
                 android:layout_width="0dp"
@@ -59,7 +63,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/breakfast_time_pick"
-            android:layout_below="@+id/breakfastLine">
+            android:layout_below="@+id/breakfastLine"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
             <TextView
                 android:id="@+id/breakfast_time"
                 android:layout_width="match_parent"
@@ -72,7 +80,11 @@
             android:id="@+id/lunchLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/breakfast_time_pick">
+            android:layout_below="@+id/breakfast_time_pick"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
             <TextView
                 android:id="@+id/lunch"
                 android:layout_width="0dp"
@@ -95,7 +107,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lunch_time_pick"
-            android:layout_below="@+id/lunchLine">
+            android:layout_below="@+id/lunchLine"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
             <TextView
                 android:id="@+id/lunch_time"
                 android:layout_width="match_parent"
@@ -108,7 +124,11 @@
             android:id="@+id/dinnerLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lunch_time_pick">
+            android:layout_below="@+id/lunch_time_pick"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
             <TextView
                 android:id="@+id/dinner"
                 android:layout_width="0dp"
@@ -131,7 +151,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/dinner_time_pick"
-            android:layout_below="@+id/dinnerLine">
+            android:layout_below="@+id/dinnerLine"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
             <TextView
                 android:id="@+id/dinner_time"
                 android:layout_width="match_parent"

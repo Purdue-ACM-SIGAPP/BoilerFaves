@@ -158,10 +158,14 @@ public class NotificationActivity extends AppCompatActivity {
                             hour-=12;
                             amorpm = "PM";
                         }
+                        String sMinute = "" + minute;
+                        if(minute < 10) {
+                            sMinute = "0" + minute;
+                        }
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         storeTimeFromTimePicker("breakfast", hour, minute);
-                        breakfastTime.setText(hour + ":" + minute + " " + amorpm);
+                        breakfastTime.setText(hour + ":" + sMinute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
             }
@@ -180,11 +184,15 @@ public class NotificationActivity extends AppCompatActivity {
                             hour -= 12;
                             amorpm = "PM";
                         }
+                        String sMinute = "" + minute;
+                        if(minute < 10) {
+                            sMinute = "0" + minute;
+                        }
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         //lunchTime.setText(hour + ":" + minute);
                         storeTimeFromTimePicker("lunch", hour, minute);
-                        lunchTime.setText(hour + ":" + minute + " " + amorpm);
+                        lunchTime.setText(hour + ":" + sMinute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
             }
@@ -203,11 +211,15 @@ public class NotificationActivity extends AppCompatActivity {
                             hour -= 12;
                             amorpm = "PM";
                         }
+                        String sMinute = "" + minute;
+                        if(minute < 10) {
+                            sMinute = "0" + minute;
+                        }
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         //dinnerTime.setText(hour + ":" + minute);
                         storeTimeFromTimePicker("dinner", hour, minute);
-                        dinnerTime.setText(hour + ":" + minute + " " + amorpm);
+                        dinnerTime.setText(hour + ":" + sMinute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
             }
