@@ -22,9 +22,8 @@ import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
-import com.lshan.boilerfaves.Receivers.AlarmReceiver;
+import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
-import com.lshan.boilerfaves.Utils.TimeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity{
         checkForFaves(faveList);
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
+        Intent intent = new Intent(context, MasterAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
         } else {
             showNoInternetDialog();
         }
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isOnline()){
-                            new MenuRetrievalTask(context, mainRecyclerView).execute();
+                            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
                         } else {
                             showNoInternetDialog();
                         }
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity{
             startAdaptor(faveList);
         }
 
-        new MenuRetrievalTask(context, mainRecyclerView).execute();
+        new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
     }
 
 

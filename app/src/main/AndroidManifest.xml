@@ -37,11 +37,15 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".Receivers.AlarmReceiver"/>
+        <receiver android:name=".Receivers.NotificationAlarmReceiver"/>
+        <receiver android:name=".Receivers.MasterAlarmReceiver"/>
 
         <service android:name=".Services.NotificationService"/>
         <service android:name=".Services.NotificationJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service android:name=".Services.MasterJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service android:name=".Services.MasterService"/>
 
 
     </application>
