@@ -26,6 +26,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
 
+        <activity
+            android:name=".Activities.NotificationActivity" />
+
+
+        <receiver android:name=".Utils.NotificationHelper$NotificationAlarmReciever" />
+
         <receiver android:name=".Utils.NotificationHelper$NotificationAlarmReciever"
                     android:process=":remote">
 
@@ -46,7 +52,6 @@
         <service android:name=".Services.MasterJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service android:name=".Services.MasterService"/>
-
 
     </application>
 

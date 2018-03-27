@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMaterialGray400"
+    tools:context="com.lshan.boilerfaves.Activities.NotificationActivity"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/listParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="2"
+        android:rowCount="3"
+        android:useDefaultMargins="true">
+
+
+        <LinearLayout
+            android:id="@+id/breakfastLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
+            <TextView
+                android:id="@+id/breakfast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/breakfast"
+                android:textSize="25sp"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:layout_gravity="start"
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/breakfastSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/breakfast_time_pick"
+            android:layout_below="@+id/breakfastLine"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
+            <TextView
+                android:id="@+id/breakfast_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lunchLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/breakfast_time_pick"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
+            <TextView
+                android:id="@+id/lunch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/lunch"
+                android:textSize="25sp"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:gravity="start"
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/lunchSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lunch_time_pick"
+            android:layout_below="@+id/lunchLine"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
+            <TextView
+                android:id="@+id/lunch_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dinnerLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lunch_time_pick"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
+            <TextView
+                android:id="@+id/dinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/dinner"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                android:layout_weight="1"
+                android:gravity="start"
+                />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/dinnerSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dinner_time_pick"
+            android:layout_below="@+id/dinnerLine"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
+            android:paddingEnd="4dp"
+            android:paddingRight="4dp">
+            <TextView
+                android:id="@+id/dinner_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/timeParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorMaterialGray400">
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"/>
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timePicker"
+            android:text="Ok"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/submit"
+            android:text="Cancel"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"/>
+    </RelativeLayout>
+
+
+    <include layout="@layout/content_notification" />
+</LinearLayout>
