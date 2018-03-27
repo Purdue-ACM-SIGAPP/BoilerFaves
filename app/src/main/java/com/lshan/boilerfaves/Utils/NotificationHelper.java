@@ -48,11 +48,15 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             mNotifyMgr.createNotificationChannel(channel);
 
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                    new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
             Notification notification = new Notification.Builder(context, CHANNEL_ID)
                     .setContentTitle(title)
                     .setContentText(content)
                     .setSmallIcon(R.drawable.ic_notification_icon)
                     .setChannelId(CHANNEL_ID)
+                    .setContentIntent(contentIntent)
                     .build();
 
             if (mNotifyMgr != null) {
@@ -61,7 +65,7 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
                 Log.e("Notification", "Notification manager is null.");
             }
 
-        }else {
+        } else {
 
             //https://developer.android.com/training/notify-user/build-notification.html#click
             mBuilder = new NotificationCompat.Builder(context)

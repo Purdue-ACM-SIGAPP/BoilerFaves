@@ -38,7 +38,7 @@ public class MasterJobService extends JobService{
 
         notifIntent.putExtra("notificationType", MenuRetrievalTask.BREAKFAST_NOTIFICATION);
         PendingIntent breakfastPendingIntent = PendingIntent.getBroadcast(context, 1, notifIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(6, 0), breakfastPendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() /*+ TimeHelper.getMillisUntil(6, 0)*/, breakfastPendingIntent);
 
         notifIntent.putExtra("notificationType", MenuRetrievalTask.LUNCH_NOTIFICATION);
         PendingIntent lunchPendingIntent = PendingIntent.getBroadcast(context, 2, notifIntent, 0);
