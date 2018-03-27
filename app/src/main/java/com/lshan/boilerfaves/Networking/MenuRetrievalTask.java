@@ -1,6 +1,8 @@
 package com.lshan.boilerfaves.Networking;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.os.AsyncTask;
@@ -46,13 +48,18 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
     private static final String API_URL = "https://api.hfs.purdue.edu/menus/v1/locations/";
     private RecyclerView mainRecyclerView;
+    private int notificationType;
     private Context context;
 
+    public static final int NO_NOTIFICATION = 0;
+    public static final int BREAKFAST_NOTIFICATION = 1;
+    public static final int LUNCH_NOTIFICATION = 2;
+    public static final int DINNER_NOTIFICATION = 3;
 
-
-    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView){
+    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, int notificationType){
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;
+        this.notificationType = notificationType;
     }
 
     @Override
@@ -71,14 +78,17 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         try {
             //Synchronous retrofit call
             Response<List<String>> locationsResponse = MenuApiHelper.getInstance().getLocations().execute();
-
-            for (String diningCourt:locationsResponse.body()){
-                Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt, date).execute();
-                diningCourtMenus.add(new DiningCourtMenu(diningCourt, menuResponse.body()));
+            if (locationsResponse.isSuccessful()) {
+                for (String diningCourt : locationsResponse.body()) {
+                    Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt, date).execute();
+                    diningCourtMenus.add(new DiningCourtMenu(diningCourt, menuResponse.body()));
+                }
+            } else {
+                Log.e("Retrofit synch call: ", locationsResponse.message());
             }
-
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e("Retrofit synch call: ", e.getMessage());
         }
 
         return diningCourtMenus;
@@ -155,19 +165,19 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             }
         }
 
-        if(breakfastAvailable){
+        if(breakfastAvailable && notificationType == BREAKFAST_NOTIFICATION){
             breakfastMessageBuilder.append("for breakfast!");
-            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(6, 0), breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
+            NotificationHelper.sendNotification(context, breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
         }
 
-        if(lunchAvailable){
+        if(lunchAvailable && notificationType == LUNCH_NOTIFICATION){
             lunchMessageBuilder.append("for lunch!");
-            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(11, 0), lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
+            NotificationHelper.sendNotification(context, lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
         }
 
-        if(dinnerAvailable){
+        if(dinnerAvailable && notificationType == DINNER_NOTIFICATION){
             dinnerMessageBuilder.append("for dinner!");
-            NotificationHelper.scheduleNofication(context, TimeHelper.getMillisUntil(16, 0), dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
+            NotificationHelper.sendNotification(context, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
         }
 
     }

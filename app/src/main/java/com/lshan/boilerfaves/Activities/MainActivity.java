@@ -1,7 +1,13 @@
 package com.lshan.boilerfaves.Activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,18 +22,14 @@ import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity{
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         checkForFaves(faveList);
 
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, MasterAlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+
         if(faveList != null){
             startAdaptor(faveList);
         }else{
@@ -66,7 +73,45 @@ public class MainActivity extends AppCompatActivity{
         }
 
         //new SelectionRetrievalTask().execute();
-        new MenuRetrievalTask(context, mainRecyclerView).execute();
+
+
+        if (isOnline()) {
+            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+        } else {
+            showNoInternetDialog();
+        }
+
+        //JobUtil.scheduleJob(context);
+
+    }
+
+    //https://stackoverflow.com/questions/9521232/how-to-catch-an-exception-if-the-internet-or-signal-is-down
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void showNoInternetDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                .setTitle("Data retrieval failed")
+                .setMessage("Unable to connect to the Internet")
+                .setCancelable(false)
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (isOnline()){
+                            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+                        } else {
+                            showNoInternetDialog();
+                        }
+                    }
+                });
+        AlertDialog failure = alertDialogBuilder.create();
+        failure.show();
     }
 
     private void checkForFaves(List<FoodModel> faveList){
@@ -90,7 +135,7 @@ public class MainActivity extends AppCompatActivity{
             startAdaptor(faveList);
         }
 
-        new MenuRetrievalTask(context, mainRecyclerView).execute();
+        new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
     }
 
 
