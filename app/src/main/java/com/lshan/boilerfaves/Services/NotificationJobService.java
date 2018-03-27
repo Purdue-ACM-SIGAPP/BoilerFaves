@@ -20,11 +20,11 @@ public class NotificationJobService extends JobService{
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        System.out.println("Notif job service");
 
         Context context = getApplicationContext();
 
         int notificationType = jobParameters.getExtras().getInt("notificationType");
+        System.out.println("Notif job service. Type=" + notificationType);
 
         new MenuRetrievalTask(context, null, notificationType).execute();
         return false;

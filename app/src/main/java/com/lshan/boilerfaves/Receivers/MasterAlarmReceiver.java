@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.lshan.boilerfaves.Services.MasterJobService;
+import com.lshan.boilerfaves.Services.MasterService;
 import com.lshan.boilerfaves.Services.NotificationJobService;
 import com.lshan.boilerfaves.Services.NotificationService;
 
@@ -29,7 +30,7 @@ public class MasterAlarmReceiver extends BroadcastReceiver{
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .build());
         }else{
-            Intent serviceIntent = new Intent(context, MasterJobService.class);
+            Intent serviceIntent = new Intent(context, MasterService.class);
             context.startService(serviceIntent);
         }
 
