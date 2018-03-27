@@ -24,7 +24,7 @@ public class MasterService extends Service {
         return null;
     }
 
-    //This serves the same purpose as MasterJobService but it works on phones that don't run Oreo
+    //This serves the same purpose as MasterJobService but it works on phones that don't run JobScheduler
     //This service should set an alarm for each meal
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -36,21 +36,21 @@ public class MasterService extends Service {
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, MasterAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(0, 20), pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, pendingIntent);
 
         Intent notifIntent = new Intent(context, NotificationAlarmReceiver.class);
 
         notifIntent.putExtra("notificationType", MenuRetrievalTask.BREAKFAST_NOTIFICATION);
         PendingIntent breakfastPendingIntent = PendingIntent.getBroadcast(context, 1, notifIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(6, 0), breakfastPendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), breakfastPendingIntent);
 
         notifIntent.putExtra("notificationType", MenuRetrievalTask.LUNCH_NOTIFICATION);
         PendingIntent lunchPendingIntent = PendingIntent.getBroadcast(context, 2, notifIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), lunchPendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 4000, lunchPendingIntent);
 
         notifIntent.putExtra("notificationType", MenuRetrievalTask.DINNER_NOTIFICATION);
         PendingIntent dinnerPendingIntent = PendingIntent.getBroadcast(context, 3, notifIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(16, 0), dinnerPendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 7000, dinnerPendingIntent);
 
 
         return super.onStartCommand(intent, flags, startId);

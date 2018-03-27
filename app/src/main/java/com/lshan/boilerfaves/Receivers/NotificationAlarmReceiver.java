@@ -43,6 +43,11 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
                     .build());
         }else{
             Intent serviceIntent = new Intent(context, NotificationService.class);
+
+            Bundle bundle = new Bundle();
+            int notificiationType = intent.getExtras().getInt("notificationType");
+            bundle.putInt("notificationType", notificiationType);
+
             context.startService(serviceIntent);
         }
 

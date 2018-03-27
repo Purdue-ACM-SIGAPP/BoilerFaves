@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.Receivers.NotificationAlarmReceiver;
@@ -28,6 +29,15 @@ public class NotificationService extends Service {
         System.out.println("In Service");
 
         Context context = getApplicationContext();
+
+        int notificationType = 0;
+        if(intent.getExtras() == null){
+            Log.e("Notification Service", "Bundle was null");
+        }else {
+            notificationType = intent.getExtras().getInt("notificationType");
+        }
+
+        System.out.println("Notif service (not job service). Type=" + notificationType);
 
         new MenuRetrievalTask(context, null, MenuRetrievalTask.NO_NOTIFICATION).execute();
 

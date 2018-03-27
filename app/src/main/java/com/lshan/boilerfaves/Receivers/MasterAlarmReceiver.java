@@ -22,6 +22,7 @@ public class MasterAlarmReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         System.out.println("In master alarm receiver");
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             JobScheduler jobScheduler =
                     (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);

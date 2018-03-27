@@ -51,7 +51,7 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
             Notification notification = new Notification.Builder(context, CHANNEL_ID)
                     .setContentTitle(title)
                     .setContentText(content)
-                    .setSmallIcon(R.drawable.ic_notifications_icon)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
                     .setChannelId(CHANNEL_ID)
                     .build();
 
@@ -65,7 +65,7 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
 
             //https://developer.android.com/training/notify-user/build-notification.html#click
             mBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_notifications_icon)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
                     .setContentTitle(title)
                     .setContentText(content);
 
