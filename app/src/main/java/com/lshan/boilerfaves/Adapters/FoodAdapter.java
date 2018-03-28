@@ -70,7 +70,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
         FoodModel food = foods.get(position);
-        holder.cardTitle.setText(food.Name);
+        holder.cardTitle.setText(food.getName());
 
 
         //Update card layout based on availability
