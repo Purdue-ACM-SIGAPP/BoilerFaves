@@ -15,8 +15,38 @@ import java.util.List;
  */
 
 public class SharedPrefsHelper {
+
+    public static final int BREAKFAST = 0;
+    public static final int LUNCH = 1;
+    public static final int DINNER = 2;
+
     public static SharedPreferences getSharedPrefs(Context context){
         return context.getSharedPreferences("com.lshan.boilerfaves", Context.MODE_PRIVATE);
+    }
+
+    public static int[] getMealTime(Context context, int meal){
+        SharedPreferences prefs = getSharedPrefs(context);
+        int[] result = new int[2];
+        int hour = 0, min = 0;
+        switch(meal){
+            case BREAKFAST:
+                hour = prefs.getInt("breakfastHour", 6);
+                min = prefs.getInt("breakfastMinute", 0);
+                break;
+            case LUNCH:
+                hour = prefs.getInt("lunchHour", 11);
+                min = prefs.getInt("lunchMinute", 0);
+                break;
+            case DINNER:
+                hour = prefs.getInt("dinnerHour", 16);
+                min = prefs.getInt("dinnerMinute", 0);
+                break;
+        }
+
+        result[0] = hour;
+        result[1] = min;
+
+        return result;
     }
 
     public static void storeFaveList(List<FoodModel> foodList, Context context){

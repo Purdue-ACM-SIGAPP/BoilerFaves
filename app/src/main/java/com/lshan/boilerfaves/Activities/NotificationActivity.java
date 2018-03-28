@@ -1,6 +1,9 @@
 package com.lshan.boilerfaves.Activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,6 +27,7 @@ import android.app.TimePickerDialog;
 import java.util.Calendar;
 
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.sql.SQLOutput;
@@ -122,26 +126,33 @@ public class NotificationActivity extends AppCompatActivity {
 
         SharedPreferences prefs = SharedPrefsHelper.getSharedPrefs(getApplicationContext());
 
-        String toPrint = prefs.getString("breakfast", null);
+        int[] breakfastHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.BREAKFAST);
+        String toPrint = breakfastHandM[0] + ":" + breakfastHandM[1];
         if(toPrint == null) {
             breakfastTime.setText("00:00");
         } else {
             breakfastTime.setText(toPrint);
         }
 
-        toPrint = prefs.getString("lunch", null);
+        int[] lunchHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.LUNCH);
+        toPrint = lunchHandM[0] + ":" + lunchHandM[1];
         if(toPrint == null) {
             lunchTime.setText("00:00");
         } else {
             lunchTime.setText(toPrint);
         }
 
-        toPrint = prefs.getString("dinner", null);
+        int[] dinnerHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.DINNER);
+        toPrint = dinnerHandM[0] + ":" + dinnerHandM[1];
         if(toPrint == null) {
             dinnerTime.setText("00:00");
         } else {
             dinnerTime.setText(toPrint);
         }
+
+        breakfastSwitch.setChecked(prefs.getBoolean("sendBreakfastNotif", true));
+        lunchSwitch.setChecked(prefs.getBoolean("sendLunchNotif", true));
+        dinnerSwitch.setChecked(prefs.getBoolean("sendDinnerNotif", true));
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +187,8 @@ public class NotificationActivity extends AppCompatActivity {
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         breakfastTime.setText(hour + ":" + sMinute + " " + amorpm);
+
+                        runNotifAlarm();
                     }
                 }, hour, minute, false).show();
             }
@@ -203,6 +216,8 @@ public class NotificationActivity extends AppCompatActivity {
                         System.out.println("Minute: " + minute);
                         //lunchTime.setText(hour + ":" + minute);
                         lunchTime.setText(hour + ":" + sMinute + " " + amorpm);
+
+                        runNotifAlarm();
                     }
                 }, hour, minute, false).show();
             }
@@ -230,6 +245,8 @@ public class NotificationActivity extends AppCompatActivity {
                         System.out.println("Minute: " + minute);
                         //dinnerTime.setText(hour + ":" + minute);
                         dinnerTime.setText(hour + ":" + sMinute + " " + amorpm);
+
+                        runNotifAlarm();
                     }
                 }, hour, minute, false).show();
             }
@@ -263,6 +280,8 @@ public class NotificationActivity extends AppCompatActivity {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
         }
+
+        runNotifAlarm();
     }
 
     @OnCheckedChanged(R.id.lunchSwitch)
@@ -278,6 +297,8 @@ public class NotificationActivity extends AppCompatActivity {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
         }
+
+        runNotifAlarm();
     }
 
     @OnCheckedChanged(R.id.dinnerSwitch)
@@ -293,6 +314,8 @@ public class NotificationActivity extends AppCompatActivity {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
         }
+
+        runNotifAlarm();
     }
 
     /*
@@ -362,5 +385,12 @@ public class NotificationActivity extends AppCompatActivity {
         editor.putString(meal, time);
         editor.apply();
         */
+    }
+
+    private void runNotifAlarm(){
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, MasterAlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
     }
 }
