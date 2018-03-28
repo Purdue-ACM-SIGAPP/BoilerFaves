@@ -21,6 +21,17 @@ public class TimeHelper {
         c.set(Calendar.MILLISECOND, 0);
         long howMany = (c.getTimeInMillis()-System.currentTimeMillis());
 
+        if(howMany <= 0){
+            Calendar tomorrow = Calendar.getInstance();
+            tomorrow.add(Calendar.DATE, 1);
+            tomorrow.set(Calendar.HOUR_OF_DAY, hour);
+            tomorrow.set(Calendar.MINUTE, minute);
+            tomorrow.set(Calendar.SECOND, 0);
+            tomorrow.set(Calendar.MILLISECOND, 0);
+            long tomorrowTime = tomorrow.getTimeInMillis()-System.currentTimeMillis();
+            return tomorrowTime;
+        }
+
         return howMany;
     }
 

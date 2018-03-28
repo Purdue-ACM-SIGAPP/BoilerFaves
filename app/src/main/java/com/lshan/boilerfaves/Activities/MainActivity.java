@@ -1,5 +1,7 @@
 package com.lshan.boilerfaves.Activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,18 +22,14 @@ import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
+import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -63,17 +61,28 @@ public class MainActivity extends AppCompatActivity{
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         checkForFaves(faveList);
 
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, MasterAlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+
         if(faveList != null){
             startAdaptor(faveList);
         }else{
             SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
         }
+
         //new SelectionRetrievalTask().execute();
+
+
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
         } else {
             showNoInternetDialog();
         }
+
+        //JobUtil.scheduleJob(context);
+
     }
 
     //https://stackoverflow.com/questions/9521232/how-to-catch-an-exception-if-the-internet-or-signal-is-down
@@ -95,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isOnline()){
-                            new MenuRetrievalTask(context, mainRecyclerView).execute();
+                            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
                         } else {
                             showNoInternetDialog();
                         }
@@ -126,7 +135,7 @@ public class MainActivity extends AppCompatActivity{
             startAdaptor(faveList);
         }
 
-        new MenuRetrievalTask(context, mainRecyclerView).execute();
+        new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
     }
 
 
@@ -144,15 +153,13 @@ public class MainActivity extends AppCompatActivity{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_notifications) {
-            System.out.println("Notification Button Clicked");
-        }
-
 
         if(id == R.id.action_add){
             launchFoodSelect();
+        }
+        if(id == R.id.action_notifications){
+            launchNotifications();
         }
 
         return super.onOptionsItemSelected(item);
@@ -183,6 +190,12 @@ public class MainActivity extends AppCompatActivity{
     public void launchFoodSelect(){
         Intent intent = new Intent(context, SelectFoodActivity.class);
         context.startActivity(intent);
+    }
+
+    public void launchNotifications(){
+        Intent intent = new Intent(context, NotificationActivity.class);
+        context.startActivity(intent);
+
     }
 
 
