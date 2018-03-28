@@ -151,6 +151,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                         break;
                     case "The Gathering Place":
                         icon.setImageResource(R.drawable.ic_gatheringplace);
+                        break;
                     default:
                         icon.setVisibility(View.GONE);
                 }
