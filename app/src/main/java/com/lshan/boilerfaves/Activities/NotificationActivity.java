@@ -163,6 +163,7 @@ public class NotificationActivity extends AppCompatActivity {
                 new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        storeTimeFromTimePicker("breakfast", hour, minute);
                         String amorpm = "AM";
                         if(hour > 12){
                             hour-=12;
@@ -174,7 +175,6 @@ public class NotificationActivity extends AppCompatActivity {
                         }
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
-                        storeTimeFromTimePicker("breakfast", hour, minute);
                         breakfastTime.setText(hour + ":" + sMinute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
@@ -189,6 +189,7 @@ public class NotificationActivity extends AppCompatActivity {
                 new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        storeTimeFromTimePicker("lunch", hour, minute);
                         String amorpm = "AM";
                         if(hour > 12){
                             hour -= 12;
@@ -201,7 +202,6 @@ public class NotificationActivity extends AppCompatActivity {
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         //lunchTime.setText(hour + ":" + minute);
-                        storeTimeFromTimePicker("lunch", hour, minute);
                         lunchTime.setText(hour + ":" + sMinute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
@@ -216,6 +216,7 @@ public class NotificationActivity extends AppCompatActivity {
                 new TimePickerDialog(NotificationActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        storeTimeFromTimePicker("dinner", hour, minute);
                         String amorpm = "AM";
                         if(hour > 12){
                             hour -= 12;
@@ -228,7 +229,6 @@ public class NotificationActivity extends AppCompatActivity {
                         System.out.println("Hour: " + hour);
                         System.out.println("Minute: " + minute);
                         //dinnerTime.setText(hour + ":" + minute);
-                        storeTimeFromTimePicker("dinner", hour, minute);
                         dinnerTime.setText(hour + ":" + sMinute + " " + amorpm);
                     }
                 }, hour, minute, false).show();
@@ -250,6 +250,9 @@ public class NotificationActivity extends AppCompatActivity {
 
     @OnCheckedChanged(R.id.breakfastSwitch)
     public void breakfeastClicked(SwitchCompat buttonView, boolean isChecked) {
+        SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendBreakfastNotif", isChecked).apply();
+        System.out.println(isChecked);
+
         if (isChecked) {
             mealTime = BREAKFAST;
             /*
@@ -264,6 +267,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     @OnCheckedChanged(R.id.lunchSwitch)
     public void lunchClicked(SwitchCompat buttonView, boolean isChecked) {
+        SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendLunchNotif", isChecked).apply();
         if (isChecked) {
             mealTime = LUNCH;
             /*
@@ -278,6 +282,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     @OnCheckedChanged(R.id.dinnerSwitch)
     public void dinnerClicked(SwitchCompat buttonView, boolean isChecked) {
+        SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendDinnerNotif", isChecked).apply();
         if (isChecked) {
             mealTime = DINNER;
             /*
@@ -324,7 +329,10 @@ public class NotificationActivity extends AppCompatActivity {
         listParent.setVisibility(View.VISIBLE);
 
         switch(mealTime){
-            case BREAKFAST: breakfastSwitch.toggle();
+            case BREAKFAST:
+                breakfastSwitch.toggle();
+
+
                 break;
             case LUNCH: lunchSwitch.toggle();
                 break;
@@ -335,7 +343,12 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     public void storeTimeFromTimePicker(String meal, int hour, int minute){
-        String Shour = Integer.toString(hour);
+
+        SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
+        preferences.edit().putInt(meal + "Hour", hour).apply();
+        preferences.edit().putInt(meal + "Minute", minute).apply();
+
+        /*String Shour = Integer.toString(hour);
         String Sminute = Integer.toString(minute);
         if(hour < 10){
             Shour = "0" + Shour;
@@ -348,5 +361,6 @@ public class NotificationActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(meal, time);
         editor.apply();
+        */
     }
 }

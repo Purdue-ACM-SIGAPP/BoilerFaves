@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.Receivers.NotificationAlarmReceiver;
 import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 import com.lshan.boilerfaves.Utils.TimeHelper;
 
 /**
@@ -36,17 +37,37 @@ public class MasterJobService extends JobService{
 
         Intent notifIntent = new Intent(context, NotificationAlarmReceiver.class);
 
-        notifIntent.putExtra("notificationType", MenuRetrievalTask.BREAKFAST_NOTIFICATION);
-        PendingIntent breakfastPendingIntent = PendingIntent.getBroadcast(context, 1, notifIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() /*+ TimeHelper.getMillisUntil(6, 0)*/, breakfastPendingIntent);
+        //Breakfast
+        boolean sendBreakfast = SharedPrefsHelper.getSharedPrefs(context).getBoolean("sendBreakfastNotif", true);
+        System.out.println(sendBreakfast);
+        if(sendBreakfast) {
+            int breakfastHour = SharedPrefsHelper.getSharedPrefs(context).getInt("breakfastHour", 6);
+            int breakfastMinute = SharedPrefsHelper.getSharedPrefs(context).getInt("breakfastMinute", 0);
+            notifIntent.putExtra("notificationType", MenuRetrievalTask.BREAKFAST_NOTIFICATION);
+            PendingIntent breakfastPendingIntent = PendingIntent.getBroadcast(context, 1, notifIntent, 0);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(breakfastHour, breakfastMinute), breakfastPendingIntent);
+        }
 
-        notifIntent.putExtra("notificationType", MenuRetrievalTask.LUNCH_NOTIFICATION);
-        PendingIntent lunchPendingIntent = PendingIntent.getBroadcast(context, 2, notifIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(11, 0), lunchPendingIntent);
 
-        notifIntent.putExtra("notificationType", MenuRetrievalTask.DINNER_NOTIFICATION);
-        PendingIntent dinnerPendingIntent = PendingIntent.getBroadcast(context, 3, notifIntent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(16, 0), dinnerPendingIntent);
+        //Lunch
+        boolean sendLunch = SharedPrefsHelper.getSharedPrefs(context).getBoolean("sendLunchNotif", true);
+        if(sendLunch) {
+            int lunchHour = SharedPrefsHelper.getSharedPrefs(context).getInt("lunchHour", 11);
+            int lunchMinute = SharedPrefsHelper.getSharedPrefs(context).getInt("lunchMinute", 0);
+            notifIntent.putExtra("notificationType", MenuRetrievalTask.LUNCH_NOTIFICATION);
+            PendingIntent lunchPendingIntent = PendingIntent.getBroadcast(context, 2, notifIntent, 0);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(lunchHour, lunchMinute), lunchPendingIntent);
+        }
+
+        //Dinner
+        boolean sendDinner = SharedPrefsHelper.getSharedPrefs(context).getBoolean("sendDinnerNotif", true);
+        if(sendDinner) {
+            int dinnerHour = SharedPrefsHelper.getSharedPrefs(context).getInt("dinnerHour", 16);
+            int dinnerMinute = SharedPrefsHelper.getSharedPrefs(context).getInt("dinnerMinute", 0);
+            notifIntent.putExtra("notificationType", MenuRetrievalTask.DINNER_NOTIFICATION);
+            PendingIntent dinnerPendingIntent = PendingIntent.getBroadcast(context, 3, notifIntent, 0);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(dinnerHour, dinnerMinute), dinnerPendingIntent);
+        }
 
         return false;
     }
