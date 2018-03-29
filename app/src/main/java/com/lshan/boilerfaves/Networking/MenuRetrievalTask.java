@@ -218,6 +218,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     }
 
     private void addAvailableCourt(String meal, String court, FoodModel foodModel){
+        
         HashMap<String, ArrayList<String>> availableCourts = foodModel.getAvailableCourts();
         if(availableCourts == null){
             availableCourts = new HashMap<>();
