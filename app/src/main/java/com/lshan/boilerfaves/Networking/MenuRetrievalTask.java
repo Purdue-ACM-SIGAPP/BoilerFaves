@@ -97,8 +97,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     @Override
     protected void onPostExecute(ArrayList<DiningCourtMenu> menus) {
 
-        //TODO Do I need to move the notifications stuff to doInBackground so it can be called without passing the recyclerView?
-
         List<FoodModel> faves = SharedPrefsHelper.getFaveList(context);
         ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
 
@@ -111,6 +109,38 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         StringBuilder dinnerMessageBuilder = new StringBuilder().append("Faves available at ");
 
         boolean breakfastAvailable = false, lunchAvailable = false, dinnerAvailable = false;
+
+        //Make a list of all the foods available today so we can mark foods that aren't in it as unavailable
+        ArrayList<FoodModel> availableToday = new ArrayList<>();
+        for(DiningCourtMenu menu : availableFaves){
+            if(menu != null) {
+                if (menu.getBreakfast() != null) {
+                    for (FoodModel food : menu.getBreakfast()) {
+                        availableToday.add(food);
+                    }
+                }
+
+                if (menu.getLunch() != null) {
+                    for (FoodModel food : menu.getLunch()) {
+                        availableToday.add(food);
+                    }
+                }
+
+                if (menu.getDinner() != null) {
+                    for (FoodModel food : menu.getLunch()) {
+                        availableToday.add(food);
+                    }
+                }
+            }
+        }
+
+
+        for(FoodModel food : faves){
+            if(!availableToday.contains(food)){
+                food.setAvailable(false);
+            }
+        }
+
 
         for(DiningCourtMenu menu : availableFaves){
             if(menu != null){
@@ -180,6 +210,9 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             NotificationHelper.sendNotification(context, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
         }
 
+
+
+
     }
 
 
@@ -236,8 +269,9 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                     availableCourts.get(meal).add(court);
                 }
             }
-        }
 
+            foodModel.setAvailableCourts(availableCourts);
+        }
 
     }
 }

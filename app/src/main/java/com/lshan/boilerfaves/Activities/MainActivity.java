@@ -75,8 +75,9 @@ public class MainActivity extends AppCompatActivity{
         //new SelectionRetrievalTask().execute();
 
 
+        new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+
         } else {
             showNoInternetDialog();
         }
