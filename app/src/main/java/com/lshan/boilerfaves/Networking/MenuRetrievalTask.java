@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.lshan.boilerfaves.Activities.MainActivity;
@@ -50,21 +52,41 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     private RecyclerView mainRecyclerView;
     private int notificationType;
     private Context context;
+    ProgressBar progressBar;
+    FrameLayout frameLayout;
 
     public static final int NO_NOTIFICATION = 0;
     public static final int BREAKFAST_NOTIFICATION = 1;
     public static final int LUNCH_NOTIFICATION = 2;
     public static final int DINNER_NOTIFICATION = 3;
 
+    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, ProgressBar progressBar, FrameLayout frameLayout, int notificationType){
+        this.context = context;
+        this.mainRecyclerView = mainRecyclerView;
+        this.notificationType = notificationType;
+        this.progressBar = progressBar;
+        this.frameLayout = frameLayout;
+    }
+
     public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, int notificationType){
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;
         this.notificationType = notificationType;
+        this.progressBar = null;
+        this.frameLayout = null;
     }
 
     @Override
     protected void onPreExecute() {
+
         super.onPreExecute();
+
+        if(progressBar != null){
+            progressBar.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.GONE);
+        }
+
+
     }
 
     @Override
@@ -96,6 +118,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
     @Override
     protected void onPostExecute(ArrayList<DiningCourtMenu> menus) {
+
 
         List<FoodModel> faves = SharedPrefsHelper.getFaveList(context);
         ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
@@ -211,6 +234,12 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         }
 
 
+
+        //Hide the progress bar
+        if(progressBar != null){
+            progressBar.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.VISIBLE);
+        }
 
 
     }
