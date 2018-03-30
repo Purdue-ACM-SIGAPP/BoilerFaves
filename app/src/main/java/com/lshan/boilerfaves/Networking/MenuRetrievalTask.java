@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.lshan.boilerfaves.Activities.MainActivity;
@@ -52,7 +53,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     private RecyclerView mainRecyclerView;
     private int notificationType;
     private Context context;
-    ProgressBar progressBar;
+    RelativeLayout progressLayout;
     FrameLayout frameLayout;
 
     public static final int NO_NOTIFICATION = 0;
@@ -60,11 +61,11 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     public static final int LUNCH_NOTIFICATION = 2;
     public static final int DINNER_NOTIFICATION = 3;
 
-    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, ProgressBar progressBar, FrameLayout frameLayout, int notificationType){
+    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType){
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;
         this.notificationType = notificationType;
-        this.progressBar = progressBar;
+        this.progressLayout = progressLayout;
         this.frameLayout = frameLayout;
     }
 
@@ -72,7 +73,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;
         this.notificationType = notificationType;
-        this.progressBar = null;
+        this.progressLayout = null;
         this.frameLayout = null;
     }
 
@@ -81,11 +82,10 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
         super.onPreExecute();
 
-        if(progressBar != null){
-            progressBar.setVisibility(View.VISIBLE);
+        if(progressLayout != null){
+            progressLayout.setVisibility(View.VISIBLE);
             frameLayout.setVisibility(View.GONE);
         }
-
 
     }
 
@@ -236,8 +236,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
 
         //Hide the progress bar
-        if(progressBar != null){
-            progressBar.setVisibility(View.GONE);
+        if(progressLayout != null){
+            progressLayout.setVisibility(View.GONE);
             frameLayout.setVisibility(View.VISIBLE);
         }
 

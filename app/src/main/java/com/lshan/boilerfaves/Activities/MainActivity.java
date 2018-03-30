@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.noFavesLayout)
     RelativeLayout noFavesLayout;
 
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    @BindView(R.id.progressLayout)
+    RelativeLayout progressLayout;
 
     @BindView(R.id.mainLayout)
     FrameLayout mainLayout;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView, progressBar, mainLayout, MenuRetrievalTask.NO_NOTIFICATION).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION).execute();
         } else {
             showNoInternetDialog();
         }
