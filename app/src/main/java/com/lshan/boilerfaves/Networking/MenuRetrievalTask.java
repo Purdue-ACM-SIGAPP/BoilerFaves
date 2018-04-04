@@ -132,7 +132,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         StringBuilder dinnerMessageBuilder = new StringBuilder().append("Faves available at ");
 
         boolean breakfastAvailable = false, lunchAvailable = false, dinnerAvailable = false;
-
+        int spaceBrek=0, spaceLunch=0, spaceDinner=0;
         //Make a list of all the foods available today so we can mark foods that aren't in it as unavailable
         ArrayList<FoodModel> availableToday = new ArrayList<>();
         for(DiningCourtMenu menu : availableFaves){
@@ -178,7 +178,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Breakfast", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    breakfastMessageBuilder.append(courtName + " ");
+                    spaceBrek++;
+                    breakfastMessageBuilder.append(courtName + ", ");
                     breakfastAvailable = true;
                 }
 
@@ -190,7 +191,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Lunch", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    lunchMessageBuilder.append(courtName + " ");
+                    spaceLunch++;
+                    lunchMessageBuilder.append(courtName + ", ");
                     lunchAvailable = true;
                 }
 
@@ -202,7 +204,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Dinner", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    dinnerMessageBuilder.append(courtName + " ");
+                    spaceDinner++;
+                    dinnerMessageBuilder.append(courtName + ", ");
                     dinnerAvailable = true;
                 }
 
@@ -219,16 +222,37 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         }
 
         if(breakfastAvailable && notificationType == BREAKFAST_NOTIFICATION){
+            if(spaceBrek>0){
+                breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceBrek>1){
+                breakfastMessageBuilder.insert(breakfastMessageBuilder.lastIndexOf(",")+1," and") ;
+                breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             breakfastMessageBuilder.append("for breakfast!");
             NotificationHelper.sendNotification(context, breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
         }
 
         if(lunchAvailable && notificationType == LUNCH_NOTIFICATION){
+            if(spaceLunch>0){
+                lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceLunch>1){
+                lunchMessageBuilder.insert(lunchMessageBuilder.lastIndexOf(",")+1," and") ;
+                lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             lunchMessageBuilder.append("for lunch!");
             NotificationHelper.sendNotification(context, lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
         }
 
         if(dinnerAvailable && notificationType == DINNER_NOTIFICATION){
+            if(spaceDinner>0){
+                dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceDinner>1){
+                dinnerMessageBuilder.insert(dinnerMessageBuilder.lastIndexOf(",")+1," and") ;
+                dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             dinnerMessageBuilder.append("for dinner!");
             NotificationHelper.sendNotification(context, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
         }
