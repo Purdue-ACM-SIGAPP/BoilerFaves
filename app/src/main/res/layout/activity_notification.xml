@@ -70,7 +70,7 @@
             android:paddingRight="4dp">
             <Button
                 android:id="@+id/breakfast_time"
-                android:layout_width="115dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="20sp"/>
@@ -121,7 +121,7 @@
             android:paddingRight="4dp">
             <Button
                 android:id="@+id/lunch_time"
-                android:layout_width="115dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="20sp"/>
@@ -170,7 +170,7 @@
             android:paddingRight="4dp">
             <Button
                 android:id="@+id/dinner_time"
-                android:layout_width="115dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="20sp"/>
