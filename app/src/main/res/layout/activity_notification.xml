@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMaterialGray400"
     tools:context="com.lshan.boilerfaves.Activities.NotificationActivity"
     android:orientation="vertical">
 
@@ -18,8 +17,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:layout_height="match_parent"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -30,8 +28,8 @@
         android:layout_height="match_parent"
         android:columnCount="2"
         android:rowCount="3"
-        android:useDefaultMargins="true">
-
+        android:useDefaultMargins="true"
+        android:paddingTop="4dp">
 
         <LinearLayout
             android:id="@+id/breakfastLine"
@@ -52,13 +50,15 @@
                 android:layout_gravity="start"
                 />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/breakfastSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-        </LinearLayout>
 
+        </LinearLayout>
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/breakfastSwitch"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,13 +68,20 @@
             android:paddingLeft="4dp"
             android:paddingEnd="4dp"
             android:paddingRight="4dp">
-            <TextView
+            <Button
                 android:id="@+id/breakfast_time"
-                android:layout_width="match_parent"
+                android:layout_width="115dp"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="20sp"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_below="@id/breakfast_time_pick"
+            android:layout_height="1dp"
+            android:background="#bdbdbd"
+            />
 
         <LinearLayout
             android:id="@+id/lunchLine"
@@ -112,9 +119,9 @@
             android:paddingLeft="4dp"
             android:paddingEnd="4dp"
             android:paddingRight="4dp">
-            <TextView
+            <Button
                 android:id="@+id/lunch_time"
-                android:layout_width="match_parent"
+                android:layout_width="115dp"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="20sp"/>
@@ -146,7 +153,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"/>
         </LinearLayout>
-
+        <View
+            android:layout_width="fill_parent"
+            android:layout_below="@id/lunch_time_pick"
+            android:layout_height="1dp"
+            android:background="#bdbdbd"
+            android:padding="20dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -156,9 +168,9 @@
             android:paddingLeft="4dp"
             android:paddingEnd="4dp"
             android:paddingRight="4dp">
-            <TextView
+            <Button
                 android:id="@+id/dinner_time"
-                android:layout_width="match_parent"
+                android:layout_width="115dp"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="20sp"/>
@@ -196,7 +208,6 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"/>
     </RelativeLayout>
-
 
     <include layout="@layout/content_notification" />
 </LinearLayout>

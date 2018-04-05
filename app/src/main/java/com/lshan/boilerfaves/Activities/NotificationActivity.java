@@ -175,19 +175,6 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         storeTimeFromTimePicker("breakfast", hour, minute);
-                        String amorpm = "AM";
-                        if(hour > 12){
-                            hour-=12;
-                            amorpm = "PM";
-                        }
-                        String sMinute = "" + minute;
-                        if(minute < 10) {
-                            sMinute = "0" + minute;
-                        }
-                        System.out.println("Hour: " + hour);
-                        System.out.println("Minute: " + minute);
-                        breakfastTime.setText(hour + ":" + sMinute + " " + amorpm);
-
                         runNotifAlarm();
                     }
                 }, hour, minute, false).show();
@@ -203,20 +190,6 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         storeTimeFromTimePicker("lunch", hour, minute);
-                        String amorpm = "AM";
-                        if(hour > 12){
-                            hour -= 12;
-                            amorpm = "PM";
-                        }
-                        String sMinute = "" + minute;
-                        if(minute < 10) {
-                            sMinute = "0" + minute;
-                        }
-                        System.out.println("Hour: " + hour);
-                        System.out.println("Minute: " + minute);
-                        //lunchTime.setText(hour + ":" + minute);
-                        lunchTime.setText(hour + ":" + sMinute + " " + amorpm);
-
                         runNotifAlarm();
                     }
                 }, hour, minute, false).show();
@@ -232,20 +205,6 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         storeTimeFromTimePicker("dinner", hour, minute);
-                        String amorpm = "AM";
-                        if(hour > 12){
-                            hour -= 12;
-                            amorpm = "PM";
-                        }
-                        String sMinute = "" + minute;
-                        if(minute < 10) {
-                            sMinute = "0" + minute;
-                        }
-                        System.out.println("Hour: " + hour);
-                        System.out.println("Minute: " + minute);
-                        //dinnerTime.setText(hour + ":" + minute);
-                        dinnerTime.setText(hour + ":" + sMinute + " " + amorpm);
-
                         runNotifAlarm();
                     }
                 }, hour, minute, false).show();
