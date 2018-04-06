@@ -136,6 +136,7 @@ public class SelectFoodActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
                 //change adapter model to fit query
+                searchView.scrollTo(0,0);
                 selectFoodAdapter.searchFoods(s);
                 return false;
             }

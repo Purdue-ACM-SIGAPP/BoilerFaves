@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
@@ -46,6 +48,11 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.noFavesLayout)
     RelativeLayout noFavesLayout;
 
+    @BindView(R.id.progressLayout)
+    RelativeLayout progressLayout;
+
+    @BindView(R.id.mainLayout)
+    FrameLayout mainLayout;
 
     private FoodAdapter foodAdapter;
     final private Context context = this;
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION).execute();
         } else {
             showNoInternetDialog();
         }
@@ -208,9 +215,6 @@ public class MainActivity extends AppCompatActivity{
     public void launchNotifications(){
         Intent intent = new Intent(context, NotificationActivity.class);
         context.startActivity(intent);
-
     }
-
-
 
 }

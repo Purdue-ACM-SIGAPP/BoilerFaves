@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,19 +136,19 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 icon.setVisibility(View.VISIBLE);
                 switch(court){
                     case "Windsor":
-                        icon.setImageResource(R.drawable.ic_windsor);
+                        Picasso.with(context).load(R.drawable.ic_windsor).into(icon);
                         break;
                     case "Ford":
-                        icon.setImageResource(R.drawable.ic_ford);
+                        Picasso.with(context).load(R.drawable.ic_ford).into(icon);
                         break;
                     case "Wiley":
-                        icon.setImageResource(R.drawable.ic_wiley);
+                        Picasso.with(context).load(R.drawable.ic_wiley).into(icon);
                         break;
                     case "Earhart":
-                        icon.setImageResource(R.drawable.ic_earhart);
+                        Picasso.with(context).load(R.drawable.ic_earhart).into(icon);
                         break;
                     case "Hillenbrand":
-                        icon.setImageResource(R.drawable.ic_hillenbrand);
+                        Picasso.with(context).load(R.drawable.ic_hillenbrand).into(icon);
                         break;
                     case "The Gathering Place":
                         icon.setImageResource(R.drawable.ic_gatheringplace);

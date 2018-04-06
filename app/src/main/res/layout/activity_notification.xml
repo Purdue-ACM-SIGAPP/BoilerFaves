@@ -83,6 +83,7 @@
             android:background="#bdbdbd"
             />
 
+
         <LinearLayout
             android:id="@+id/lunchLine"
             android:layout_width="match_parent"
@@ -159,6 +160,7 @@
             android:layout_height="1dp"
             android:background="#bdbdbd"
             android:padding="20dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

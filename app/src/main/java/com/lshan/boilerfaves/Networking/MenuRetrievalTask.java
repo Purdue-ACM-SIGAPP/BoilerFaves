@@ -7,6 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.lshan.boilerfaves.Activities.MainActivity;
@@ -50,21 +53,40 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     private RecyclerView mainRecyclerView;
     private int notificationType;
     private Context context;
+    RelativeLayout progressLayout;
+    FrameLayout frameLayout;
 
     public static final int NO_NOTIFICATION = 0;
     public static final int BREAKFAST_NOTIFICATION = 1;
     public static final int LUNCH_NOTIFICATION = 2;
     public static final int DINNER_NOTIFICATION = 3;
 
+    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType){
+        this.context = context;
+        this.mainRecyclerView = mainRecyclerView;
+        this.notificationType = notificationType;
+        this.progressLayout = progressLayout;
+        this.frameLayout = frameLayout;
+    }
+
     public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, int notificationType){
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;
         this.notificationType = notificationType;
+        this.progressLayout = null;
+        this.frameLayout = null;
     }
 
     @Override
     protected void onPreExecute() {
+
         super.onPreExecute();
+
+        if(progressLayout != null){
+            progressLayout.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -97,7 +119,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     @Override
     protected void onPostExecute(ArrayList<DiningCourtMenu> menus) {
 
-        //TODO Do I need to move the notifications stuff to doInBackground so it can be called without passing the recyclerView?
 
         List<FoodModel> faves = SharedPrefsHelper.getFaveList(context);
         ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
@@ -111,6 +132,38 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         StringBuilder dinnerMessageBuilder = new StringBuilder().append("Faves available at ");
 
         boolean breakfastAvailable = false, lunchAvailable = false, dinnerAvailable = false;
+        int spaceBrek=0, spaceLunch=0, spaceDinner=0;
+        //Make a list of all the foods available today so we can mark foods that aren't in it as unavailable
+        ArrayList<FoodModel> availableToday = new ArrayList<>();
+        for(DiningCourtMenu menu : availableFaves){
+            if(menu != null) {
+                if (menu.getBreakfast() != null) {
+                    for (FoodModel food : menu.getBreakfast()) {
+                        availableToday.add(food);
+                    }
+                }
+
+                if (menu.getLunch() != null) {
+                    for (FoodModel food : menu.getLunch()) {
+                        availableToday.add(food);
+                    }
+                }
+
+                if (menu.getDinner() != null) {
+                    for (FoodModel food : menu.getLunch()) {
+                        availableToday.add(food);
+                    }
+                }
+            }
+        }
+
+
+        for(FoodModel food : faves){
+            if(!availableToday.contains(food)){
+                food.setAvailable(false);
+            }
+        }
+
 
         for(DiningCourtMenu menu : availableFaves){
             if(menu != null){
@@ -125,7 +178,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Breakfast", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    breakfastMessageBuilder.append(courtName + " ");
+                    spaceBrek++;
+                    breakfastMessageBuilder.append(courtName + ", ");
                     breakfastAvailable = true;
                 }
 
@@ -137,7 +191,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Lunch", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    lunchMessageBuilder.append(courtName + " ");
+                    spaceLunch++;
+                    lunchMessageBuilder.append(courtName + ", ");
                     lunchAvailable = true;
                 }
 
@@ -149,7 +204,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Dinner", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    dinnerMessageBuilder.append(courtName + " ");
+                    spaceDinner++;
+                    dinnerMessageBuilder.append(courtName + ", ");
                     dinnerAvailable = true;
                 }
 
@@ -166,19 +222,49 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         }
 
         if(breakfastAvailable && notificationType == BREAKFAST_NOTIFICATION){
+            if(spaceBrek>0){
+                breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceBrek>1){
+                breakfastMessageBuilder.insert(breakfastMessageBuilder.lastIndexOf(",")+1," and") ;
+                breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             breakfastMessageBuilder.append("for breakfast!");
             NotificationHelper.sendNotification(context, breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
         }
 
         if(lunchAvailable && notificationType == LUNCH_NOTIFICATION){
+            if(spaceLunch>0){
+                lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceLunch>1){
+                lunchMessageBuilder.insert(lunchMessageBuilder.lastIndexOf(",")+1," and") ;
+                lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             lunchMessageBuilder.append("for lunch!");
             NotificationHelper.sendNotification(context, lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
         }
 
         if(dinnerAvailable && notificationType == DINNER_NOTIFICATION){
+            if(spaceDinner>0){
+                dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceDinner>1){
+                dinnerMessageBuilder.insert(dinnerMessageBuilder.lastIndexOf(",")+1," and") ;
+                dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             dinnerMessageBuilder.append("for dinner!");
             NotificationHelper.sendNotification(context, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
         }
+
+
+
+        //Hide the progress bar
+        if(progressLayout != null){
+            progressLayout.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.VISIBLE);
+        }
+
 
     }
 
@@ -237,8 +323,9 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                     availableCourts.get(meal).add(court);
                 }
             }
-        }
 
+            foodModel.setAvailableCourts(availableCourts);
+        }
 
     }
 }
