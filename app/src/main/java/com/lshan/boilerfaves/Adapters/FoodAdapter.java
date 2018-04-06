@@ -3,6 +3,7 @@ package com.lshan.boilerfaves.Adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by lshan on 12/16/2017.
@@ -134,22 +137,28 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 icon.setVisibility(View.VISIBLE);
                 switch(court){
                     case "Windsor":
-                        Picasso.with(context).load(R.drawable.ic_windsor).into(icon);
+                        //Picasso.with(context).load(R.drawable.ic_windsor).fit().into(icon);
+                        Glide.with(context).load(R.drawable.ic_windsor).into(icon);
                         break;
                     case "Ford":
-                        Picasso.with(context).load(R.drawable.ic_ford).into(icon);
+                        //Picasso.with(context).load(R.drawable.ic_ford).fit().into(icon);
+                        Glide.with(context).load(R.drawable.ic_ford).into(icon);
                         break;
                     case "Wiley":
-                        Picasso.with(context).load(R.drawable.ic_wiley).into(icon);
+                        //Picasso.with(context).load(R.drawable.ic_wiley).fit().into(icon);
+                        Glide.with(context).load(R.drawable.ic_wiley).into(icon);
                         break;
                     case "Earhart":
-                        Picasso.with(context).load(R.drawable.ic_earhart).into(icon);
+                        //Picasso.get().load(R.drawable.ic_earhart).fit().into(icon);
+                        Glide.with(context).load(R.drawable.ic_earhart).into(icon);
                         break;
                     case "Hillenbrand":
-                        Picasso.with(context).load(R.drawable.ic_hillenbrand).into(icon);
+                        //Picasso.with(context).load(R.drawable.ic_hillenbrand).fit().into(icon);
+                        Glide.with(context).load(R.drawable.ic_hillenbrand).into(icon);
                         break;
                     case "The Gathering Place":
-                        icon.setImageResource(R.drawable.ic_gatheringplace);
+                        //icon.setImageResource(R.drawable.ic_gatheringplace);
+                        Glide.with(context).load(R.drawable.ic_gatheringplace).into(icon);
                         break;
                     default:
                         icon.setVisibility(View.GONE);
