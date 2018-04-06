@@ -60,6 +60,7 @@ public class SelectFoodActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setTitle("");
 
         callRetrofit();
     }
