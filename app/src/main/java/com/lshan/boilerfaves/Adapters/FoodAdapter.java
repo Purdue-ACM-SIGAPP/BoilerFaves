@@ -137,27 +137,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 icon.setVisibility(View.VISIBLE);
                 switch(court){
                     case "Windsor":
-                        //Picasso.with(context).load(R.drawable.ic_windsor).fit().into(icon);
                         Glide.with(context).load(R.drawable.ic_windsor).into(icon);
                         break;
                     case "Ford":
-                        //Picasso.with(context).load(R.drawable.ic_ford).fit().into(icon);
                         Glide.with(context).load(R.drawable.ic_ford).into(icon);
                         break;
                     case "Wiley":
-                        //Picasso.with(context).load(R.drawable.ic_wiley).fit().into(icon);
                         Glide.with(context).load(R.drawable.ic_wiley).into(icon);
                         break;
                     case "Earhart":
-                        //Picasso.get().load(R.drawable.ic_earhart).fit().into(icon);
                         Glide.with(context).load(R.drawable.ic_earhart).into(icon);
                         break;
                     case "Hillenbrand":
-                        //Picasso.with(context).load(R.drawable.ic_hillenbrand).fit().into(icon);
                         Glide.with(context).load(R.drawable.ic_hillenbrand).into(icon);
                         break;
                     case "The Gathering Place":
-                        //icon.setImageResource(R.drawable.ic_gatheringplace);
                         Glide.with(context).load(R.drawable.ic_gatheringplace).into(icon);
                         break;
                     default:
