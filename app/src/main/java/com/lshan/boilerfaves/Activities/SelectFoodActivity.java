@@ -116,8 +116,9 @@ public class SelectFoodActivity extends AppCompatActivity {
         MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
         SearchView searchView = (SearchView) myActionMenuItem.getActionView();
 
-        searchView.setIconifiedByDefault(false);
-        searchView.requestFocus();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setIconified(false);
+        searchView.setQueryHint("Search foods...");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
