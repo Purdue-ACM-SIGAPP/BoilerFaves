@@ -43,8 +43,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     private final int DINNER_OFFSET = 16;
 
 
-
-
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
         this.context = context;

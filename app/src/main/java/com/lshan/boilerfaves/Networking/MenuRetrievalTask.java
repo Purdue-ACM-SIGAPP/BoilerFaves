@@ -230,7 +230,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
             }
             breakfastMessageBuilder.append("for breakfast!");
-            NotificationHelper.sendNotification(context, breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
+            NotificationHelper.sendNotification(context, "Faves For Breakfast", breakfastMessageBuilder.toString(), NotificationHelper.BREAKFAST);
         }
 
         if(lunchAvailable && notificationType == LUNCH_NOTIFICATION){
@@ -242,7 +242,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
             }
             lunchMessageBuilder.append("for lunch!");
-            NotificationHelper.sendNotification(context, lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
+            NotificationHelper.sendNotification(context, "Faves For Lunch", lunchMessageBuilder.toString(), NotificationHelper.LUNCH);
         }
 
         if(dinnerAvailable && notificationType == DINNER_NOTIFICATION){
@@ -254,7 +254,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
             }
             dinnerMessageBuilder.append("for dinner!");
-            NotificationHelper.sendNotification(context, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
+            NotificationHelper.sendNotification(context, "Faves For Dinner", dinnerMessageBuilder.toString(), NotificationHelper.DINNER);
         }
 
 

@@ -65,6 +65,8 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
                     .setContentIntent(contentIntent)
                     .build();
 
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
             if (mNotifyMgr != null) {
                 mNotifyMgr.notify(notificationID, notification);
             } else {
@@ -97,9 +99,12 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
 
             mBuilder.setContentIntent(resultPendingIntent);
 
+            Notification notification = mBuilder.build();
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
             if (mNotifyMgr != null) {
                 System.out.println(notificationID);
-                mNotifyMgr.notify(notificationID, mBuilder.build());
+                mNotifyMgr.notify(notificationID, notification);
             } else {
                 Log.e("Notification", "Notification manager is null.");
             }

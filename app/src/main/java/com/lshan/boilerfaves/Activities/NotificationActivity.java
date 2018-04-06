@@ -358,6 +358,7 @@ public class NotificationActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
     }
+
     private String twentyFourHourTo12(int hour, int minute){
         String amorpm = "AM";
         String sMin = "" + minute;
