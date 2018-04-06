@@ -151,7 +151,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                         Picasso.with(context).load(R.drawable.ic_hillenbrand).into(icon);
                         break;
                     case "The Gathering Place":
-                        Picasso.with(context).load(R.drawable.ic_gatheringplace).into(icon);
+                        icon.setImageResource(R.drawable.ic_gatheringplace);
+                        break;
                     default:
                         icon.setVisibility(View.GONE);
                 }

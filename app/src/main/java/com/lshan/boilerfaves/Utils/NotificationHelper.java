@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -48,8 +49,13 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             mNotifyMgr.createNotificationChannel(channel);
 
+            Intent intent = new Intent(context, MainActivity.class);
+            Bundle b  = new Bundle();
+            b.putInt("notificationID", notificationID);
+            intent.putExtras(b);
+
             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                    new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Notification notification = new Notification.Builder(context, CHANNEL_ID)
                     .setContentTitle(title)
@@ -74,6 +80,10 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
                     .setContentText(content);
 
             Intent resultIntent = new Intent(context, MainActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("notificationID", notificationID);
+            resultIntent.putExtras(b);
+
             //TODO Actually should have the back stack ... do later
             // Because clicking the notification opens a new ("special") activity, there's
             // no need to create an artificial back stack.

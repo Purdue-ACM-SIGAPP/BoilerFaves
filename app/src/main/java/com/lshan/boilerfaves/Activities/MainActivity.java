@@ -1,6 +1,7 @@
 package com.lshan.boilerfaves.Activities;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,6 +61,14 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Dismiss notification if the user clicked a notification to get here
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            int id = b.getInt("notificationID", 0);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(id);
+        }
 
         ButterKnife.bind(this);
 
@@ -142,7 +151,11 @@ public class MainActivity extends AppCompatActivity{
             startAdaptor(faveList);
         }
 
-        new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+        if (isOnline()) {
+            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+        } else {
+            showNoInternetDialog();
+        }
     }
 
 
