@@ -3,6 +3,7 @@ package com.lshan.boilerfaves.Adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by lshan on 12/16/2017.
@@ -41,11 +46,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     private final int DINNER_OFFSET = 16;
 
 
-
-
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
         this.context = context;
+        Collections.sort(this.foods);
+        SharedPrefsHelper.storeFaveList(this.foods, context);
     }
 
     //Used to display the "No faves selected" message
@@ -67,7 +72,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
         FoodModel food = foods.get(position);
-        holder.cardTitle.setText(food.Name);
+        holder.cardTitle.setText(food.getName());
 
 
         //Update card layout based on availability
@@ -132,22 +137,23 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 icon.setVisibility(View.VISIBLE);
                 switch(court){
                     case "Windsor":
-                        icon.setImageResource(R.drawable.ic_windsor);
+                        Glide.with(context).load(R.drawable.ic_windsor).into(icon);
                         break;
                     case "Ford":
-                        icon.setImageResource(R.drawable.ic_ford);
+                        Glide.with(context).load(R.drawable.ic_ford).into(icon);
                         break;
                     case "Wiley":
-                        icon.setImageResource(R.drawable.ic_wiley);
+                        Glide.with(context).load(R.drawable.ic_wiley).into(icon);
                         break;
                     case "Earhart":
-                        icon.setImageResource(R.drawable.ic_earhart);
+                        Glide.with(context).load(R.drawable.ic_earhart).into(icon);
                         break;
                     case "Hillenbrand":
-                        icon.setImageResource(R.drawable.ic_hillenbrand);
+                        Glide.with(context).load(R.drawable.ic_hillenbrand).into(icon);
                         break;
                     case "The Gathering Place":
-                        icon.setImageResource(R.drawable.ic_gatheringplace);
+                        Glide.with(context).load(R.drawable.ic_gatheringplace).into(icon);
+                        break;
                     default:
                         icon.setVisibility(View.GONE);
                 }

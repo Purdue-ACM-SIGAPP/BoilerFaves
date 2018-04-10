@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/food_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -24,7 +25,7 @@
             android:text="@string/PopcornChicken"
             android:textColor="#000000"
             android:textSize="28sp"
-            android:maxLines="1"
+            android:maxLines="10"
             android:ellipsize="end"/>
 
 
@@ -35,7 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="?android:selectableItemBackground"
-            android:src="@drawable/ic_clear_black_24dp" />
+            app:srcCompat="@drawable/ic_clear_black_24dp" />
 
 
         <RelativeLayout
@@ -72,8 +73,8 @@
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="1"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -81,8 +82,8 @@
                     android:src="@drawable/ic_windsor" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="2"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -91,27 +92,28 @@
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="3"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
                     android:layout_row="0"
-                    android:src="@drawable/ic_earhart" />
+                    android:src="@drawable/ic_earhart"
+                    />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="4"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
                     android:layout_row="0"
                     android:src="@drawable/ic_wiley"
-                    android:stretchMode="columnWidth" />
+                    />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="5"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -119,8 +121,8 @@
                     android:src="@drawable/ic_ford" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="6"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -130,8 +132,8 @@
 
                 <!--Empty image layout used for formatting-->
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="7"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -152,8 +154,8 @@
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="1"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -161,8 +163,8 @@
                     android:src="@drawable/ic_windsor" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="2"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -170,8 +172,8 @@
                     android:src="@drawable/ic_hillenbrand" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="3"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -179,8 +181,8 @@
                     android:src="@drawable/ic_earhart" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="4"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -188,8 +190,8 @@
                     android:src="@drawable/ic_wiley" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="5"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -198,8 +200,8 @@
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="6"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -208,8 +210,8 @@
 
                 <!--Empty image layout used for formatting-->
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="7"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -229,8 +231,8 @@
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="1"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -238,8 +240,8 @@
                     android:src="@drawable/ic_windsor" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="2"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -247,8 +249,8 @@
                     android:src="@drawable/ic_hillenbrand" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="3"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -256,8 +258,8 @@
                     android:src="@drawable/ic_earhart" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="4"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -265,8 +267,8 @@
                     android:src="@drawable/ic_wiley" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="5"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -275,8 +277,8 @@
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="6"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"
@@ -286,8 +288,8 @@
 
                 <!--Empty image layout used for formatting-->
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_column="7"
                     android:layout_gravity="center"
                     android:layout_marginRight="6dp"

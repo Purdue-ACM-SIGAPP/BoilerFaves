@@ -79,8 +79,8 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="action_notification">action_notification</string>
     <string name="search">Search</string>
-    <string name="breakfast">Breakfast:</string>
-    <string name="lunch">Lunch:</string>
-    <string name="dinner">Dinner:</string>
-    <string name="search">search</string>
+    <string name="breakfast">Breakfast</string>
+    <string name="lunch">Lunch</string>
+    <string name="dinner">Dinner</string>
+    <string name="cancel">Cancel</string>
 </resources>

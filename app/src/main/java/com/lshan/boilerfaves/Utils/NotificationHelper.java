@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -48,12 +49,23 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             mNotifyMgr.createNotificationChannel(channel);
 
+            Intent intent = new Intent(context, MainActivity.class);
+            Bundle b  = new Bundle();
+            b.putInt("notificationID", notificationID);
+            intent.putExtras(b);
+
+            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
             Notification notification = new Notification.Builder(context, CHANNEL_ID)
                     .setContentTitle(title)
                     .setContentText(content)
-                    .setSmallIcon(R.drawable.ic_notifications_icon)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
                     .setChannelId(CHANNEL_ID)
+                    .setContentIntent(contentIntent)
                     .build();
+
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
             if (mNotifyMgr != null) {
                 mNotifyMgr.notify(notificationID, notification);
@@ -61,15 +73,19 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
                 Log.e("Notification", "Notification manager is null.");
             }
 
-        }else {
+        } else {
 
             //https://developer.android.com/training/notify-user/build-notification.html#click
             mBuilder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_notifications_icon)
+                    .setSmallIcon(R.drawable.ic_notification_icon)
                     .setContentTitle(title)
                     .setContentText(content);
 
             Intent resultIntent = new Intent(context, MainActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("notificationID", notificationID);
+            resultIntent.putExtras(b);
+
             //TODO Actually should have the back stack ... do later
             // Because clicking the notification opens a new ("special") activity, there's
             // no need to create an artificial back stack.
@@ -83,9 +99,12 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
 
             mBuilder.setContentIntent(resultPendingIntent);
 
+            Notification notification = mBuilder.build();
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
             if (mNotifyMgr != null) {
                 System.out.println(notificationID);
-                mNotifyMgr.notify(notificationID, mBuilder.build());
+                mNotifyMgr.notify(notificationID, notification);
             } else {
                 Log.e("Notification", "Notification manager is null.");
             }
