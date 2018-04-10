@@ -138,21 +138,15 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         for(DiningCourtMenu menu : availableFaves){
             if(menu != null) {
                 if (menu.getBreakfast() != null) {
-                    for (FoodModel food : menu.getBreakfast()) {
-                        availableToday.add(food);
-                    }
+                    availableToday.addAll(menu.getBreakfast());
                 }
 
                 if (menu.getLunch() != null) {
-                    for (FoodModel food : menu.getLunch()) {
-                        availableToday.add(food);
-                    }
+                    availableToday.addAll(menu.getLunch());
                 }
 
                 if (menu.getDinner() != null) {
-                    for (FoodModel food : menu.getLunch()) {
-                        availableToday.add(food);
-                    }
+                    availableToday.addAll(menu.getDinner());
                 }
             }
         }
@@ -161,6 +155,10 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         for(FoodModel food : faves){
             if(!availableToday.contains(food)){
                 food.setAvailable(false);
+            }else {
+                for (String court : food.getAvailableCourts().keySet()) {
+                    food.getAvailableCourts().get(court).clear();
+                }
             }
         }
 

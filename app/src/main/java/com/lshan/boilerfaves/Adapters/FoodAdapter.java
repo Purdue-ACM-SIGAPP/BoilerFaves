@@ -74,53 +74,58 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         FoodModel food = foods.get(position);
         holder.cardTitle.setText(food.getName());
 
-
         //Update card layout based on availability
-        if(food.isAvailable){
+        if(food.isAvailable) {
+
             holder.availabilityLayout.setVisibility(View.VISIBLE);
             holder.unavailableMessage.setVisibility(View.GONE);
+
+            HashMap<String, ArrayList<String>> availableCourts = food.getAvailableCourts();
+            GridLayout grid = holder.availabilityGrid;
+
+            //First clear all available court icons, then redraw them based on availability
+            for (int i = 0; i < 24; i++) {
+                grid.getChildAt(i).setVisibility(View.GONE);
+            }
+
+            if (availableCourts != null) {
+
+                if (availableCourts.containsKey("Breakfast")) {
+                    grid.getChildAt(0).setVisibility(View.VISIBLE);
+
+                    ArrayList<String> courtList = availableCourts.get("Breakfast");
+                    displayDiningCourts(grid, courtList, BREAKFAST_OFFSET);
+                } else {
+                    for (int i = 0; i < 8; i++) {
+                        grid.getChildAt(i).setVisibility(View.GONE);
+                    }
+                }
+
+                if (availableCourts.containsKey("Lunch")) {
+                    grid.getChildAt(8).setVisibility(View.VISIBLE);
+
+                    ArrayList<String> courtList = availableCourts.get("Lunch");
+                    displayDiningCourts(grid, courtList, LUNCH_OFFSET);
+                } else {
+                    for (int i = 8; i < 16; i++) {
+                        grid.getChildAt(i).setVisibility(View.GONE);
+                    }
+                }
+
+                if (availableCourts.containsKey("Dinner")) {
+                    grid.getChildAt(16).setVisibility(View.VISIBLE);
+
+                    ArrayList<String> courtList = availableCourts.get("Dinner");
+                    displayDiningCourts(grid, courtList, DINNER_OFFSET);
+                } else {
+                    for (int i = 16; i < 24; i++) {
+                        grid.getChildAt(i).setVisibility(View.GONE);
+                    }
+                }
+            }
         }else{
             holder.availabilityLayout.setVisibility(View.GONE);
             holder.unavailableMessage.setVisibility(View.VISIBLE);
-        }
-
-        HashMap<String, ArrayList<String>> availableCourts = food.getAvailableCourts();
-        GridLayout grid = holder.availabilityGrid;
-
-        if(availableCourts != null) {
-
-            if (availableCourts.containsKey("Breakfast")) {
-                grid.getChildAt(0).setVisibility(View.VISIBLE);
-
-                ArrayList<String> courtList = availableCourts.get("Breakfast");
-                displayDiningCourts(grid, courtList, BREAKFAST_OFFSET);
-            } else {
-                for (int i = 0; i < 8; i++) {
-                    grid.getChildAt(i).setVisibility(View.GONE);
-                }
-            }
-
-            if (availableCourts.containsKey("Lunch")) {
-                grid.getChildAt(8).setVisibility(View.VISIBLE);
-
-                ArrayList<String> courtList = availableCourts.get("Lunch");
-                displayDiningCourts(grid, courtList, LUNCH_OFFSET);
-            } else {
-                for (int i = 8; i < 16; i++) {
-                    grid.getChildAt(i).setVisibility(View.GONE);
-                }
-            }
-
-            if (availableCourts.containsKey("Dinner")) {
-                grid.getChildAt(16).setVisibility(View.VISIBLE);
-
-                ArrayList<String> courtList = availableCourts.get("Dinner");
-                displayDiningCourts(grid, courtList, DINNER_OFFSET);
-            } else {
-                for (int i = 16; i < 24; i++) {
-                    grid.getChildAt(i).setVisibility(View.GONE);
-                }
-            }
         }
 
     }
