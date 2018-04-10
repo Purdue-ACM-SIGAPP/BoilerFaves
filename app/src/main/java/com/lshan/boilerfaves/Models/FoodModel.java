@@ -23,6 +23,7 @@ public class FoodModel implements Comparable<FoodModel>{
     private boolean IsVegetarian;
 
     public boolean isAvailable;
+    //<Meal, List of courts food is available for that meal>
     public HashMap<String, ArrayList<String>> availableCourts;
 
 
@@ -48,6 +49,7 @@ public class FoodModel implements Comparable<FoodModel>{
     public boolean isAvailable(){
         return isAvailable;
     }
+
 
     public void setAvailableCourts(HashMap<String, ArrayList<String>> availableCourts){
         this.availableCourts = availableCourts;

@@ -155,11 +155,9 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         for(FoodModel food : faves){
             if(!availableToday.contains(food)){
                 food.setAvailable(false);
-            }else {
-                for (String court : food.getAvailableCourts().keySet()) {
-                    food.getAvailableCourts().get(court).clear();
-                }
             }
+
+            food.setAvailableCourts(new HashMap<>());
         }
 
 
