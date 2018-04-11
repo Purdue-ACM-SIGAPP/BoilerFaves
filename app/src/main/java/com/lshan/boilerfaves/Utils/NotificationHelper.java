@@ -39,10 +39,9 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
 
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-
+        String CHANNEL_ID = "boiler_faves_01";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             //Need to do channel stuff for android oreo ugh
-            String CHANNEL_ID = "boiler_faves_01";
             CharSequence name = "BoilerFaves";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
@@ -76,7 +75,7 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
         } else {
 
             //https://developer.android.com/training/notify-user/build-notification.html#click
-            mBuilder = new NotificationCompat.Builder(context)
+            mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_notification_icon)
                     .setContentTitle(title)
                     .setContentText(content);
