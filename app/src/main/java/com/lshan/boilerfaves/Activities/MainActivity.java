@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
     Toolbar toolbar;
 
     @BindView(R.id.availableFavesLayout)
-    RelativeLayout availableFavesLayout;
+    ScrollView availableFavesLayout;
 
     @BindView(R.id.noFavesLayout)
     RelativeLayout noFavesLayout;

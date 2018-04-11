@@ -26,21 +26,44 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
-        <RelativeLayout
+        <ScrollView
             android:id="@+id/availableFavesLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-         >
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/mainRecyclerView"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="visible"
+             >
+                <LinearLayout
+                    android:id="@+id/filterLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:layout_marginLeft="4dp">
 
-            </android.support.v7.widget.RecyclerView>
+                    <android.support.v7.widget.SwitchCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Show Available Only"
+                        app:switchPadding="10dp" />
 
-        </RelativeLayout>
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/mainRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/filterLayout"
+                    android:nestedScrollingEnabled="false">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
+
+        </ScrollView>
 
         <RelativeLayout
             android:id="@+id/noFavesLayout"
@@ -54,7 +77,7 @@
                 android:id="@+id/foodIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_food_icon"
+                app:srcCompat="@drawable/ic_food_icon"
 
                 android:layout_centerHorizontal="true"/>
 
