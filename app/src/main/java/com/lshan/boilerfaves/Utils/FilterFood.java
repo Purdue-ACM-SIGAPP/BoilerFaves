@@ -11,25 +11,22 @@ import java.util.ArrayList;
  * Created by crosenblatt on 4/10/18.
  */
 
-public abstract class FilterFood extends Filter {
+public class FilterFood extends Filter {
 
-    //@Override
-    /*protected FilterResults performFiltering(CharSequence constraint) {
-        FilterResults results = new FilterResults();
-        ArrayList<FoodModel> availableFoods = new ArrayList<FoodModel>();
-
-
-
-        results.values = availableFoods;
-        results.count = availableFoods.size();
+    @Override
+    protected FilterResults performFiltering(CharSequence constraint) {
         return null;
-    }*/
+    }
 
-    protected FilterResults performFiltering(boolean isAvailable) {
+    protected FilterResults performFiltering(ArrayList<FoodModel> foodList) {
         FilterResults results = new FilterResults();
         ArrayList<FoodModel> availableFoods = new ArrayList<FoodModel>();
 
-
+        for(int i = 0; i < foodList.size(); i++) {
+            if(foodList.get(i).isAvailable) {
+                availableFoods.add(foodList.get(i));
+            }
+        }
 
         results.values = availableFoods;
         results.count = availableFoods.size();

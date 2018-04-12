@@ -86,6 +86,14 @@ public class MainActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
         checkForFaves(faveList);
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -235,8 +243,24 @@ public class MainActivity extends AppCompatActivity{
 
     @OnCheckedChanged(R.id.availabilitySwitch)
     public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
+        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
         System.out.println("checked " + isChecked);
-        showAvailableOnly = isChecked;
+
+        if(isChecked) {
+            foodAdapter.setFoods(availFaveList);
+        } else {
+            foodAdapter.setFoods(faveList);
+        }
+        foodAdapter.notifyDataSetChanged();
+
     }
 
 }
