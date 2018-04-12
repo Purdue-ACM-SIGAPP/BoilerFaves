@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -54,6 +56,9 @@ public class MainActivity extends AppCompatActivity{
 
     @BindView(R.id.mainLayout)
     FrameLayout mainLayout;
+
+    @BindView(R.id.availabilitySwitch)
+    SwitchCompat availabilitySwitch;
 
     private FoodAdapter foodAdapter;
     final private Context context = this;
@@ -218,4 +223,8 @@ public class MainActivity extends AppCompatActivity{
         context.startActivity(intent);
     }
 
+    @OnCheckedChanged(R.id.availabilitySwitch)
+    public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
+        System.out.println("checked " + isChecked);
+    }
 }
