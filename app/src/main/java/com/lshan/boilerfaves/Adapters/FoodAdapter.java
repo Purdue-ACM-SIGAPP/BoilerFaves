@@ -37,6 +37,7 @@ import static android.content.ContentValues.TAG;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder>{
 
     private List<FoodModel> foods;
+    private List<FoodModel> availFoods;
     private Context context;
     private OnListEmptyListener mOnListEmptyListener;
 
@@ -48,6 +49,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
+        for(int i = 0; i < data.size(); i++) {
+            if(data.get(i).isAvailable) {
+                availFoods.add(data.get(i));
+            }
+        }
         this.context = context;
         Collections.sort(this.foods);
         SharedPrefsHelper.storeFaveList(this.foods, context);

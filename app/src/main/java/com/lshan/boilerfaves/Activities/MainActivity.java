@@ -81,6 +81,14 @@ public class MainActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
         checkForFaves(faveList);
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -212,6 +220,23 @@ public class MainActivity extends AppCompatActivity{
         mainRecyclerView.setAdapter(foodAdapter);
     }
 
+    private void startAdaptorChecked(List<FoodModel> data){
+        foodAdapter = new FoodAdapter(this, data);
+        foodAdapter.setmOnListEmptyListener(new FoodAdapter.OnListEmptyListener() {
+            @Override
+            public void onListEmpty() {
+                noFavesLayout.setVisibility(View.VISIBLE);
+                availableFavesLayout.setVisibility(View.GONE);
+            }
+        });
+        foodAdapter.notifyDataSetChanged();
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mainRecyclerView.setLayoutManager(linearLayoutManager);
+
+        mainRecyclerView.setAdapter(foodAdapter);
+    }
+
 
     public void launchFoodSelect(){
         Intent intent = new Intent(context, SelectFoodActivity.class);
@@ -225,6 +250,20 @@ public class MainActivity extends AppCompatActivity{
 
     @OnCheckedChanged(R.id.availabilitySwitch)
     public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
+        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
         System.out.println("checked " + isChecked);
+        if(isChecked) {
+            startAdaptorChecked(availFaveList);
+        } else {
+            startAdaptorChecked(faveList);
+        }
     }
 }
