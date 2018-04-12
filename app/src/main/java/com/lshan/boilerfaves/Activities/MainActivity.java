@@ -220,23 +220,6 @@ public class MainActivity extends AppCompatActivity{
         mainRecyclerView.setAdapter(foodAdapter);
     }
 
-    private void startAdaptorChecked(List<FoodModel> data){
-        foodAdapter = new FoodAdapter(this, data);
-        foodAdapter.setmOnListEmptyListener(new FoodAdapter.OnListEmptyListener() {
-            @Override
-            public void onListEmpty() {
-                noFavesLayout.setVisibility(View.VISIBLE);
-                availableFavesLayout.setVisibility(View.GONE);
-            }
-        });
-        foodAdapter.notifyDataSetChanged();
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mainRecyclerView.setLayoutManager(linearLayoutManager);
-
-        mainRecyclerView.setAdapter(foodAdapter);
-    }
-
 
     public void launchFoodSelect(){
         Intent intent = new Intent(context, SelectFoodActivity.class);
@@ -261,9 +244,9 @@ public class MainActivity extends AppCompatActivity{
 
         System.out.println("checked " + isChecked);
         if(isChecked) {
-            startAdaptorChecked(availFaveList);
+            startAdaptor(availFaveList);
         } else {
-            startAdaptorChecked(faveList);
+            startAdaptor(faveList);
         }
     }
 }
