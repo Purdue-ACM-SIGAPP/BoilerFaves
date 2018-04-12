@@ -244,9 +244,10 @@ public class MainActivity extends AppCompatActivity{
 
         System.out.println("checked " + isChecked);
         if(isChecked) {
-            startAdaptor(availFaveList);
+            foodAdapter.setFoods(availFaveList);
         } else {
-            startAdaptor(faveList);
+            foodAdapter.setFoods(faveList);
         }
+        foodAdapter.notifyDataSetChanged();
     }
 }
