@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity{
     @OnCheckedChanged(R.id.availabilitySwitch)
     public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
-        List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
+        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
 
         for(int i = 0; i < faveList.size(); i++) {
             if(faveList.get(i).isAvailable) {
