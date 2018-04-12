@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
@@ -60,7 +61,11 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.availabilitySwitch)
     SwitchCompat availabilitySwitch;
 
+    @BindView(R.id.noFavesText)
+    TextView noFavesTextView;
+
     private FoodAdapter foodAdapter;
+    private boolean showAvailableOnly;
     final private Context context = this;
 
     @Override
@@ -200,8 +205,13 @@ public class MainActivity extends AppCompatActivity{
         foodAdapter.setmOnListEmptyListener(new FoodAdapter.OnListEmptyListener() {
             @Override
             public void onListEmpty() {
-                noFavesLayout.setVisibility(View.VISIBLE);
-                availableFavesLayout.setVisibility(View.GONE);
+                if(showAvailableOnly && SharedPrefsHelper.getFaveList(context).size() > 0){
+                    noFavesTextView.setVisibility(View.VISIBLE);
+                    availableFavesLayout.setVisibility(View.GONE);
+                }else {
+                    noFavesLayout.setVisibility(View.VISIBLE);
+                    availableFavesLayout.setVisibility(View.GONE);
+                }
             }
         });
         foodAdapter.notifyDataSetChanged();
@@ -226,5 +236,7 @@ public class MainActivity extends AppCompatActivity{
     @OnCheckedChanged(R.id.availabilitySwitch)
     public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
         System.out.println("checked " + isChecked);
+        showAvailableOnly = isChecked;
     }
+
 }
