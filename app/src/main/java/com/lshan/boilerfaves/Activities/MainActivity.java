@@ -30,6 +30,7 @@ import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
+import com.lshan.boilerfaves.Utils.CustomGridLayoutManager;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
@@ -239,9 +240,9 @@ public class MainActivity extends AppCompatActivity{
         });
 
 
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mainRecyclerView.setLayoutManager(linearLayoutManager);
+        CustomGridLayoutManager customGridLayoutManager = new CustomGridLayoutManager(context);
+        customGridLayoutManager.setScrollEnabled(false);
+        mainRecyclerView.setLayoutManager(customGridLayoutManager);
 
         mainRecyclerView.setAdapter(foodAdapter);
 
