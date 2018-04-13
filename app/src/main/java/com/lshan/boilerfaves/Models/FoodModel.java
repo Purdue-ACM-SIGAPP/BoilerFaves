@@ -86,6 +86,6 @@ public class FoodModel implements Comparable<FoodModel>, Filterable{
 
     @Override
     public Filter getFilter() {
-        return new FilterFood();
+        return null;
     }
 }

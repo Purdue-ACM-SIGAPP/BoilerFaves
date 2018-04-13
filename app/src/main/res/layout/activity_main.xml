@@ -36,28 +36,22 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"
              >
-                <LinearLayout
-                    android:id="@+id/filterLayout"
-                    android:layout_width="match_parent"
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/availabilitySwitch"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:layout_marginLeft="4dp">
+                    android:text="Show Available Only"
+                    app:switchPadding="10dp"
+                    android:layout_margin="10dp"/>
 
-                    <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/availabilitySwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Show Available Only"
-                        app:switchPadding="10dp" />
 
-                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/mainRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/filterLayout"
+                    android:layout_below="@+id/availabilitySwitch"
                     android:nestedScrollingEnabled="false">
 
                 </android.support.v7.widget.RecyclerView>
@@ -119,7 +113,6 @@
 
     </FrameLayout>
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -131,6 +124,20 @@
             android:layout_centerInParent="true"
             />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/noAvailableFavesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/noFavesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/none_of_your_faves_are_available_today"
+            android:layout_centerInParent="true"
+            />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

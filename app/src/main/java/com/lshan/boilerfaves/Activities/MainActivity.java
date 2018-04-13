@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
@@ -61,7 +62,11 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.availabilitySwitch)
     SwitchCompat availabilitySwitch;
 
+    @BindView(R.id.noAvailableFavesLayout)
+    RelativeLayout noAvailableFavesLayout;
+
     private FoodAdapter foodAdapter;
+    private boolean showAvailableOnly;
     final private Context context = this;
 
     @Override
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity{
 
         if(faveList != null){
             startAdaptor(faveList);
+            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
         }else{
             SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
         }
@@ -214,6 +220,12 @@ public class MainActivity extends AppCompatActivity{
             public void onListEmpty() {
                 noFavesLayout.setVisibility(View.VISIBLE);
                 availableFavesLayout.setVisibility(View.GONE);
+
+                //TODO doesn't work
+                if(availabilitySwitch.isChecked() && SharedPrefsHelper.getFaveList(context).size() > 0){
+                    noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                    mainRecyclerView.setVisibility(View.GONE);
+                }
             }
         });
         foodAdapter.notifyDataSetChanged();
@@ -255,12 +267,21 @@ public class MainActivity extends AppCompatActivity{
         }
 
         System.out.println("checked " + isChecked);
+
         if(isChecked) {
             foodAdapter.setFoods(availFaveList);
+            if(availFaveList.size() == 0){
+                noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                mainRecyclerView.setVisibility(View.GONE);
+            }
         } else {
             foodAdapter.setFoods(faveList);
+            mainRecyclerView.setVisibility(View.VISIBLE);
+            noAvailableFavesLayout.setVisibility(View.GONE);
         }
         storeShowAvailable(isChecked);
         foodAdapter.notifyDataSetChanged();
+
     }
+
 }
