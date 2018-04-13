@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity{
 
         if (isOnline()) {
             noAvailableFavesLayout.setVisibility(View.GONE);
-            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout).execute();
         } else {
             showNoInternetDialog();
         }
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity{
         noAvailableFavesLayout.setVisibility(View.GONE);
 
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout).execute();
         } else {
             showNoInternetDialog();
         }
@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity{
                 noAvailableFavesLayout.setVisibility(View.VISIBLE);
                 mainRecyclerView.setVisibility(View.GONE);
             }else{
-                //mainRecyclerView.setVisibility(View.VISIBLE);
+                mainRecyclerView.setVisibility(View.VISIBLE);
             }
 
             /*
