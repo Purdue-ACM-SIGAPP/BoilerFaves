@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
+
+        //preferences.getBoolean("SwitchEnabled", )
 
         //Dismiss notification if the user clicked a notification to get here
         Bundle b = getIntent().getExtras();
@@ -231,6 +235,14 @@ public class MainActivity extends AppCompatActivity{
         context.startActivity(intent);
     }
 
+    public void storeShowAvailable(boolean isEnabled){
+        SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
+        preferences.edit().putBoolean("SwitchEnabled",isEnabled).apply();
+
+    }
+
+
+
     @OnCheckedChanged(R.id.availabilitySwitch)
     public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
@@ -248,6 +260,7 @@ public class MainActivity extends AppCompatActivity{
         } else {
             foodAdapter.setFoods(faveList);
         }
+        storeShowAvailable(isChecked);
         foodAdapter.notifyDataSetChanged();
     }
 }
