@@ -92,11 +92,20 @@ public class MainActivity extends AppCompatActivity{
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
 
-        for(int i = 0; i < faveList.size(); i++) {
-            if(faveList.get(i).isAvailable) {
+        if(faveList != null){
+            startAdaptor(faveList);
+            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
+        }else{
+            SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
+            faveList = new ArrayList<FoodModel>();
+        }
+
+        for (int i = 0; i < faveList.size(); i++) {
+            if (faveList.get(i).isAvailable) {
                 availFaveList.add(faveList.get(i));
             }
         }
+
 
         checkForFaves(faveList);
 
@@ -105,12 +114,7 @@ public class MainActivity extends AppCompatActivity{
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
-        if(faveList != null){
-            startAdaptor(faveList);
-            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
-        }else{
-            SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
-        }
+
 
         //new SelectionRetrievalTask().execute();
 
