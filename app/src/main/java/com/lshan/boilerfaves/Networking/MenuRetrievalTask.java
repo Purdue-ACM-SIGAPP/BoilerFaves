@@ -211,7 +211,11 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
                 if(mainRecyclerView != null) {
                     FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
-                    foodAdapter.setFoods(faves);
+                    if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
+                        foodAdapter.setFoods(filterAvailableFaves(new ArrayList<>(faves)));
+                    }else{
+                        foodAdapter.setFoods(faves);
+                    }
                     foodAdapter.notifyDataSetChanged();
                 }
 
@@ -327,5 +331,18 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             foodModel.setAvailableCourts(availableCourts);
         }
 
+    }
+
+    //This should probably not be copied here to avid redundancy but eh (from main activity)
+    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList){
+        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
+        return availFaveList;
     }
 }

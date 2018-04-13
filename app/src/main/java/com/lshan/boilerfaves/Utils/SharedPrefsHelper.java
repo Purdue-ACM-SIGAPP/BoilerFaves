@@ -53,7 +53,7 @@ public class SharedPrefsHelper {
         SharedPreferences sharedPreferences = getSharedPrefs(context);
         Gson gson = new Gson();
         String json = gson.toJson(foodList);
-        sharedPreferences.edit().putString("FaveList", json).commit();
+        sharedPreferences.edit().putString("FaveList", json).apply();
 }
 
     public static List<FoodModel> getFaveList(Context context){

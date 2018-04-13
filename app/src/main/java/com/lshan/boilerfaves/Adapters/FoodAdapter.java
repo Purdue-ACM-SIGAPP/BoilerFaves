@@ -50,7 +50,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         this.foods = data;
         this.context = context;
         Collections.sort(this.foods);
-        SharedPrefsHelper.storeFaveList(this.foods, context);
+        //SharedPrefsHelper.storeFaveList(this.foods, context);
     }
 
     //Used to display the "No faves selected" message

@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity{
 
         setSupportActionBar(toolbar);
 
+        availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
+
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
 
@@ -172,17 +174,17 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        //TODO maybe I should just call notfity dataset changed or something
-        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
-        checkForFaves(faveList);
-        if(faveList != null){
-            startAdaptor(faveList);
-        }
-
         if (isOnline()) {
             new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
         } else {
             showNoInternetDialog();
+        }
+
+        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        checkForFaves(faveList);
+        if(faveList != null){
+            availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
+            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
         }
     }
 
@@ -232,12 +234,13 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
-        foodAdapter.notifyDataSetChanged();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setLayoutManager(linearLayoutManager);
 
         mainRecyclerView.setAdapter(foodAdapter);
+
+        foodAdapter.notifyDataSetChanged();
     }
 
 
@@ -251,16 +254,12 @@ public class MainActivity extends AppCompatActivity{
         context.startActivity(intent);
     }
 
-    public void storeShowAvailable(boolean isEnabled){
-        SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
-        preferences.edit().putBoolean("SwitchEnabled",isEnabled).apply();
-
-    }
-
-
 
     @OnCheckedChanged(R.id.availabilitySwitch)
     public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
+        SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
+        preferences.edit().putBoolean("availabilitySwitchChecked",isChecked).apply();
+
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
 
@@ -273,17 +272,35 @@ public class MainActivity extends AppCompatActivity{
         System.out.println("checked " + isChecked);
 
         if(isChecked) {
-            foodAdapter.setFoods(availFaveList);
             if(availFaveList.size() == 0){
                 noAvailableFavesLayout.setVisibility(View.VISIBLE);
                 mainRecyclerView.setVisibility(View.GONE);
             }
+
+            /*
+            if(foodAdapter == null){
+                startAdaptor(availFaveList);
+            }else{
+                foodAdapter.setFoods(availFaveList);
+            }*/
+
+            startAdaptor(availFaveList);
+
         } else {
-            foodAdapter.setFoods(faveList);
+
+            /*
+            if(foodAdapter == null){
+                startAdaptor(faveList);
+            }else{
+                foodAdapter.setFoods(faveList);
+            }*/
+
+            startAdaptor(faveList);
+
             mainRecyclerView.setVisibility(View.VISIBLE);
             noAvailableFavesLayout.setVisibility(View.GONE);
         }
-        storeShowAvailable(isChecked);
+
         foodAdapter.notifyDataSetChanged();
 
     }
