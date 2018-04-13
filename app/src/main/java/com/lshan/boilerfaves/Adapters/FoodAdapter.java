@@ -50,7 +50,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         this.foods = data;
         this.context = context;
         Collections.sort(this.foods);
-        SharedPrefsHelper.storeFaveList(this.foods, context);
+        //SharedPrefsHelper.storeFaveList(this.foods, context);
     }
 
     //Used to display the "No faves selected" message
@@ -219,7 +219,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
             List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
             if(faveList != null && faveList.contains(foodModel)){
                 faveList.remove(foodModel);
-                if(faveList.size() == 0){
+                if(faveList.size() == 0 || foods.size() == 1){
                     //Need to display the no faves selected screen
                     if(mOnListEmptyListener != null){
                         mOnListEmptyListener.onListEmpty();

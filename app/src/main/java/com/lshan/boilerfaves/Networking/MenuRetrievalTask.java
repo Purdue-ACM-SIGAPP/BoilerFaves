@@ -34,6 +34,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +86,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         if(progressLayout != null){
             progressLayout.setVisibility(View.VISIBLE);
             frameLayout.setVisibility(View.GONE);
+            mainRecyclerView.setVisibility(View.GONE);
         }
 
     }
@@ -207,7 +209,12 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
                 if(mainRecyclerView != null) {
                     FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
-                    foodAdapter.setFoods(faves);
+                    if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
+                        foodAdapter.setFoods(filterAvailableFaves(new ArrayList<>(faves)));
+                    }else{
+                        Collections.sort(faves);
+                        foodAdapter.setFoods(faves);
+                    }
                     foodAdapter.notifyDataSetChanged();
                 }
 
@@ -259,6 +266,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         if(progressLayout != null){
             progressLayout.setVisibility(View.GONE);
             frameLayout.setVisibility(View.VISIBLE);
+            mainRecyclerView.setVisibility(View.VISIBLE);
         }
 
 
@@ -323,5 +331,20 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             foodModel.setAvailableCourts(availableCourts);
         }
 
+    }
+
+    //This should probably not be copied here to avid redundancy but eh (from main activity)
+    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList){
+        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
+        Collections.sort(availFaveList);
+
+        return availFaveList;
     }
 }
