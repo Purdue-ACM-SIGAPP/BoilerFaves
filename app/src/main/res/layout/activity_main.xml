@@ -135,8 +135,9 @@
             android:id="@+id/noFavesText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/none_of_your_faves_are_available_today"
+            android:text="@string/none_of_your_faves_are_available_today_with_emote"
             android:layout_centerInParent="true"
+            android:textSize="16sp"
             />
     </RelativeLayout>
 

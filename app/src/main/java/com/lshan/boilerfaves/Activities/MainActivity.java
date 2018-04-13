@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity{
 
         setSupportActionBar(toolbar);
 
+        noAvailableFavesLayout.setVisibility(View.GONE);
         availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         if (isOnline()) {
+            noAvailableFavesLayout.setVisibility(View.GONE);
             new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION).execute();
         } else {
             showNoInternetDialog();
@@ -174,6 +176,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
+        noAvailableFavesLayout.setVisibility(View.GONE);
+
         if (isOnline()) {
             new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
         } else {
@@ -224,16 +228,17 @@ public class MainActivity extends AppCompatActivity{
         foodAdapter.setmOnListEmptyListener(new FoodAdapter.OnListEmptyListener() {
             @Override
             public void onListEmpty() {
-                noFavesLayout.setVisibility(View.VISIBLE);
-                availableFavesLayout.setVisibility(View.GONE);
-
-                //TODO doesn't work
                 if(availabilitySwitch.isChecked() && SharedPrefsHelper.getFaveList(context).size() > 0){
                     noAvailableFavesLayout.setVisibility(View.VISIBLE);
                     mainRecyclerView.setVisibility(View.GONE);
+                }else{
+                    noFavesLayout.setVisibility(View.VISIBLE);
+                    availableFavesLayout.setVisibility(View.GONE);
                 }
             }
         });
+
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mainRecyclerView.setLayoutManager(linearLayoutManager);
@@ -273,8 +278,12 @@ public class MainActivity extends AppCompatActivity{
 
         if(isChecked) {
             if(availFaveList.size() == 0){
+                progressLayout.setVisibility(View.GONE);
+
                 noAvailableFavesLayout.setVisibility(View.VISIBLE);
                 mainRecyclerView.setVisibility(View.GONE);
+            }else{
+                //mainRecyclerView.setVisibility(View.VISIBLE);
             }
 
             /*
