@@ -219,7 +219,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
             List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
             if(faveList != null && faveList.contains(foodModel)){
                 faveList.remove(foodModel);
-                if(faveList.size() == 0 || foods.size() == 1){
+                if(faveList.size() == 0 || foods.size() <= 1){
                     //Need to display the no faves selected screen
                     if(mOnListEmptyListener != null){
                         mOnListEmptyListener.onListEmpty();

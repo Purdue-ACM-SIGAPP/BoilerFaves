@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
 
-        checkForFaves(faveList);
+        //checkForFaves(faveList);
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, MasterAlarmReceiver.class);
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity{
 
         if (isOnline()) {
             noAvailableFavesLayout.setVisibility(View.GONE);
-            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
         } else {
             showNoInternetDialog();
         }
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity{
         failure.show();
     }
 
-    private void checkForFaves(List<FoodModel> faveList){
+    public void checkForFaves(List<FoodModel> faveList){
         if(faveList == null || faveList.size() == 0){
             noFavesLayout.setVisibility(View.VISIBLE);
             availableFavesLayout.setVisibility(View.GONE);
@@ -178,19 +178,21 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
 
         noAvailableFavesLayout.setVisibility(View.GONE);
+        availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
 
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout).execute();
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
         } else {
             showNoInternetDialog();
         }
 
+        /*
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         checkForFaves(faveList);
         if(faveList != null){
-            availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
             handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
         }
+        */
     }
 
 

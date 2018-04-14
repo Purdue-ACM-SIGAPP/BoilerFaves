@@ -56,7 +56,9 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     private Context context;
     RelativeLayout progressLayout;
     RelativeLayout noAvailableFavesLayout;
+    RelativeLayout noFavesLayout;
     FrameLayout frameLayout;
+    MainActivity activity;
 
     public static final int NO_NOTIFICATION = 0;
     public static final int BREAKFAST_NOTIFICATION = 1;
@@ -71,13 +73,15 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         this.frameLayout = frameLayout;
     }
 
-    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType, RelativeLayout noAvailableFavesLayout){
+    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType, RelativeLayout noAvailableFavesLayout, RelativeLayout noFavesLayout, MainActivity activity){
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;
         this.notificationType = notificationType;
         this.progressLayout = progressLayout;
         this.frameLayout = frameLayout;
         this.noAvailableFavesLayout = noAvailableFavesLayout;
+        this.noFavesLayout = noFavesLayout;
+        this.activity = activity;
     }
 
     public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, int notificationType){
@@ -136,7 +140,10 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
 
         for(DiningCourtMenu menu: menus){
-            availableFaves.add(checkForFaves(faves, menu));
+            DiningCourtMenu faveCourts = checkForFaves(faves, menu);
+            if(faveCourts != null) {
+                availableFaves.add(checkForFaves(faves, menu));
+            }
         }
 
         StringBuilder breakfastMessageBuilder = new StringBuilder().append("Faves available at ");
@@ -217,27 +224,39 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                     dinnerAvailable = true;
                 }
 
-                if(mainRecyclerView != null) {
-                    FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
-                    if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
-                        ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(faves));
-                        foodAdapter.setFoods(filteredFaves);
-                        if(filteredFaves.size() > 0){
-                            noAvailableFavesLayout.setVisibility(View.GONE);
-                        }
-                    }else{
-                        Collections.sort(faves);
-                        foodAdapter.setFoods(faves);
-                    }
-                    foodAdapter.notifyDataSetChanged();
-                    mainRecyclerView.setVisibility(View.VISIBLE);
-                }
-
-                //Need to call this so when main activity resumes it remembers availability
-                SharedPrefsHelper.storeFaveList(faves, context);
 
             }
+
         }
+
+
+        if(mainRecyclerView != null) {
+            FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
+
+            activity.checkForFaves(faves);
+
+            if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
+
+                ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(faves));
+                foodAdapter.setFoods(filteredFaves);
+                if(filteredFaves.size() > 0){
+                    noAvailableFavesLayout.setVisibility(View.GONE);
+                    mainRecyclerView.setVisibility(View.VISIBLE);
+                }else{
+                    noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                    mainRecyclerView.setVisibility(View.GONE);
+                    progressLayout.setVisibility(View.GONE);
+                }
+            }else{
+                Collections.sort(faves);
+                foodAdapter.setFoods(faves);
+                mainRecyclerView.setVisibility(View.VISIBLE);
+            }
+            foodAdapter.notifyDataSetChanged();
+        }
+
+        //Need to call this so when main activity resumes it remembers availability
+        SharedPrefsHelper.storeFaveList(faves, context);
 
         if(breakfastAvailable && notificationType == BREAKFAST_NOTIFICATION){
             if(spaceBrek>0){
