@@ -58,7 +58,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     RelativeLayout noAvailableFavesLayout;
     RelativeLayout noFavesLayout;
     FrameLayout frameLayout;
-    MainActivity activity;
+    private MainActivity activity;
 
     public static final int NO_NOTIFICATION = 0;
     public static final int BREAKFAST_NOTIFICATION = 1;
@@ -73,6 +73,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         this.frameLayout = frameLayout;
     }
 
+    //TODO change this to just use the reference to the activity
     public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType, RelativeLayout noAvailableFavesLayout, RelativeLayout noFavesLayout, MainActivity activity){
         this.context = context;
         this.mainRecyclerView = mainRecyclerView;
@@ -243,9 +244,11 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                     noAvailableFavesLayout.setVisibility(View.GONE);
                     mainRecyclerView.setVisibility(View.VISIBLE);
                 }else{
-                    noAvailableFavesLayout.setVisibility(View.VISIBLE);
-                    mainRecyclerView.setVisibility(View.GONE);
-                    progressLayout.setVisibility(View.GONE);
+                    if(SharedPrefsHelper.getFaveList(context).size() > 0) {
+                        noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                        mainRecyclerView.setVisibility(View.GONE);
+                        progressLayout.setVisibility(View.GONE);
+                    }
                 }
             }else{
                 Collections.sort(faves);

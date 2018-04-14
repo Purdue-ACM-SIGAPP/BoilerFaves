@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity{
     public void checkForFaves(List<FoodModel> faveList){
         if(faveList == null || faveList.size() == 0){
             noFavesLayout.setVisibility(View.VISIBLE);
+            noAvailableFavesLayout.setVisibility(View.GONE);
             availableFavesLayout.setVisibility(View.GONE);
         }else{
             noFavesLayout.setVisibility(View.GONE);
