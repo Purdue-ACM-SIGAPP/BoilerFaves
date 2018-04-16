@@ -182,6 +182,7 @@ public class MainActivity extends AppCompatActivity{
         availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
 
         if (isOnline()) {
+            startAdaptor(new ArrayList<FoodModel>());
             new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
         } else {
             showNoInternetDialog();

@@ -252,10 +252,15 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 }
             }else{
                 Collections.sort(faves);
-                foodAdapter.setFoods(faves);
+                if (!faves.isEmpty() && foodAdapter != null) {
+                    foodAdapter.setFoods(faves);
+                }
                 mainRecyclerView.setVisibility(View.VISIBLE);
             }
-            foodAdapter.notifyDataSetChanged();
+
+            if(foodAdapter != null) {
+                foodAdapter.notifyDataSetChanged();
+            }
         }
 
         //Need to call this so when main activity resumes it remembers availability
