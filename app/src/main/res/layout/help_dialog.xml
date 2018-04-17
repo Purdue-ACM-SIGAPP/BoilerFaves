@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="#00000000"
+    android:background= "#00000000"
     android:orientation="vertical"
     android:layout_gravity="center">
 
@@ -15,7 +15,7 @@
         android:layout_margin="10dp"
         android:text="Symbols"
         android:textColor="@android:color/white"
-        android:textSize="15dp"
+        android:textSize="35dp"
         android:textStyle="bold" />
 
     <LinearLayout
