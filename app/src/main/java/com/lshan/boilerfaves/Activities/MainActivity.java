@@ -12,7 +12,6 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -20,27 +19,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
+import com.lshan.boilerfaves.Networking.OnMenuRetrievalCompleted;
+import com.lshan.boilerfaves.Networking.OnNotificationConstructed;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
 import com.lshan.boilerfaves.Utils.CustomGridLayoutManager;
+import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCompleted, OnNotificationConstructed {
 
     @BindView(R.id.mainRecyclerView)
     RecyclerView mainRecyclerView;
@@ -125,7 +127,10 @@ public class MainActivity extends AppCompatActivity{
 
         if (isOnline()) {
             noAvailableFavesLayout.setVisibility(View.GONE);
-            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
+            //new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
+            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
+                    SharedPrefsHelper.getFaveList(context),
+                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
         } else {
             showNoInternetDialog();
         }
@@ -153,7 +158,10 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isOnline()){
-                            new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+                            //new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION, null).execute();
+                            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
+                                    SharedPrefsHelper.getFaveList(context),
+                                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
                         } else {
                             showNoInternetDialog();
                         }
@@ -183,7 +191,10 @@ public class MainActivity extends AppCompatActivity{
 
         if (isOnline()) {
             startAdaptor(new ArrayList<FoodModel>());
-            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
+            //new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
+            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
+                    SharedPrefsHelper.getFaveList(context),
+                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
         } else {
             showNoInternetDialog();
         }
@@ -319,4 +330,67 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+
+    //The results of the menu retrieval task are used here (make UI changes)
+    @Override
+    public void onMenuRetrievalCompleted(List<FoodModel> faves) {
+        checkForFaves(faves);
+
+        if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
+
+            ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(faves));
+            foodAdapter.setFoods(filteredFaves);
+            if(filteredFaves.size() > 0){
+                noAvailableFavesLayout.setVisibility(View.GONE);
+                mainRecyclerView.setVisibility(View.VISIBLE);
+            }else{
+                if(SharedPrefsHelper.getFaveList(context).size() > 0) {
+                    noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                    mainRecyclerView.setVisibility(View.GONE);
+                    progressLayout.setVisibility(View.GONE);
+                }
+            }
+        }else{
+            Collections.sort(faves);
+            if (!faves.isEmpty() && foodAdapter != null) {
+                foodAdapter.setFoods(faves);
+            }
+            mainRecyclerView.setVisibility(View.VISIBLE);
+        }
+
+        if(foodAdapter != null) {
+            foodAdapter.notifyDataSetChanged();
+        }
+
+        //Need to call this so when main activity resumes it remembers availability
+        SharedPrefsHelper.storeFaveList(faves, context);
+
+        //Hide the progress bar and show the food list
+        if(progressLayout != null){
+            progressLayout.setVisibility(View.GONE);
+            mainLayout.setVisibility(View.VISIBLE);
+            mainRecyclerView.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+
+    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList){
+        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
+        Collections.sort(availFaveList);
+
+        return availFaveList;
+    }
+
+    @Override
+    public void onNotificationConstructed(String title, String message, int id) {
+        NotificationHelper.sendNotification(context, title, message, id);
+    }
 }

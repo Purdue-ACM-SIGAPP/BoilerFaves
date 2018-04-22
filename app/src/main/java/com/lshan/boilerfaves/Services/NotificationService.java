@@ -39,7 +39,7 @@ public class NotificationService extends Service {
 
         System.out.println("Notif service (not job service). Type=" + notificationType);
 
-        new MenuRetrievalTask(context, null, MenuRetrievalTask.NO_NOTIFICATION).execute();
+        //new MenuRetrievalTask(context, null, MenuRetrievalTask.NO_NOTIFICATION).execute();
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);

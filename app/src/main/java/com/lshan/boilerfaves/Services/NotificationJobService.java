@@ -8,6 +8,9 @@ import android.support.annotation.RequiresApi;
 import android.view.Menu;
 
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
+import com.lshan.boilerfaves.Networking.OnNotificationConstructed;
+import com.lshan.boilerfaves.Utils.NotificationHelper;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 /**
  * Created by lshan on 3/1/2018.
@@ -16,7 +19,7 @@ import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 //This service should send a notification (if it needs to be sent)
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class NotificationJobService extends JobService{
+public class NotificationJobService extends JobService implements OnNotificationConstructed{
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
@@ -26,7 +29,8 @@ public class NotificationJobService extends JobService{
         int notificationType = jobParameters.getExtras().getInt("notificationType");
         System.out.println("Notif job service. Type=" + notificationType);
 
-        new MenuRetrievalTask(context, null, notificationType).execute();
+        //new MenuRetrievalTask(context, null, notificationType, this).execute();
+        new MenuRetrievalTask(notificationType, SharedPrefsHelper.getFaveList(getApplicationContext()), this);
         return false;
     }
 
@@ -35,4 +39,8 @@ public class NotificationJobService extends JobService{
         return false;
     }
 
+    @Override
+    public void onNotificationConstructed(String title, String message, int id) {
+        NotificationHelper.sendNotification(getApplicationContext(), title, message, id);
+    }
 }

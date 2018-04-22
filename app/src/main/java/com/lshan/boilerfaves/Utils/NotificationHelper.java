@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.lshan.boilerfaves.Activities.MainActivity;
+import com.lshan.boilerfaves.Networking.OnNotificationConstructed;
 import com.lshan.boilerfaves.R;
 
 import java.util.GregorianCalendar;
@@ -28,10 +29,10 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * Created by lshan on 12/18/2017.
  */
 
-public class NotificationHelper {
+public class NotificationHelper{
 
     //These are for the notification channels/code numbers
-public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
+    public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
 
     private static NotificationCompat.Builder mBuilder;
 
@@ -122,6 +123,7 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
         alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis,
                 PendingIntent.getBroadcast(context, notificationID, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
+
 
     public static class NotificationAlarmReciever extends BroadcastReceiver{
 
