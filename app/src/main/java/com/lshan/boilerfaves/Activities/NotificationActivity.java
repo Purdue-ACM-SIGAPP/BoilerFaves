@@ -340,8 +340,6 @@ public class NotificationActivity extends AppCompatActivity {
         switch(mealTime){
             case BREAKFAST:
                 breakfastSwitch.toggle();
-
-
                 break;
             case LUNCH: lunchSwitch.toggle();
                 break;
