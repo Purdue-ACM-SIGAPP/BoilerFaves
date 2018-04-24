@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.EventLog;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,6 +96,8 @@ public class NotificationActivity extends AppCompatActivity {
     public static final int DINNER = 3;
     Calendar calendar = Calendar.getInstance();
 
+    private Context context;
+
     TimePickerDialog.OnTimeSetListener time_listener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker timePicker, int hour, int minute) {
@@ -107,6 +110,9 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+
+        context = this;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
@@ -127,7 +133,7 @@ public class NotificationActivity extends AppCompatActivity {
         SharedPreferences prefs = SharedPrefsHelper.getSharedPrefs(getApplicationContext());
 
         int[] breakfastHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.BREAKFAST);
-        String toPrint = breakfastHandM[0] + ":" + breakfastHandM[1];
+        String toPrint = twentyFourHourTo12(breakfastHandM[0], breakfastHandM[1]);
         if(toPrint == null) {
             breakfastTime.setText("00:00");
         } else {
@@ -135,7 +141,7 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         int[] lunchHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.LUNCH);
-        toPrint = lunchHandM[0] + ":" + lunchHandM[1];
+        toPrint = twentyFourHourTo12(lunchHandM[0], lunchHandM[1]);
         if(toPrint == null) {
             lunchTime.setText("00:00");
         } else {
@@ -143,7 +149,7 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         int[] dinnerHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.DINNER);
-        toPrint = dinnerHandM[0] + ":" + dinnerHandM[1];
+        toPrint = twentyFourHourTo12(dinnerHandM[0], dinnerHandM[1]);
         if(toPrint == null) {
             dinnerTime.setText("00:00");
         } else {
@@ -166,7 +172,7 @@ public class NotificationActivity extends AppCompatActivity {
 
 
 
-        breakfast.setOnClickListener(new View.OnClickListener() {
+        breakfastTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -175,26 +181,20 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         storeTimeFromTimePicker("breakfast", hour, minute);
-                        String amorpm = "AM";
-                        if(hour > 12){
-                            hour-=12;
-                            amorpm = "PM";
+                        String toDisplay;
+                        if(DateFormat.is24HourFormat(context)){
+                            toDisplay = get24HourString(hour, minute);
+                        }else{
+                            toDisplay = twentyFourHourTo12(hour, minute);
                         }
-                        String sMinute = "" + minute;
-                        if(minute < 10) {
-                            sMinute = "0" + minute;
-                        }
-                        System.out.println("Hour: " + hour);
-                        System.out.println("Minute: " + minute);
-                        breakfastTime.setText(hour + ":" + sMinute + " " + amorpm);
-
+                        breakfastTime.setText(toDisplay);
                         runNotifAlarm();
                     }
-                }, hour, minute, false).show();
+                }, hour, minute, DateFormat.is24HourFormat(context)).show();
             }
         });
 
-        lunch.setOnClickListener(new View.OnClickListener() {
+        lunchTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -203,27 +203,20 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         storeTimeFromTimePicker("lunch", hour, minute);
-                        String amorpm = "AM";
-                        if(hour > 12){
-                            hour -= 12;
-                            amorpm = "PM";
+                        String toDisplay;
+                        if(DateFormat.is24HourFormat(context)){
+                            toDisplay = get24HourString(hour, minute);
+                        }else{
+                            toDisplay = twentyFourHourTo12(hour, minute);
                         }
-                        String sMinute = "" + minute;
-                        if(minute < 10) {
-                            sMinute = "0" + minute;
-                        }
-                        System.out.println("Hour: " + hour);
-                        System.out.println("Minute: " + minute);
-                        //lunchTime.setText(hour + ":" + minute);
-                        lunchTime.setText(hour + ":" + sMinute + " " + amorpm);
-
+                        lunchTime.setText(toDisplay);
                         runNotifAlarm();
                     }
-                }, hour, minute, false).show();
+                }, hour, minute, DateFormat.is24HourFormat(context)).show();
             }
         });
 
-        dinner.setOnClickListener(new View.OnClickListener() {
+        dinnerTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -232,23 +225,16 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         storeTimeFromTimePicker("dinner", hour, minute);
-                        String amorpm = "AM";
-                        if(hour > 12){
-                            hour -= 12;
-                            amorpm = "PM";
+                        String toDisplay;
+                        if(DateFormat.is24HourFormat(context)){
+                            toDisplay = get24HourString(hour, minute);
+                        }else{
+                            toDisplay = twentyFourHourTo12(hour, minute);
                         }
-                        String sMinute = "" + minute;
-                        if(minute < 10) {
-                            sMinute = "0" + minute;
-                        }
-                        System.out.println("Hour: " + hour);
-                        System.out.println("Minute: " + minute);
-                        //dinnerTime.setText(hour + ":" + minute);
-                        dinnerTime.setText(hour + ":" + sMinute + " " + amorpm);
-
+                        dinnerTime.setText(toDisplay);
                         runNotifAlarm();
                     }
-                }, hour, minute, false).show();
+                }, hour, minute, DateFormat.is24HourFormat(context)).show();
             }
         });
 
@@ -390,5 +376,49 @@ public class NotificationActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MasterAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+    }
+
+    private String twentyFourHourTo12(int hour, int minute){
+        String amorpm = "AM";
+        String sMin = "" + minute;
+        if(hour > 12) {
+            hour -= 12;
+            amorpm = "PM";
+        }
+        String sHour = "" + hour;
+        if(minute < 10){
+            sMin = "0" + sMin;
+        }
+        return (sHour + ":" + sMin + " " + amorpm);
+    }
+
+    private String get24HourString(int hour, int minute){
+        String hourStr = "";
+        if(hour < 10){
+            hourStr = "0" + hour;
+        }
+
+        String minuteStr = "";
+        if(minute < 10){
+            minuteStr =  "0" + minute;
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        if(hourStr.length() > 0){
+            result.append(hourStr);
+        }else{
+            result.append(hour);
+        }
+
+        result.append(":");
+
+        if(minuteStr.length() > 0){
+            result.append(minuteStr);
+        }else{
+            result.append(minute);
+        }
+
+        return result.toString();
     }
 }

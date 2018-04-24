@@ -1,12 +1,14 @@
 package com.lshan.boilerfaves.Activities;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +24,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
 import com.lshan.boilerfaves.Dialog.Help_Dialog;
@@ -28,6 +33,7 @@ import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Receivers.MasterAlarmReceiver;
+import com.lshan.boilerfaves.Utils.CustomGridLayoutManager;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 import java.util.ArrayList;
@@ -35,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -45,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
     Toolbar toolbar;
 
     @BindView(R.id.availableFavesLayout)
-    RelativeLayout availableFavesLayout;
+    ScrollView availableFavesLayout;
 
     @BindView(R.id.noFavesLayout)
     RelativeLayout noFavesLayout;
@@ -56,37 +63,72 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.mainLayout)
     FrameLayout mainLayout;
 
+    @BindView(R.id.availabilitySwitch)
+    SwitchCompat availabilitySwitch;
+
+    @BindView(R.id.noAvailableFavesLayout)
+    RelativeLayout noAvailableFavesLayout;
+
     private FoodAdapter foodAdapter;
+    private boolean showAvailableOnly;
     final private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
+
+        //preferences.getBoolean("SwitchEnabled", )
+
+        //Dismiss notification if the user clicked a notification to get here
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            int id = b.getInt("notificationID", 0);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(id);
+        }
 
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
 
+        noAvailableFavesLayout.setVisibility(View.GONE);
+        availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
+
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
-        checkForFaves(faveList);
+        List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
+
+        if(faveList != null){
+            startAdaptor(faveList);
+            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
+        }else{
+            SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
+            faveList = new ArrayList<FoodModel>();
+        }
+
+        for (int i = 0; i < faveList.size(); i++) {
+            if (faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
+
+        //checkForFaves(faveList);
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, MasterAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
-        if(faveList != null){
-            startAdaptor(faveList);
-        }else{
-            SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
-        }
+
 
         //new SelectionRetrievalTask().execute();
 
 
         if (isOnline()) {
-            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION).execute();
+            noAvailableFavesLayout.setVisibility(View.GONE);
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
         } else {
             showNoInternetDialog();
         }
@@ -124,9 +166,10 @@ public class MainActivity extends AppCompatActivity{
         failure.show();
     }
 
-    private void checkForFaves(List<FoodModel> faveList){
+    public void checkForFaves(List<FoodModel> faveList){
         if(faveList == null || faveList.size() == 0){
             noFavesLayout.setVisibility(View.VISIBLE);
+            noAvailableFavesLayout.setVisibility(View.GONE);
             availableFavesLayout.setVisibility(View.GONE);
         }else{
             noFavesLayout.setVisibility(View.GONE);
@@ -138,14 +181,23 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        //TODO maybe I should just call notfity dataset changed or something
+        noAvailableFavesLayout.setVisibility(View.GONE);
+        availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
+
+        if (isOnline()) {
+            startAdaptor(new ArrayList<FoodModel>());
+            new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
+        } else {
+            showNoInternetDialog();
+        }
+
+        /*
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         checkForFaves(faveList);
         if(faveList != null){
-            startAdaptor(faveList);
+            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
         }
-
-        new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION).execute();
+        */
     }
 
 
@@ -189,16 +241,24 @@ public class MainActivity extends AppCompatActivity{
         foodAdapter.setmOnListEmptyListener(new FoodAdapter.OnListEmptyListener() {
             @Override
             public void onListEmpty() {
-                noFavesLayout.setVisibility(View.VISIBLE);
-                availableFavesLayout.setVisibility(View.GONE);
+                if(availabilitySwitch.isChecked() && SharedPrefsHelper.getFaveList(context).size() > 0){
+                    noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                    mainRecyclerView.setVisibility(View.GONE);
+                }else{
+                    noFavesLayout.setVisibility(View.VISIBLE);
+                    availableFavesLayout.setVisibility(View.GONE);
+                }
             }
         });
-        foodAdapter.notifyDataSetChanged();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mainRecyclerView.setLayoutManager(linearLayoutManager);
+
+        CustomGridLayoutManager customGridLayoutManager = new CustomGridLayoutManager(context);
+        customGridLayoutManager.setScrollEnabled(false);
+        mainRecyclerView.setLayoutManager(customGridLayoutManager);
 
         mainRecyclerView.setAdapter(foodAdapter);
+
+        foodAdapter.notifyDataSetChanged();
     }
 
 
@@ -210,6 +270,61 @@ public class MainActivity extends AppCompatActivity{
     public void launchNotifications(){
         Intent intent = new Intent(context, NotificationActivity.class);
         context.startActivity(intent);
+    }
+
+
+    @OnCheckedChanged(R.id.availabilitySwitch)
+    public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
+        SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
+        preferences.edit().putBoolean("availabilitySwitchChecked",isChecked).apply();
+
+        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
+        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
+        System.out.println("checked " + isChecked);
+
+        if(isChecked) {
+            if(availFaveList.size() == 0){
+                progressLayout.setVisibility(View.GONE);
+
+                noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                mainRecyclerView.setVisibility(View.GONE);
+            }else{
+                mainRecyclerView.setVisibility(View.VISIBLE);
+            }
+
+            /*
+            if(foodAdapter == null){
+                startAdaptor(availFaveList);
+            }else{
+                foodAdapter.setFoods(availFaveList);
+            }*/
+
+            startAdaptor(availFaveList);
+
+        } else {
+
+            /*
+            if(foodAdapter == null){
+                startAdaptor(faveList);
+            }else{
+                foodAdapter.setFoods(faveList);
+            }*/
+
+            startAdaptor(faveList);
+
+            mainRecyclerView.setVisibility(View.VISIBLE);
+            noAvailableFavesLayout.setVisibility(View.GONE);
+        }
+
+        foodAdapter.notifyDataSetChanged();
+
     }
 
 }

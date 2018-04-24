@@ -60,6 +60,7 @@ public class SelectFoodActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setTitle("");
 
         callRetrofit();
     }
@@ -115,8 +116,9 @@ public class SelectFoodActivity extends AppCompatActivity {
         MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
         SearchView searchView = (SearchView) myActionMenuItem.getActionView();
 
-        searchView.setIconifiedByDefault(false);
-        searchView.requestFocus();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setIconified(false);
+        searchView.setQueryHint("Search foods...");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -136,7 +138,7 @@ public class SelectFoodActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
                 //change adapter model to fit query
-                searchView.scrollTo(0,0);
+                selectFoodRecyclerView.scrollToPosition(0);
                 selectFoodAdapter.searchFoods(s);
                 return false;
             }

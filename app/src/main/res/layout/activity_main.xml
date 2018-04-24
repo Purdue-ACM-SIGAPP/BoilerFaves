@@ -26,27 +26,44 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
-        <RelativeLayout
+        <ScrollView
             android:id="@+id/availableFavesLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-         >
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/mainRecyclerView"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="visible"
+             >
 
-            </android.support.v7.widget.RecyclerView>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/availabilitySwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Show Available Only"
+                    app:switchPadding="10dp"
+                    android:layout_margin="10dp"/>
 
-        </RelativeLayout>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/mainRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/availabilitySwitch"
+                    android:nestedScrollingEnabled="false">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
+
+        </ScrollView>
 
         <RelativeLayout
             android:id="@+id/noFavesLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorMaterialGray400"
             android:gravity="center"
             android:visibility="gone"
            >
@@ -55,7 +72,7 @@
                 android:id="@+id/foodIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_food_icon"
+                app:srcCompat="@drawable/ic_food_icon"
 
                 android:layout_centerHorizontal="true"/>
 
@@ -96,7 +113,6 @@
 
     </FrameLayout>
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -108,6 +124,21 @@
             android:layout_centerInParent="true"
             />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/noAvailableFavesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/noFavesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/none_of_your_faves_are_available_today_with_emote"
+            android:layout_centerInParent="true"
+            android:textSize="16sp"
+            />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

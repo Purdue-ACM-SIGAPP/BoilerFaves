@@ -3,6 +3,7 @@ package com.lshan.boilerfaves.Adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.lshan.boilerfaves.Models.FoodModel;
 import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by lshan on 12/16/2017.
@@ -43,13 +46,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     private final int DINNER_OFFSET = 16;
 
 
-
-
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
         this.context = context;
         Collections.sort(this.foods);
-        SharedPrefsHelper.storeFaveList(this.foods, context);
+        //SharedPrefsHelper.storeFaveList(this.foods, context);
     }
 
     //Used to display the "No faves selected" message
@@ -73,53 +74,58 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
         FoodModel food = foods.get(position);
         holder.cardTitle.setText(food.getName());
 
-
         //Update card layout based on availability
-        if(food.isAvailable){
+        if(food.isAvailable) {
+
             holder.availabilityLayout.setVisibility(View.VISIBLE);
             holder.unavailableMessage.setVisibility(View.GONE);
+
+            HashMap<String, ArrayList<String>> availableCourts = food.getAvailableCourts();
+            GridLayout grid = holder.availabilityGrid;
+
+            //First clear all available court icons, then redraw them based on availability
+            for (int i = 0; i < 24; i++) {
+                grid.getChildAt(i).setVisibility(View.GONE);
+            }
+
+            if (availableCourts != null) {
+
+                if (availableCourts.containsKey("Breakfast")) {
+                    grid.getChildAt(0).setVisibility(View.VISIBLE);
+
+                    ArrayList<String> courtList = availableCourts.get("Breakfast");
+                    displayDiningCourts(grid, courtList, BREAKFAST_OFFSET);
+                } else {
+                    for (int i = 0; i < 8; i++) {
+                        grid.getChildAt(i).setVisibility(View.GONE);
+                    }
+                }
+
+                if (availableCourts.containsKey("Lunch")) {
+                    grid.getChildAt(8).setVisibility(View.VISIBLE);
+
+                    ArrayList<String> courtList = availableCourts.get("Lunch");
+                    displayDiningCourts(grid, courtList, LUNCH_OFFSET);
+                } else {
+                    for (int i = 8; i < 16; i++) {
+                        grid.getChildAt(i).setVisibility(View.GONE);
+                    }
+                }
+
+                if (availableCourts.containsKey("Dinner")) {
+                    grid.getChildAt(16).setVisibility(View.VISIBLE);
+
+                    ArrayList<String> courtList = availableCourts.get("Dinner");
+                    displayDiningCourts(grid, courtList, DINNER_OFFSET);
+                } else {
+                    for (int i = 16; i < 24; i++) {
+                        grid.getChildAt(i).setVisibility(View.GONE);
+                    }
+                }
+            }
         }else{
             holder.availabilityLayout.setVisibility(View.GONE);
             holder.unavailableMessage.setVisibility(View.VISIBLE);
-        }
-
-        HashMap<String, ArrayList<String>> availableCourts = food.getAvailableCourts();
-        GridLayout grid = holder.availabilityGrid;
-
-        if(availableCourts != null) {
-
-            if (availableCourts.containsKey("Breakfast")) {
-                grid.getChildAt(0).setVisibility(View.VISIBLE);
-
-                ArrayList<String> courtList = availableCourts.get("Breakfast");
-                displayDiningCourts(grid, courtList, BREAKFAST_OFFSET);
-            } else {
-                for (int i = 0; i < 8; i++) {
-                    grid.getChildAt(i).setVisibility(View.GONE);
-                }
-            }
-
-            if (availableCourts.containsKey("Lunch")) {
-                grid.getChildAt(8).setVisibility(View.VISIBLE);
-
-                ArrayList<String> courtList = availableCourts.get("Lunch");
-                displayDiningCourts(grid, courtList, LUNCH_OFFSET);
-            } else {
-                for (int i = 8; i < 16; i++) {
-                    grid.getChildAt(i).setVisibility(View.GONE);
-                }
-            }
-
-            if (availableCourts.containsKey("Dinner")) {
-                grid.getChildAt(16).setVisibility(View.VISIBLE);
-
-                ArrayList<String> courtList = availableCourts.get("Dinner");
-                displayDiningCourts(grid, courtList, DINNER_OFFSET);
-            } else {
-                for (int i = 16; i < 24; i++) {
-                    grid.getChildAt(i).setVisibility(View.GONE);
-                }
-            }
         }
 
     }
@@ -136,22 +142,23 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
                 icon.setVisibility(View.VISIBLE);
                 switch(court){
                     case "Windsor":
-                        Picasso.with(context).load(R.drawable.ic_windsor).into(icon);
+                        Glide.with(context).load(R.drawable.ic_windsor).into(icon);
                         break;
                     case "Ford":
-                        Picasso.with(context).load(R.drawable.ic_ford).into(icon);
+                        Glide.with(context).load(R.drawable.ic_ford).into(icon);
                         break;
                     case "Wiley":
-                        Picasso.with(context).load(R.drawable.ic_wiley).into(icon);
+                        Glide.with(context).load(R.drawable.ic_wiley).into(icon);
                         break;
                     case "Earhart":
-                        Picasso.with(context).load(R.drawable.ic_earhart).into(icon);
+                        Glide.with(context).load(R.drawable.ic_earhart).into(icon);
                         break;
                     case "Hillenbrand":
-                        Picasso.with(context).load(R.drawable.ic_hillenbrand).into(icon);
+                        Glide.with(context).load(R.drawable.ic_hillenbrand).into(icon);
                         break;
                     case "The Gathering Place":
-                        Picasso.with(context).load(R.drawable.ic_gatheringplace).into(icon);
+                        Glide.with(context).load(R.drawable.ic_gatheringplace).into(icon);
+                        break;
                     default:
                         icon.setVisibility(View.GONE);
                 }
@@ -212,14 +219,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
             List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
             if(faveList != null && faveList.contains(foodModel)){
                 faveList.remove(foodModel);
-                if(faveList.size() == 0){
+                SharedPrefsHelper.storeFaveList(faveList, context);
+                if(faveList.size() == 0 || foods.size() <= 1){
                     //Need to display the no faves selected screen
                     if(mOnListEmptyListener != null){
                         mOnListEmptyListener.onListEmpty();
                     }
                 }
 
-                SharedPrefsHelper.storeFaveList(faveList, context);
             }
 
 

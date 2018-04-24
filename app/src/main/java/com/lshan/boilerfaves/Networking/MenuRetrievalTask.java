@@ -34,6 +34,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,10 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     private int notificationType;
     private Context context;
     RelativeLayout progressLayout;
+    RelativeLayout noAvailableFavesLayout;
+    RelativeLayout noFavesLayout;
     FrameLayout frameLayout;
+    private MainActivity activity;
 
     public static final int NO_NOTIFICATION = 0;
     public static final int BREAKFAST_NOTIFICATION = 1;
@@ -67,6 +71,18 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         this.notificationType = notificationType;
         this.progressLayout = progressLayout;
         this.frameLayout = frameLayout;
+    }
+
+    //TODO change this to just use the reference to the activity
+    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType, RelativeLayout noAvailableFavesLayout, RelativeLayout noFavesLayout, MainActivity activity){
+        this.context = context;
+        this.mainRecyclerView = mainRecyclerView;
+        this.notificationType = notificationType;
+        this.progressLayout = progressLayout;
+        this.frameLayout = frameLayout;
+        this.noAvailableFavesLayout = noAvailableFavesLayout;
+        this.noFavesLayout = noFavesLayout;
+        this.activity = activity;
     }
 
     public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, int notificationType){
@@ -85,6 +101,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         if(progressLayout != null){
             progressLayout.setVisibility(View.VISIBLE);
             frameLayout.setVisibility(View.GONE);
+            mainRecyclerView.setVisibility(View.GONE);
         }
 
     }
@@ -124,7 +141,10 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
 
         for(DiningCourtMenu menu: menus){
-            availableFaves.add(checkForFaves(faves, menu));
+            DiningCourtMenu faveCourts = checkForFaves(faves, menu);
+            if(faveCourts != null) {
+                availableFaves.add(checkForFaves(faves, menu));
+            }
         }
 
         StringBuilder breakfastMessageBuilder = new StringBuilder().append("Faves available at ");
@@ -132,27 +152,21 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         StringBuilder dinnerMessageBuilder = new StringBuilder().append("Faves available at ");
 
         boolean breakfastAvailable = false, lunchAvailable = false, dinnerAvailable = false;
-
+        int spaceBrek=0, spaceLunch=0, spaceDinner=0;
         //Make a list of all the foods available today so we can mark foods that aren't in it as unavailable
         ArrayList<FoodModel> availableToday = new ArrayList<>();
         for(DiningCourtMenu menu : availableFaves){
             if(menu != null) {
                 if (menu.getBreakfast() != null) {
-                    for (FoodModel food : menu.getBreakfast()) {
-                        availableToday.add(food);
-                    }
+                    availableToday.addAll(menu.getBreakfast());
                 }
 
                 if (menu.getLunch() != null) {
-                    for (FoodModel food : menu.getLunch()) {
-                        availableToday.add(food);
-                    }
+                    availableToday.addAll(menu.getLunch());
                 }
 
                 if (menu.getDinner() != null) {
-                    for (FoodModel food : menu.getLunch()) {
-                        availableToday.add(food);
-                    }
+                    availableToday.addAll(menu.getDinner());
                 }
             }
         }
@@ -162,6 +176,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             if(!availableToday.contains(food)){
                 food.setAvailable(false);
             }
+
+            food.setAvailableCourts(new HashMap<>());
         }
 
 
@@ -178,7 +194,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Breakfast", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    breakfastMessageBuilder.append(courtName + " ");
+                    spaceBrek++;
+                    breakfastMessageBuilder.append(courtName + ", ");
                     breakfastAvailable = true;
                 }
 
@@ -190,7 +207,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Lunch", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    lunchMessageBuilder.append(courtName + " ");
+                    spaceLunch++;
+                    lunchMessageBuilder.append(courtName + ", ");
                     lunchAvailable = true;
                 }
 
@@ -202,35 +220,86 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                         addAvailableCourt("Dinner", courtName, faves.get(faves.indexOf(foodModel)));
                     }
 
-                    dinnerMessageBuilder.append(courtName + " ");
+                    spaceDinner++;
+                    dinnerMessageBuilder.append(courtName + ", ");
                     dinnerAvailable = true;
                 }
 
-                if(mainRecyclerView != null) {
-                    FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
-                    foodAdapter.setFoods(faves);
-                    foodAdapter.notifyDataSetChanged();
+
+            }
+
+        }
+
+
+        if(mainRecyclerView != null) {
+            FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
+
+            activity.checkForFaves(faves);
+
+            if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
+
+                ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(faves));
+                foodAdapter.setFoods(filteredFaves);
+                if(filteredFaves.size() > 0){
+                    noAvailableFavesLayout.setVisibility(View.GONE);
+                    mainRecyclerView.setVisibility(View.VISIBLE);
+                }else{
+                    if(SharedPrefsHelper.getFaveList(context).size() > 0) {
+                        noAvailableFavesLayout.setVisibility(View.VISIBLE);
+                        mainRecyclerView.setVisibility(View.GONE);
+                        progressLayout.setVisibility(View.GONE);
+                    }
                 }
+            }else{
+                Collections.sort(faves);
+                if (!faves.isEmpty() && foodAdapter != null) {
+                    foodAdapter.setFoods(faves);
+                }
+                mainRecyclerView.setVisibility(View.VISIBLE);
+            }
 
-                //Need to call this so when main activity resumes it remembers availability
-                SharedPrefsHelper.storeFaveList(faves, context);
-
+            if(foodAdapter != null) {
+                foodAdapter.notifyDataSetChanged();
             }
         }
 
+        //Need to call this so when main activity resumes it remembers availability
+        SharedPrefsHelper.storeFaveList(faves, context);
+
         if(breakfastAvailable && notificationType == BREAKFAST_NOTIFICATION){
+            if(spaceBrek>0){
+                breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceBrek>1){
+                breakfastMessageBuilder.insert(breakfastMessageBuilder.lastIndexOf(",")+1," and") ;
+                breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             breakfastMessageBuilder.append("for breakfast!");
-            NotificationHelper.sendNotification(context, breakfastMessageBuilder.toString(), "Faves For Breakfast", NotificationHelper.BREAKFAST);
+            NotificationHelper.sendNotification(context, "Faves For Breakfast", breakfastMessageBuilder.toString(), NotificationHelper.BREAKFAST);
         }
 
         if(lunchAvailable && notificationType == LUNCH_NOTIFICATION){
+            if(spaceLunch>0){
+                lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceLunch>1){
+                lunchMessageBuilder.insert(lunchMessageBuilder.lastIndexOf(",")+1," and") ;
+                lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             lunchMessageBuilder.append("for lunch!");
-            NotificationHelper.sendNotification(context, lunchMessageBuilder.toString(), "Faves For Lunch", NotificationHelper.LUNCH);
+            NotificationHelper.sendNotification(context, "Faves For Lunch", lunchMessageBuilder.toString(), NotificationHelper.LUNCH);
         }
 
         if(dinnerAvailable && notificationType == DINNER_NOTIFICATION){
+            if(spaceDinner>0){
+                dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
+            if(spaceDinner>1){
+                dinnerMessageBuilder.insert(dinnerMessageBuilder.lastIndexOf(",")+1," and") ;
+                dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
+            }
             dinnerMessageBuilder.append("for dinner!");
-            NotificationHelper.sendNotification(context, dinnerMessageBuilder.toString(), "Faves For Dinner", NotificationHelper.DINNER);
+            NotificationHelper.sendNotification(context, "Faves For Dinner", dinnerMessageBuilder.toString(), NotificationHelper.DINNER);
         }
 
 
@@ -239,6 +308,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         if(progressLayout != null){
             progressLayout.setVisibility(View.GONE);
             frameLayout.setVisibility(View.VISIBLE);
+            mainRecyclerView.setVisibility(View.VISIBLE);
         }
 
 
@@ -280,6 +350,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     }
 
     private void addAvailableCourt(String meal, String court, FoodModel foodModel){
+        
         HashMap<String, ArrayList<String>> availableCourts = foodModel.getAvailableCourts();
         if(availableCourts == null){
             availableCourts = new HashMap<>();
@@ -302,5 +373,20 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             foodModel.setAvailableCourts(availableCourts);
         }
 
+    }
+
+    //This should probably not be copied here to avid redundancy but eh (from main activity)
+    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList){
+        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
+
+        for(int i = 0; i < faveList.size(); i++) {
+            if(faveList.get(i).isAvailable) {
+                availFaveList.add(faveList.get(i));
+            }
+        }
+
+        Collections.sort(availFaveList);
+
+        return availFaveList;
     }
 }

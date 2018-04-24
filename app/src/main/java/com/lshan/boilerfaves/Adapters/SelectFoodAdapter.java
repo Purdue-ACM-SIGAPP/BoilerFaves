@@ -108,7 +108,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
                 SharedPrefsHelper.storeFaveList(faveList, context);
 
                 //create toast that food has been added
-                Toast.makeText(context, foodModel.getName() + " added to faves", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, foodModel.getName() + " added to faves", Toast.LENGTH_LONG).show();
                 //make checkmark visible
 
                 notifyDataSetChanged();
@@ -116,7 +116,7 @@ public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.Ar
                 faveList.remove(foodModel);
                 SharedPrefsHelper.storeFaveList(faveList, context);
 
-                Toast.makeText(context, foodModel.getName() + " removed from faves", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, foodModel.getName() + " removed from faves", Toast.LENGTH_LONG).show();
 
                 notifyDataSetChanged();
             }
