@@ -46,9 +46,14 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
     public static final int DINNER_NOTIFICATION = 3;
 
 
-    public MenuRetrievalTask(int notificationType, List<FoodModel> faves,
+    /**
+     * This constructor is used to check the menu api and then display the results in the main activity.
+     * @param faves The user's selected faves.
+     * @param onMenuRetrievalCompleted This interface should be used to make UI changes with the results of the
+     *                                 parsed data from the api call.
+     */
+    public MenuRetrievalTask(List<FoodModel> faves,
                              OnMenuRetrievalCompleted onMenuRetrievalCompleted){
-        this.notificationType = notificationType;
         this.onMenuRetrievalCompleted = onMenuRetrievalCompleted;
         this.faves = faves;
     }
@@ -190,7 +195,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         if(onMenuRetrievalCompleted != null) {
             onMenuRetrievalCompleted.onMenuRetrievalCompleted(faves);
         }
-
 
         if(breakfastAvailable && notificationType == BREAKFAST_NOTIFICATION){
             if(spaceBrek>0){

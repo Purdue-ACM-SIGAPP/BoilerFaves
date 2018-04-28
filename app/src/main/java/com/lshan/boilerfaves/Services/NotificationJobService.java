@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.Menu;
 
+import com.lshan.boilerfaves.Activities.MainActivity;
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.Networking.OnNotificationConstructed;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
@@ -29,8 +30,7 @@ public class NotificationJobService extends JobService implements OnNotification
         int notificationType = jobParameters.getExtras().getInt("notificationType");
         System.out.println("Notif job service. Type=" + notificationType);
 
-        //new MenuRetrievalTask(context, null, notificationType, this).execute();
-        new MenuRetrievalTask(notificationType, SharedPrefsHelper.getFaveList(getApplicationContext()), this);
+        new MenuRetrievalTask(notificationType, SharedPrefsHelper.getFaveList(getApplicationContext()), this).execute();
         return false;
     }
 
@@ -41,6 +41,7 @@ public class NotificationJobService extends JobService implements OnNotification
 
     @Override
     public void onNotificationConstructed(String title, String message, int id) {
+        System.out.println("In onNotificationConstructed");
         NotificationHelper.sendNotification(getApplicationContext(), title, message, id);
     }
 }

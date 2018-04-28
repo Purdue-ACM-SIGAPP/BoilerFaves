@@ -45,8 +45,8 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
             Intent serviceIntent = new Intent(context, NotificationService.class);
 
             Bundle bundle = new Bundle();
-            int notificiationType = intent.getExtras().getInt("notificationType");
-            bundle.putInt("notificationType", notificiationType);
+            int notificationType = intent.getExtras().getInt("notificationType");
+            bundle.putInt("notificationType", notificationType);
 
             context.startService(serviceIntent);
         }

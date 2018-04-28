@@ -42,7 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 
-public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCompleted, OnNotificationConstructed {
+public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCompleted {
 
     @BindView(R.id.mainRecyclerView)
     RecyclerView mainRecyclerView;
@@ -110,14 +110,14 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         }
 
 
-        //Run menu check
+        //Run notification check
+        //Needed to start the notification checking cycle the first time the app is launched
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, MasterAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
         checkAndDisplayFaves();
-
     }
 
     //https://stackoverflow.com/questions/9521232/how-to-catch-an-exception-if-the-internet-or-signal-is-down
@@ -159,9 +159,9 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
     private void checkAndDisplayFaves() {
         if (isOnline()) {
             mainLayout.setVisibility(View.GONE);
-            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
+            new MenuRetrievalTask(
                     SharedPrefsHelper.getFaveList(context),
-                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
+                    MainActivity.this).execute();
         } else {
             showNoInternetDialog();
         }
@@ -340,8 +340,4 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         return availFaveList;
     }
 
-    @Override
-    public void onNotificationConstructed(String title, String message, int id) {
-        NotificationHelper.sendNotification(context, title, message, id);
-    }
 }
