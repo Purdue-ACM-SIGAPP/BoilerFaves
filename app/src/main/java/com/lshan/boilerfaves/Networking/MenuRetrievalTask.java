@@ -47,15 +47,6 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
 
     public MenuRetrievalTask(int notificationType, List<FoodModel> faves,
-                             OnMenuRetrievalCompleted onMenuRetrievalCompleted,
-                             OnNotificationConstructed onNotificationConstructed){
-        this.notificationType = notificationType;
-        this.onMenuRetrievalCompleted = onMenuRetrievalCompleted;
-        this.onNotificationConstructed = onNotificationConstructed;
-        this.faves = faves;
-    }
-
-    public MenuRetrievalTask(int notificationType, List<FoodModel> faves,
                              OnMenuRetrievalCompleted onMenuRetrievalCompleted){
         this.notificationType = notificationType;
         this.onMenuRetrievalCompleted = onMenuRetrievalCompleted;
@@ -71,16 +62,7 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
     @Override
     protected void onPreExecute() {
-
         super.onPreExecute();
-
-        //TODO move to interface methods
-        /*if(progressLayout != null){
-            progressLayout.setVisibility(View.VISIBLE);
-            frameLayout.setVisibility(View.GONE);
-            mainRecyclerView.setVisibility(View.GONE);
-        }*/
-
     }
 
     @Override

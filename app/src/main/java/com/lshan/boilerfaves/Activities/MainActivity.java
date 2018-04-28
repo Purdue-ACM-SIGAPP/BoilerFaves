@@ -68,21 +68,18 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
     @BindView(R.id.noAvailableFavesLayout)
     RelativeLayout noAvailableFavesLayout;
 
-    private FoodAdapter foodAdapter;
-    private boolean showAvailableOnly;
     final private Context context = this;
+
+    private FoodAdapter foodAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
-
-        //preferences.getBoolean("SwitchEnabled", )
 
         //Dismiss notification if the user clicked a notification to get here
         Bundle b = getIntent().getExtras();
-        if(b != null){
+        if (b != null) {
             int id = b.getInt("notificationID", 0);
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.cancel(id);
@@ -98,10 +95,10 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
 
-        if(faveList != null){
+        if (faveList != null) {
             startAdaptor(faveList);
             handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
-        }else{
+        } else {
             SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
             faveList = new ArrayList<FoodModel>();
         }
@@ -113,29 +110,13 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         }
 
 
-        //checkForFaves(faveList);
-
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        //Run menu check
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, MasterAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
 
-
-
-        //new SelectionRetrievalTask().execute();
-
-
-        if (isOnline()) {
-            noAvailableFavesLayout.setVisibility(View.GONE);
-            //new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
-            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
-                    SharedPrefsHelper.getFaveList(context),
-                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
-        } else {
-            showNoInternetDialog();
-        }
-
-        //JobUtil.scheduleJob(context);
+        checkAndDisplayFaves();
 
     }
 
@@ -149,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         return false;
     }
 
-    public void showNoInternetDialog(){
+    public void showNoInternetDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setTitle("Data retrieval failed")
                 .setMessage("Unable to connect to the Internet")
@@ -157,28 +138,32 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (isOnline()){
-                            //new MenuRetrievalTask(context, mainRecyclerView, MenuRetrievalTask.NO_NOTIFICATION, null).execute();
-                            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
-                                    SharedPrefsHelper.getFaveList(context),
-                                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
-                        } else {
-                            showNoInternetDialog();
-                        }
+                        checkAndDisplayFaves();
                     }
                 });
         AlertDialog failure = alertDialogBuilder.create();
         failure.show();
     }
 
-    public void checkForFaves(List<FoodModel> faveList){
-        if(faveList == null || faveList.size() == 0){
+    public void checkForFaves(List<FoodModel> faveList) {
+        if (faveList == null || faveList.size() == 0) {
             noFavesLayout.setVisibility(View.VISIBLE);
             noAvailableFavesLayout.setVisibility(View.GONE);
             availableFavesLayout.setVisibility(View.GONE);
-        }else{
+        } else {
             noFavesLayout.setVisibility(View.GONE);
             availableFavesLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void checkAndDisplayFaves() {
+        if (isOnline()) {
+            mainLayout.setVisibility(View.GONE);
+            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
+                    SharedPrefsHelper.getFaveList(context),
+                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
+        } else {
+            showNoInternetDialog();
         }
     }
 
@@ -189,23 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         noAvailableFavesLayout.setVisibility(View.GONE);
         availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
 
-        if (isOnline()) {
-            startAdaptor(new ArrayList<FoodModel>());
-            //new MenuRetrievalTask(context, mainRecyclerView, progressLayout, mainLayout, MenuRetrievalTask.NO_NOTIFICATION, noAvailableFavesLayout, noFavesLayout, this).execute();
-            new MenuRetrievalTask(MenuRetrievalTask.NO_NOTIFICATION,
-                    SharedPrefsHelper.getFaveList(context),
-                    (OnMenuRetrievalCompleted) MainActivity.this).execute();
-        } else {
-            showNoInternetDialog();
-        }
-
-        /*
-        List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
-        checkForFaves(faveList);
-        if(faveList != null){
-            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
-        }
-        */
+        checkAndDisplayFaves();
     }
 
 
@@ -225,29 +194,26 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
 
-        if(id == R.id.action_add){
+        if (id == R.id.action_add) {
             launchFoodSelect();
         }
-        if(id == R.id.action_notifications){
+        if (id == R.id.action_notifications) {
             launchNotifications();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void callRetrofit ()  {
 
-    }
-
-    private void startAdaptor(List<FoodModel> data){
+    private void startAdaptor(List<FoodModel> data) {
         foodAdapter = new FoodAdapter(this, data);
         foodAdapter.setmOnListEmptyListener(new FoodAdapter.OnListEmptyListener() {
             @Override
             public void onListEmpty() {
-                if(availabilitySwitch.isChecked() && SharedPrefsHelper.getFaveList(context).size() > 0){
+                if (availabilitySwitch.isChecked() && SharedPrefsHelper.getFaveList(context).size() > 0) {
                     noAvailableFavesLayout.setVisibility(View.VISIBLE);
                     mainRecyclerView.setVisibility(View.GONE);
-                }else{
+                } else {
                     noFavesLayout.setVisibility(View.VISIBLE);
                     availableFavesLayout.setVisibility(View.GONE);
                 }
@@ -265,60 +231,46 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
     }
 
 
-    public void launchFoodSelect(){
+    public void launchFoodSelect() {
         Intent intent = new Intent(context, SelectFoodActivity.class);
         context.startActivity(intent);
     }
 
-    public void launchNotifications(){
+    public void launchNotifications() {
         Intent intent = new Intent(context, NotificationActivity.class);
         context.startActivity(intent);
     }
 
 
     @OnCheckedChanged(R.id.availabilitySwitch)
-    public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked){
+    public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked) {
         SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
-        preferences.edit().putBoolean("availabilitySwitchChecked",isChecked).apply();
+        preferences.edit().putBoolean("availabilitySwitchChecked", isChecked).apply();
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
         ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
 
-        for(int i = 0; i < faveList.size(); i++) {
-            if(faveList.get(i).isAvailable) {
+        for (int i = 0; i < faveList.size(); i++) {
+            if (faveList.get(i).isAvailable) {
                 availFaveList.add(faveList.get(i));
             }
         }
 
         System.out.println("checked " + isChecked);
 
-        if(isChecked) {
-            if(availFaveList.size() == 0){
+        if (isChecked) {
+            if (availFaveList.size() == 0) {
                 progressLayout.setVisibility(View.GONE);
 
                 noAvailableFavesLayout.setVisibility(View.VISIBLE);
                 mainRecyclerView.setVisibility(View.GONE);
-            }else{
+            } else {
                 mainRecyclerView.setVisibility(View.VISIBLE);
             }
-
-            /*
-            if(foodAdapter == null){
-                startAdaptor(availFaveList);
-            }else{
-                foodAdapter.setFoods(availFaveList);
-            }*/
 
             startAdaptor(availFaveList);
 
         } else {
-
-            /*
-            if(foodAdapter == null){
-                startAdaptor(faveList);
-            }else{
-                foodAdapter.setFoods(faveList);
-            }*/
 
             startAdaptor(faveList);
 
@@ -327,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         }
 
         foodAdapter.notifyDataSetChanged();
-
     }
 
 
@@ -336,21 +287,21 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
     public void onMenuRetrievalCompleted(List<FoodModel> faves) {
         checkForFaves(faves);
 
-        if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
+        if (SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
 
             ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(faves));
             foodAdapter.setFoods(filteredFaves);
-            if(filteredFaves.size() > 0){
+            if (filteredFaves.size() > 0) {
                 noAvailableFavesLayout.setVisibility(View.GONE);
                 mainRecyclerView.setVisibility(View.VISIBLE);
-            }else{
-                if(SharedPrefsHelper.getFaveList(context).size() > 0) {
+            } else {
+                if (SharedPrefsHelper.getFaveList(context).size() > 0) {
                     noAvailableFavesLayout.setVisibility(View.VISIBLE);
                     mainRecyclerView.setVisibility(View.GONE);
                     progressLayout.setVisibility(View.GONE);
                 }
             }
-        }else{
+        } else {
             Collections.sort(faves);
             if (!faves.isEmpty() && foodAdapter != null) {
                 foodAdapter.setFoods(faves);
@@ -358,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
             mainRecyclerView.setVisibility(View.VISIBLE);
         }
 
-        if(foodAdapter != null) {
+        if (foodAdapter != null) {
             foodAdapter.notifyDataSetChanged();
         }
 
@@ -366,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         SharedPrefsHelper.storeFaveList(faves, context);
 
         //Hide the progress bar and show the food list
-        if(progressLayout != null){
+        if (progressLayout != null) {
             progressLayout.setVisibility(View.GONE);
             mainLayout.setVisibility(View.VISIBLE);
             mainRecyclerView.setVisibility(View.VISIBLE);
@@ -375,11 +326,11 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
     }
 
 
-    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList){
+    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList) {
         ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
 
-        for(int i = 0; i < faveList.size(); i++) {
-            if(faveList.get(i).isAvailable) {
+        for (int i = 0; i < faveList.size(); i++) {
+            if (faveList.get(i).isAvailable) {
                 availFaveList.add(faveList.get(i));
             }
         }
