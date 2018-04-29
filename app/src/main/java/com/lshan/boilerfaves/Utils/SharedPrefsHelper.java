@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * Created by lshan on 12/17/2017.
+ *
+ * Contains helper methods for accessing shared preferences.
  */
 
 public class SharedPrefsHelper {

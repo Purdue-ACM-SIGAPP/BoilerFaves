@@ -1,12 +1,9 @@
 package com.lshan.boilerfaves.Models;
 
 import android.support.annotation.NonNull;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.lshan.boilerfaves.Utils.FilterFood;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +13,7 @@ import java.util.HashMap;
  */
 
 
-public class FoodModel implements Comparable<FoodModel>, Filterable{
+public class FoodModel implements Comparable<FoodModel>{
 
     @SerializedName("Name")
     @Expose
@@ -26,9 +23,9 @@ public class FoodModel implements Comparable<FoodModel>, Filterable{
     private boolean IsVegetarian;
 
     public boolean isAvailable;
+
     //<Meal, List of courts food is available for that meal>
     public HashMap<String, ArrayList<String>> availableCourts;
-
 
     public FoodModel(){
         isAvailable =  false;
@@ -48,11 +45,9 @@ public class FoodModel implements Comparable<FoodModel>, Filterable{
         isAvailable = available;
     }
 
-
     public boolean isAvailable(){
         return isAvailable;
     }
-
 
     public void setAvailableCourts(HashMap<String, ArrayList<String>> availableCourts){
         this.availableCourts = availableCourts;
@@ -86,8 +81,4 @@ public class FoodModel implements Comparable<FoodModel>, Filterable{
         return Name;
     }
 
-    @Override
-    public Filter getFilter() {
-        return null;
-    }
 }

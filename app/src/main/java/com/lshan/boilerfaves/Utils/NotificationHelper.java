@@ -27,6 +27,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by lshan on 12/18/2017.
+ *
+ * Contains helper methods for sending/managing notifications.
  */
 
 public class NotificationHelper{
@@ -111,28 +113,4 @@ public class NotificationHelper{
         }
     }
 
-    public static void scheduleNofication(Context context, long delayInMillis, String message, String title, int notificationID){
-        Intent intentAlarm = new Intent(context, NotificationAlarmReciever.class);
-        intentAlarm.putExtra("message", message);
-        intentAlarm.putExtra("title", title);
-        intentAlarm.putExtra("notificationID", notificationID);
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Long triggerAtMillis = new GregorianCalendar().getTimeInMillis() + delayInMillis;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis,
-                PendingIntent.getBroadcast(context, notificationID, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-    }
-
-
-
-    public static class NotificationAlarmReciever extends BroadcastReceiver{
-
-        //Will execute when alarm is triggered
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            sendNotification(context, intent.getStringExtra("title"),
-                    intent.getStringExtra("message"), intent.getIntExtra("notificationID",0));
-        }
-    }
 }

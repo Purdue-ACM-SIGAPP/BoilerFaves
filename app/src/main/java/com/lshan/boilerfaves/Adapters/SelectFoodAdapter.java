@@ -23,6 +23,8 @@ import butterknife.OnClick;
 
 /**
  * Created by lshan on 12/16/2017.
+ *
+ * This adapter is used to display the available foods in the select food activity.
  */
 
 public class SelectFoodAdapter extends RecyclerView.Adapter<SelectFoodAdapter.AreaViewHolder>{

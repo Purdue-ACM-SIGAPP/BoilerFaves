@@ -42,6 +42,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 
+/**
+ * This activity displays the user's selected faves and their availability.
+ */
 public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCompleted {
 
     @BindView(R.id.mainRecyclerView)
@@ -89,29 +92,19 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
 
         setSupportActionBar(toolbar);
 
-        noAvailableFavesLayout.setVisibility(View.GONE);
+        //Set the 'show available' switch
         availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
 
+        //Check to make sure fave list isn't null to prevent crash later
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
-        List<FoodModel> availFaveList = SharedPrefsHelper.getFaveList(context);
-
         if (faveList != null) {
             startAdaptor(faveList);
-            handleSwitchChange(availabilitySwitch, availabilitySwitch.isChecked());
+            handleSwitchChange(availabilitySwitch.isChecked());
         } else {
             SharedPrefsHelper.storeFaveList(new ArrayList<FoodModel>(), context);
-            faveList = new ArrayList<FoodModel>();
         }
 
-        for (int i = 0; i < faveList.size(); i++) {
-            if (faveList.get(i).isAvailable) {
-                availFaveList.add(faveList.get(i));
-            }
-        }
-
-
-        //Run notification check
-        //Needed to start the notification checking cycle the first time the app is launched
+        //Start notification cycle
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, MasterAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
@@ -145,18 +138,19 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         failure.show();
     }
 
-    public void checkForFaves(List<FoodModel> faveList) {
-        if (faveList == null || faveList.size() == 0) {
-            noFavesLayout.setVisibility(View.VISIBLE);
-            noAvailableFavesLayout.setVisibility(View.GONE);
-            availableFavesLayout.setVisibility(View.GONE);
-        } else {
-            noFavesLayout.setVisibility(View.GONE);
-            availableFavesLayout.setVisibility(View.VISIBLE);
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
+
+        checkAndDisplayFaves();
     }
 
     private void checkAndDisplayFaves() {
+        noAvailableFavesLayout.setVisibility(View.GONE);
+
         if (isOnline()) {
             mainLayout.setVisibility(View.GONE);
             new MenuRetrievalTask(
@@ -167,18 +161,6 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        noAvailableFavesLayout.setVisibility(View.GONE);
-        availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
-
-        checkAndDisplayFaves();
-    }
-
-
-    //Shameless copy paste from https://stackoverflow.com/questions/31231609/creating-a-button-in-android-toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -192,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
 
         if (id == R.id.action_add) {
             launchFoodSelect();
@@ -241,20 +222,17 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         context.startActivity(intent);
     }
 
-
+    /**
+     * Filter the fave list when the 'show available' switch is toggled.
+     * @param isChecked Current status of the show available switch.
+     */
     @OnCheckedChanged(R.id.availabilitySwitch)
-    public void handleSwitchChange(SwitchCompat switchCompat, boolean isChecked) {
+    public void handleSwitchChange(boolean isChecked) {
         SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
         preferences.edit().putBoolean("availabilitySwitchChecked", isChecked).apply();
 
         List<FoodModel> faveList = SharedPrefsHelper.getFaveList(context);
-        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
-
-        for (int i = 0; i < faveList.size(); i++) {
-            if (faveList.get(i).isAvailable) {
-                availFaveList.add(faveList.get(i));
-            }
-        }
+        ArrayList<FoodModel> availFaveList = filterAvailableFaves((new ArrayList<>(faveList)));
 
         System.out.println("checked " + isChecked);
 
@@ -282,14 +260,19 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
     }
 
 
-    //The results of the menu retrieval task are used here (make UI changes)
+    /**
+     * A callback for the MenuRetrievalTask used to update the UI on the user's fave cards.
+     * Displays food availability in the main MainRecyclerView.
+     * @param updatedFaves A list of the user's faves but with updated information on availability.
+     *                     The MenuRetrievalTask will set if and where each food is available.
+     */
     @Override
-    public void onMenuRetrievalCompleted(List<FoodModel> faves) {
-        checkForFaves(faves);
+    public void onMenuRetrievalCompleted(List<FoodModel> updatedFaves) {
+        checkForFaves(updatedFaves);
 
         if (SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
 
-            ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(faves));
+            ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(updatedFaves));
             foodAdapter.setFoods(filteredFaves);
             if (filteredFaves.size() > 0) {
                 noAvailableFavesLayout.setVisibility(View.GONE);
@@ -302,9 +285,9 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
                 }
             }
         } else {
-            Collections.sort(faves);
-            if (!faves.isEmpty() && foodAdapter != null) {
-                foodAdapter.setFoods(faves);
+            Collections.sort(updatedFaves);
+            if (!updatedFaves.isEmpty() && foodAdapter != null) {
+                foodAdapter.setFoods(updatedFaves);
             }
             mainRecyclerView.setVisibility(View.VISIBLE);
         }
@@ -314,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         }
 
         //Need to call this so when main activity resumes it remembers availability
-        SharedPrefsHelper.storeFaveList(faves, context);
+        SharedPrefsHelper.storeFaveList(updatedFaves, context);
 
         //Hide the progress bar and show the food list
         if (progressLayout != null) {
@@ -325,13 +308,32 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
 
     }
 
+    /**
+     * Shows/hides appropriate views based on if any faves are currently available.
+     * @param updatedFaves A list of the user's faves with up to date info on availability.
+     */
+    public void checkForFaves(List<FoodModel> updatedFaves) {
+        if (updatedFaves == null || updatedFaves.size() == 0) {
+            noFavesLayout.setVisibility(View.VISIBLE);
+            noAvailableFavesLayout.setVisibility(View.GONE);
+            availableFavesLayout.setVisibility(View.GONE);
+        } else {
+            noFavesLayout.setVisibility(View.GONE);
+            availableFavesLayout.setVisibility(View.VISIBLE);
+        }
+    }
 
-    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList) {
+    /**
+     * Filters the user's faves to include only those currently available.
+     * @param updatedFaves A list of the user's faves with up to date info on availability.
+     * @return A list of the user's faves that are currently available.
+     */
+    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> updatedFaves) {
         ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
 
-        for (int i = 0; i < faveList.size(); i++) {
-            if (faveList.get(i).isAvailable) {
-                availFaveList.add(faveList.get(i));
+        for (int i = 0; i < updatedFaves.size(); i++) {
+            if (updatedFaves.get(i).isAvailable) {
+                availFaveList.add(updatedFaves.get(i));
             }
         }
 

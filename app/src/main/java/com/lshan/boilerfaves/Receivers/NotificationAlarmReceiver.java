@@ -20,6 +20,8 @@ import com.lshan.boilerfaves.Utils.TimeHelper;
 
 /**
  * Created by lshan on 2/27/2018.
+ *
+ * Starts a notification service to run the check that (potentially) generates a notification.
  */
 
 public class NotificationAlarmReceiver extends BroadcastReceiver {

@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 /**
  * Created by lshan on 1/12/2018.
+ *
+ * Contains helper methods for dealing with time conversions.
  */
 
 public class TimeHelper {

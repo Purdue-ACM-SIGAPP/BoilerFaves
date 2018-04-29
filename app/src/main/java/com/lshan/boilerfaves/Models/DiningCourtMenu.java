@@ -19,6 +19,11 @@ public class DiningCourtMenu {
         this.courtName = courtName;
     }
 
+    /**
+     * Used to convert the results of the api call into a more usable DiningCourtMenu object.
+     * @param courtName The dining court's name.
+     * @param model The MenuModel generated from the api call for the dining court.
+     */
     public DiningCourtMenu(String courtName, MenuModel model){
         this.courtName = courtName;
 

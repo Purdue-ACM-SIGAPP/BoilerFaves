@@ -34,6 +34,9 @@ import retrofit2.Response;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
+/**
+ * This activity displays a list of foods that users can select as faves.
+ */
 public class SelectFoodActivity extends AppCompatActivity {
 
 

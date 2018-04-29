@@ -17,6 +17,8 @@ import com.lshan.boilerfaves.Services.NotificationService;
 
 /**
  * Created by lshan on 2/27/2018.
+ *
+ * This receiver will start the notification checking cycle when the device reboots.
  */
 
 public class BootReceiver extends BroadcastReceiver {
