@@ -210,7 +210,6 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
             }
         });
 
-
         CustomGridLayoutManager customGridLayoutManager = new CustomGridLayoutManager(context);
         customGridLayoutManager.setScrollEnabled(false);
         mainRecyclerView.setLayoutManager(customGridLayoutManager);
