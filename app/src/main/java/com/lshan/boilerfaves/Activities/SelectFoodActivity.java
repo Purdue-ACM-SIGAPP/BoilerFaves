@@ -92,11 +92,26 @@ public class SelectFoodActivity extends AppCompatActivity {
 
              @Override
              public void onFailure(Call<List<SelectFoodModel>> call, Throwable t) {
-                 //TODO: Display error message if our server goes down or something
-                Log.e("Retrofit", t.getMessage());
+                 showNoInternetDialog();
+                 Log.e("Retrofit", t.getMessage());
              }
          });
 
+    }
+
+    public void showNoInternetDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                .setTitle("Data retrieval failed")
+                .setMessage("Either you don't have internet or something went wrong on our end...")
+                .setCancelable(false)
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        callRetrofit();
+                    }
+                });
+        AlertDialog failure = alertDialogBuilder.create();
+        failure.show();
     }
 
     @Override
@@ -108,7 +123,6 @@ public class SelectFoodActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-
     }
 
 
@@ -127,7 +141,9 @@ public class SelectFoodActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                selectFoodAdapter.searchFoods(query);
+                if(selectFoodAdapter != null) {
+                    selectFoodAdapter.searchFoods(query);
+                }
                 View view = getCurrentFocus();
                 if (view != null) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -142,7 +158,9 @@ public class SelectFoodActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 //change adapter model to fit query
                 selectFoodRecyclerView.scrollToPosition(0);
-                selectFoodAdapter.searchFoods(s);
+                if(selectFoodAdapter != null) {
+                    selectFoodAdapter.searchFoods(s);
+                }
                 return false;
             }
         });

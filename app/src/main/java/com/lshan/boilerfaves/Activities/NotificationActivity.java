@@ -99,14 +99,6 @@ public class NotificationActivity extends AppCompatActivity {
 
     private Context context;
 
-    TimePickerDialog.OnTimeSetListener time_listener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-            String time = String.valueOf(hour) + ":" + String.valueOf(minute);
-            System.out.println(time);
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,10 +123,24 @@ public class NotificationActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
+        displaySelectedTimes();
+
+        setOnClickListeners();
+    }
+
+    /**
+     * Fill in the time buttons with the times the user has previously selected.
+     */
+    private void displaySelectedTimes(){
         SharedPreferences prefs = SharedPrefsHelper.getSharedPrefs(getApplicationContext());
 
         int[] breakfastHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.BREAKFAST);
-        String toPrint = twentyFourHourTo12(breakfastHandM[0], breakfastHandM[1]);
+        String toPrint;
+        if(DateFormat.is24HourFormat(context)){
+            toPrint = get24HourString(breakfastHandM[0], breakfastHandM[1]);
+        }else{
+            toPrint = twentyFourHourTo12(breakfastHandM[0], breakfastHandM[1]);
+        }
         if(toPrint == null) {
             breakfastTime.setText("00:00");
         } else {
@@ -142,7 +148,11 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         int[] lunchHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.LUNCH);
-        toPrint = twentyFourHourTo12(lunchHandM[0], lunchHandM[1]);
+        if(DateFormat.is24HourFormat(context)){
+            toPrint = get24HourString(lunchHandM[0], lunchHandM[1]);
+        }else{
+            toPrint = twentyFourHourTo12(lunchHandM[0], lunchHandM[1]);
+        }
         if(toPrint == null) {
             lunchTime.setText("00:00");
         } else {
@@ -150,7 +160,11 @@ public class NotificationActivity extends AppCompatActivity {
         }
 
         int[] dinnerHandM = SharedPrefsHelper.getMealTime(this, SharedPrefsHelper.DINNER);
-        toPrint = twentyFourHourTo12(dinnerHandM[0], dinnerHandM[1]);
+        if(DateFormat.is24HourFormat(context)){
+            toPrint = get24HourString(dinnerHandM[0], dinnerHandM[1]);
+        }else{
+            toPrint = twentyFourHourTo12(dinnerHandM[0], dinnerHandM[1]);
+        }
         if(toPrint == null) {
             dinnerTime.setText("00:00");
         } else {
@@ -160,8 +174,12 @@ public class NotificationActivity extends AppCompatActivity {
         breakfastSwitch.setChecked(prefs.getBoolean("sendBreakfastNotif", true));
         lunchSwitch.setChecked(prefs.getBoolean("sendLunchNotif", true));
         dinnerSwitch.setChecked(prefs.getBoolean("sendDinnerNotif", true));
+    }
 
-
+    /**
+     * Set onClickListeners that trigger TimePickerDialogs for the notification buttons.
+     */
+    private void setOnClickListeners(){
         breakfastTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,8 +245,8 @@ public class NotificationActivity extends AppCompatActivity {
                 }, hour, minute, DateFormat.is24HourFormat(context)).show();
             }
         });
-
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -242,7 +260,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     @OnCheckedChanged(R.id.breakfastSwitch)
-    public void breakfeastClicked(SwitchCompat buttonView, boolean isChecked) {
+    public void breakfastClicked(boolean isChecked) {
         SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendBreakfastNotif", isChecked).apply();
         System.out.println(isChecked);
 
@@ -258,7 +276,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     @OnCheckedChanged(R.id.lunchSwitch)
-    public void lunchClicked(SwitchCompat buttonView, boolean isChecked) {
+    public void lunchClicked(boolean isChecked) {
         SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendLunchNotif", isChecked).apply();
         if (isChecked) {
             mealTime = LUNCH;
@@ -272,7 +290,7 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     @OnCheckedChanged(R.id.dinnerSwitch)
-    public void dinnerClicked(SwitchCompat buttonView, boolean isChecked) {
+    public void dinnerClicked(boolean isChecked) {
         SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendDinnerNotif", isChecked).apply();
         if (isChecked) {
             mealTime = DINNER;
@@ -285,9 +303,8 @@ public class NotificationActivity extends AppCompatActivity {
         runNotifAlarm();
     }
 
-
     @OnClick(R.id.cancel)
-    public void cancelClicked(Button button){
+    public void cancelClicked(){
 
         timeParent.setVisibility(View.GONE);
         listParent.setVisibility(View.VISIBLE);
@@ -305,13 +322,14 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     public void storeTimeFromTimePicker(String meal, int hour, int minute){
-
         SharedPreferences preferences = SharedPrefsHelper.getSharedPrefs(this);
         preferences.edit().putInt(meal + "Hour", hour).apply();
         preferences.edit().putInt(meal + "Minute", minute).apply();
-
     }
 
+    /**
+     * This method is used to restart the notification cycle after the user changes the notification time.
+     */
     private void runNotifAlarm(){
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, MasterAlarmReceiver.class);

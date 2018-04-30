@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
 
     private FoodAdapter foodAdapter;
 
-    //Testing commit...
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
                 }
             }
         });
-
 
         CustomGridLayoutManager customGridLayoutManager = new CustomGridLayoutManager(context);
         customGridLayoutManager.setScrollEnabled(false);
