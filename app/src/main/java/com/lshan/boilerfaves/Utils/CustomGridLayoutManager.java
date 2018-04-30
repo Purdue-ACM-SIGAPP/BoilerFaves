@@ -5,6 +5,9 @@ import android.support.v7.widget.LinearLayoutManager;
 
 /**
  * Created by lshan on 4/13/2018.
+ *
+ * Used to display available dining courts on the food cards in the main activity.
+ * Ensures that scrolling works as expected.
  */
 
 public class CustomGridLayoutManager extends LinearLayoutManager {

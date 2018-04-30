@@ -1,111 +1,86 @@
 package com.lshan.boilerfaves.Networking;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.os.AsyncTask;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
-import com.google.gson.Gson;
-import com.lshan.boilerfaves.Activities.MainActivity;
-import com.lshan.boilerfaves.Adapters.FoodAdapter;
-import com.lshan.boilerfaves.Models.BreakfastModel;
-import com.lshan.boilerfaves.Models.DinnerModel;
 import com.lshan.boilerfaves.Models.FoodModel;
-import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.DiningCourtMenu;
 import com.lshan.boilerfaves.Models.MenuModel;
-import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
-import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
-import com.lshan.boilerfaves.Utils.TimeHelper;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Response;
 
 /**
  * Created by lshan on 1/4/2018.
+ *
+ * The purpose of this AsyncTask is to get the menu data from the Purdue API and
+ * parse it for the user's available faves. It has two constructors - the first should
+ * be used when the data is needed to make UI changes and the second is for sending a
+ * notification.
  */
 
 public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCourtMenu>>{
 
-    private static final String API_URL = "https://api.hfs.purdue.edu/menus/v1/locations/";
-    private RecyclerView mainRecyclerView;
+    private OnMenuRetrievalCompleted onMenuRetrievalCompleted;
+    private OnNotificationConstructed onNotificationConstructed;
+
+    private List<FoodModel> faves;
+
     private int notificationType;
-    private Context context;
-    RelativeLayout progressLayout;
-    RelativeLayout noAvailableFavesLayout;
-    RelativeLayout noFavesLayout;
-    FrameLayout frameLayout;
-    private MainActivity activity;
 
     public static final int NO_NOTIFICATION = 0;
     public static final int BREAKFAST_NOTIFICATION = 1;
     public static final int LUNCH_NOTIFICATION = 2;
     public static final int DINNER_NOTIFICATION = 3;
 
-    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType){
-        this.context = context;
-        this.mainRecyclerView = mainRecyclerView;
-        this.notificationType = notificationType;
-        this.progressLayout = progressLayout;
-        this.frameLayout = frameLayout;
+
+    /**
+     * This constructor is used to check the menu api and then display the results in the main activity.
+     * @param faves The user's selected faves.
+     * @param onMenuRetrievalCompleted This interface should be used to make UI changes with the results of the
+     *                                 parsed data from the api call.
+     */
+    public MenuRetrievalTask(List<FoodModel> faves,
+                             OnMenuRetrievalCompleted onMenuRetrievalCompleted){
+        notificationType = NO_NOTIFICATION;
+        this.onMenuRetrievalCompleted = onMenuRetrievalCompleted;
+        this.faves = faves;
     }
 
-    //TODO change this to just use the reference to the activity
-    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, RelativeLayout progressLayout, FrameLayout frameLayout, int notificationType, RelativeLayout noAvailableFavesLayout, RelativeLayout noFavesLayout, MainActivity activity){
-        this.context = context;
-        this.mainRecyclerView = mainRecyclerView;
+    /**
+     * This constructor is used to check the API and then send a notification.
+     * @param notificationType The meal the notification is for. See the constants at the top
+     *                         of this file.
+     * @param faves The user's selected faves.
+     * @param onNotificationConstructed This interface should be used to send a notification with
+     *                                  the results of the api call.
+     */
+    public MenuRetrievalTask(int notificationType, List<FoodModel> faves,
+                             OnNotificationConstructed onNotificationConstructed){
         this.notificationType = notificationType;
-        this.progressLayout = progressLayout;
-        this.frameLayout = frameLayout;
-        this.noAvailableFavesLayout = noAvailableFavesLayout;
-        this.noFavesLayout = noFavesLayout;
-        this.activity = activity;
-    }
-
-    public MenuRetrievalTask(Context context, RecyclerView mainRecyclerView, int notificationType){
-        this.context = context;
-        this.mainRecyclerView = mainRecyclerView;
-        this.notificationType = notificationType;
-        this.progressLayout = null;
-        this.frameLayout = null;
+        this.onNotificationConstructed = onNotificationConstructed;
+        this.faves = faves;
     }
 
     @Override
     protected void onPreExecute() {
-
         super.onPreExecute();
-
-        if(progressLayout != null){
-            progressLayout.setVisibility(View.VISIBLE);
-            frameLayout.setVisibility(View.GONE);
-            mainRecyclerView.setVisibility(View.GONE);
-        }
-
     }
 
+    /**
+     * Make the retrofit calls to the purdue dining api.
+     *
+     * @param voids
+     * @return A list of dining court menus.
+     */
     @Override
     protected ArrayList<DiningCourtMenu> doInBackground(Void... voids) {
 
@@ -116,6 +91,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
         try {
             //Synchronous retrofit call
+            //We can't use asynchronous calls here because we need to wait until we have
+            //data from all of the dining courts to continue.
             Response<List<String>> locationsResponse = MenuApiHelper.getInstance().getLocations().execute();
             if (locationsResponse.isSuccessful()) {
                 for (String diningCourt : locationsResponse.body()) {
@@ -133,26 +110,34 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
         return diningCourtMenus;
     }
 
+    /**
+     * Parse the menu data and call an interface to handle the result.
+     *
+     * @param menus The menus of all dining courts on a given day.
+     */
     @Override
     protected void onPostExecute(ArrayList<DiningCourtMenu> menus) {
 
 
-        List<FoodModel> faves = SharedPrefsHelper.getFaveList(context);
+        // Will contain menus that only have available faves
         ArrayList<DiningCourtMenu> availableFaves = new ArrayList<>();
 
+        // Filter the menus to get rid of foods that aren't faves
         for(DiningCourtMenu menu: menus){
-            DiningCourtMenu faveCourts = checkForFaves(faves, menu);
-            if(faveCourts != null) {
-                availableFaves.add(checkForFaves(faves, menu));
+            DiningCourtMenu filteredCourt = checkForFaves(faves, menu); // A menu with only faves
+            if(filteredCourt != null) {
+                availableFaves.add(filteredCourt);
             }
         }
 
+        // These are used to create the notification messages
         StringBuilder breakfastMessageBuilder = new StringBuilder().append("Faves available at ");
         StringBuilder lunchMessageBuilder = new StringBuilder().append("Faves available at ");
         StringBuilder dinnerMessageBuilder = new StringBuilder().append("Faves available at ");
 
-        boolean breakfastAvailable = false, lunchAvailable = false, dinnerAvailable = false;
+        boolean breakfastAvailable = false, lunchAvailable = false, dinnerAvailable = false; //Used to determine if notification should be sent
         int spaceBrek=0, spaceLunch=0, spaceDinner=0;
+
         //Make a list of all the foods available today so we can mark foods that aren't in it as unavailable
         ArrayList<FoodModel> availableToday = new ArrayList<>();
         for(DiningCourtMenu menu : availableFaves){
@@ -171,7 +156,8 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             }
         }
 
-
+        // Mark all foods that aren't available today as unavailable and remove any dining
+        // dining courts they were available at.
         for(FoodModel food : faves){
             if(!availableToday.contains(food)){
                 food.setAvailable(false);
@@ -180,14 +166,14 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
             food.setAvailableCourts(new HashMap<>());
         }
 
-
+        // Go through each food and set the dining courts it's available at.
+        // Also, build the notification messages based on where and when faves are available.
         for(DiningCourtMenu menu : availableFaves){
             if(menu != null){
 
                 String courtName = menu.getCourtName();
                 if(menu.getBreakfast().size() > 0){
 
-                    //Needed to update availability on the cardViews
                     for(FoodModel foodModel: menu.getBreakfast()){
                         faves.get(faves.indexOf(foodModel)).setAvailable(true);
 
@@ -224,48 +210,17 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                     dinnerMessageBuilder.append(courtName + ", ");
                     dinnerAvailable = true;
                 }
-
-
-            }
-
-        }
-
-
-        if(mainRecyclerView != null) {
-            FoodAdapter foodAdapter = (FoodAdapter) mainRecyclerView.getAdapter();
-
-            activity.checkForFaves(faves);
-
-            if(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false)) {
-
-                ArrayList<FoodModel> filteredFaves = filterAvailableFaves(new ArrayList<>(faves));
-                foodAdapter.setFoods(filteredFaves);
-                if(filteredFaves.size() > 0){
-                    noAvailableFavesLayout.setVisibility(View.GONE);
-                    mainRecyclerView.setVisibility(View.VISIBLE);
-                }else{
-                    if(SharedPrefsHelper.getFaveList(context).size() > 0) {
-                        noAvailableFavesLayout.setVisibility(View.VISIBLE);
-                        mainRecyclerView.setVisibility(View.GONE);
-                        progressLayout.setVisibility(View.GONE);
-                    }
-                }
-            }else{
-                Collections.sort(faves);
-                if (!faves.isEmpty() && foodAdapter != null) {
-                    foodAdapter.setFoods(faves);
-                }
-                mainRecyclerView.setVisibility(View.VISIBLE);
-            }
-
-            if(foodAdapter != null) {
-                foodAdapter.notifyDataSetChanged();
             }
         }
 
-        //Need to call this so when main activity resumes it remembers availability
-        SharedPrefsHelper.storeFaveList(faves, context);
+        // If we're updating the UI, do that and finish
+        if(onMenuRetrievalCompleted != null) {
+            onMenuRetrievalCompleted.onMenuRetrievalCompleted(faves);
+            return;
+        }
 
+        // Not updating the UI - need to (potentially) send a notification
+        // Finish building the notification messages before sending.
         if(breakfastAvailable && notificationType == BREAKFAST_NOTIFICATION){
             if(spaceBrek>0){
                 breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
@@ -275,7 +230,10 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 breakfastMessageBuilder.replace(breakfastMessageBuilder.lastIndexOf(","),breakfastMessageBuilder.lastIndexOf(",")+1,"") ;
             }
             breakfastMessageBuilder.append("for breakfast!");
-            NotificationHelper.sendNotification(context, "Faves For Breakfast", breakfastMessageBuilder.toString(), NotificationHelper.BREAKFAST);
+
+            if(onNotificationConstructed != null) {
+                onNotificationConstructed.onNotificationConstructed("Faves For Breakfast", breakfastMessageBuilder.toString(), NotificationHelper.BREAKFAST);
+            }
         }
 
         if(lunchAvailable && notificationType == LUNCH_NOTIFICATION){
@@ -287,7 +245,10 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 lunchMessageBuilder.replace(lunchMessageBuilder.lastIndexOf(","),lunchMessageBuilder.lastIndexOf(",")+1,"") ;
             }
             lunchMessageBuilder.append("for lunch!");
-            NotificationHelper.sendNotification(context, "Faves For Lunch", lunchMessageBuilder.toString(), NotificationHelper.LUNCH);
+
+            if(onNotificationConstructed != null) {
+                onNotificationConstructed.onNotificationConstructed("Faves For Lunch", lunchMessageBuilder.toString(), NotificationHelper.LUNCH);
+            }
         }
 
         if(dinnerAvailable && notificationType == DINNER_NOTIFICATION){
@@ -299,24 +260,24 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
                 dinnerMessageBuilder.replace(dinnerMessageBuilder.lastIndexOf(","),dinnerMessageBuilder.lastIndexOf(",")+1,"") ;
             }
             dinnerMessageBuilder.append("for dinner!");
-            NotificationHelper.sendNotification(context, "Faves For Dinner", dinnerMessageBuilder.toString(), NotificationHelper.DINNER);
+
+            if(onNotificationConstructed != null) {
+                onNotificationConstructed.onNotificationConstructed("Faves For Dinner", breakfastMessageBuilder.toString(), NotificationHelper.DINNER);
+            }
         }
-
-
-
-        //Hide the progress bar
-        if(progressLayout != null){
-            progressLayout.setVisibility(View.GONE);
-            frameLayout.setVisibility(View.VISIBLE);
-            mainRecyclerView.setVisibility(View.VISIBLE);
-        }
-
 
     }
 
 
-    //Returns a DiningCourtMenu with only that court's available faves
-    //If a court has no available faves, returns null
+
+    /**
+     * This method is used to filter a dining court's menu for faves.
+     *
+     * @param faves The user's selected faves.
+     * @param menu The menu of a dining court on a given day.
+     * @return A DiningCourtMenu with only that court's available faves. If a court has no
+     * available faves, returns null.
+     */
     private DiningCourtMenu checkForFaves(List<FoodModel> faves, DiningCourtMenu menu){
         ArrayList<FoodModel> breakfast, lunch, dinner;
 
@@ -349,6 +310,14 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
     }
 
+
+    /**
+     * This method is used to set which dining courts a food is available at on a given day.
+     *
+     * @param meal The meal for which this food is available at the dining court.
+     * @param court The dining court the food is available at.
+     * @param foodModel The food that's available.
+     */
     private void addAvailableCourt(String meal, String court, FoodModel foodModel){
         
         HashMap<String, ArrayList<String>> availableCourts = foodModel.getAvailableCourts();
@@ -375,18 +344,4 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
     }
 
-    //This should probably not be copied here to avid redundancy but eh (from main activity)
-    private ArrayList<FoodModel> filterAvailableFaves(ArrayList<FoodModel> faveList){
-        ArrayList<FoodModel> availFaveList = new ArrayList<FoodModel>();
-
-        for(int i = 0; i < faveList.size(); i++) {
-            if(faveList.get(i).isAvailable) {
-                availFaveList.add(faveList.get(i));
-            }
-        }
-
-        Collections.sort(availFaveList);
-
-        return availFaveList;
-    }
 }

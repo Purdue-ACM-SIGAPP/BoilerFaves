@@ -20,6 +20,8 @@ import com.lshan.boilerfaves.Utils.TimeHelper;
 
 /**
  * Created by lshan on 2/27/2018.
+ *
+ * Starts a notification service to run the check that (potentially) generates a notification.
  */
 
 public class NotificationAlarmReceiver extends BroadcastReceiver {
@@ -45,8 +47,8 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
             Intent serviceIntent = new Intent(context, NotificationService.class);
 
             Bundle bundle = new Bundle();
-            int notificiationType = intent.getExtras().getInt("notificationType");
-            bundle.putInt("notificationType", notificiationType);
+            int notificationType = intent.getExtras().getInt("notificationType");
+            bundle.putInt("notificationType", notificationType);
 
             context.startService(serviceIntent);
         }

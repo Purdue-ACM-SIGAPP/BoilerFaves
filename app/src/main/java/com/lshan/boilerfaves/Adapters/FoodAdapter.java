@@ -32,6 +32,8 @@ import static android.content.ContentValues.TAG;
 
 /**
  * Created by lshan on 12/16/2017.
+ *
+ * This adapter is used to display the FoodModels in a user's fave list on the MainActivity.
  */
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder>{
@@ -39,12 +41,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
     private List<FoodModel> foods;
     private Context context;
     private OnListEmptyListener mOnListEmptyListener;
-
-    //Used to edit the appropriate parts of the availability gridlayout
-    private final int BREAKFAST_OFFSET = 0;
-    private final int LUNCH_OFFSET = 8;
-    private final int DINNER_OFFSET = 16;
-
 
     public FoodAdapter(Context context, List<FoodModel> data){
         this.foods = data;
@@ -71,6 +67,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.AreaViewHolder
 
     @Override
     public void onBindViewHolder(AreaViewHolder holder, int position){
+        //Used to edit the appropriate parts of the availability gridlayout
+        final int BREAKFAST_OFFSET = 0;
+        final int LUNCH_OFFSET = 8;
+        final int DINNER_OFFSET = 16;
+
         FoodModel food = foods.get(position);
         holder.cardTitle.setText(food.getName());
 

@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.lshan.boilerfaves.Activities.MainActivity;
+import com.lshan.boilerfaves.Networking.OnNotificationConstructed;
 import com.lshan.boilerfaves.R;
 
 import java.util.GregorianCalendar;
@@ -26,12 +27,14 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by lshan on 12/18/2017.
+ *
+ * Contains helper methods for sending/managing notifications.
  */
 
-public class NotificationHelper {
+public class NotificationHelper{
 
     //These are for the notification channels/code numbers
-public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
+    public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
 
     private static NotificationCompat.Builder mBuilder;
 
@@ -110,26 +113,4 @@ public static final int BREAKFAST = 1, LUNCH = 2, DINNER = 3;
         }
     }
 
-    public static void scheduleNofication(Context context, long delayInMillis, String message, String title, int notificationID){
-        Intent intentAlarm = new Intent(context, NotificationAlarmReciever.class);
-        intentAlarm.putExtra("message", message);
-        intentAlarm.putExtra("title", title);
-        intentAlarm.putExtra("notificationID", notificationID);
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Long triggerAtMillis = new GregorianCalendar().getTimeInMillis() + delayInMillis;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis,
-                PendingIntent.getBroadcast(context, notificationID, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-    }
-
-    public static class NotificationAlarmReciever extends BroadcastReceiver{
-
-        //Will execute when alarm is triggered
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            sendNotification(context, intent.getStringExtra("title"),
-                    intent.getStringExtra("message"), intent.getIntExtra("notificationID",0));
-        }
-    }
 }

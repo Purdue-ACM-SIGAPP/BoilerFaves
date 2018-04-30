@@ -17,9 +17,11 @@ import com.lshan.boilerfaves.Utils.TimeHelper;
 
 /**
  * Created by lshan on 3/22/2018.
+ *
+ * The purpose of this JobService is to set (up to) three notification checks (breakfast,
+ * lunch, and dinner) for later in the day. The service also sets an alarm to reschedule itself
+ * for the next day.
  */
-
-//This service should set three notification alarms (breakfast, lunch dinner) and reschedule the master service for the next day
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MasterJobService extends JobService{
@@ -37,7 +39,8 @@ public class MasterJobService extends JobService{
 
         Intent notifIntent = new Intent(context, NotificationAlarmReceiver.class);
 
-        //Breakfast
+        // Breakfast
+        // Before scheduling a notification, check if the user has that notification turned on
         boolean sendBreakfast = SharedPrefsHelper.getSharedPrefs(context).getBoolean("sendBreakfastNotif", true);
         System.out.println(sendBreakfast);
         if(sendBreakfast) {
@@ -47,7 +50,6 @@ public class MasterJobService extends JobService{
             PendingIntent breakfastPendingIntent = PendingIntent.getBroadcast(context, 1, notifIntent, 0);
             alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + TimeHelper.getMillisUntil(breakfastHour, breakfastMinute), breakfastPendingIntent);
         }
-
 
         //Lunch
         boolean sendLunch = SharedPrefsHelper.getSharedPrefs(context).getBoolean("sendLunchNotif", true);

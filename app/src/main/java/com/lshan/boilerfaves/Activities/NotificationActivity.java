@@ -40,9 +40,10 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
+/**
+ * This activity lets users set their notification preferences.
+ */
 public class NotificationActivity extends AppCompatActivity {
-
-
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -160,17 +161,6 @@ public class NotificationActivity extends AppCompatActivity {
         lunchSwitch.setChecked(prefs.getBoolean("sendLunchNotif", true));
         dinnerSwitch.setChecked(prefs.getBoolean("sendDinnerNotif", true));
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
-
-
 
         breakfastTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,10 +248,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         if (isChecked) {
             mealTime = BREAKFAST;
-            /*
-            timeParent.setVisibility(View.VISIBLE);
-            listParent.setVisibility(View.GONE);
-            */
+
         } else {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
@@ -275,10 +262,7 @@ public class NotificationActivity extends AppCompatActivity {
         SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendLunchNotif", isChecked).apply();
         if (isChecked) {
             mealTime = LUNCH;
-            /*
-            timeParent.setVisibility(View.VISIBLE);
-            listParent.setVisibility(View.GONE);
-            */
+
         } else {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
@@ -292,10 +276,7 @@ public class NotificationActivity extends AppCompatActivity {
         SharedPrefsHelper.getSharedPrefs(this).edit().putBoolean("sendDinnerNotif", isChecked).apply();
         if (isChecked) {
             mealTime = DINNER;
-            /*
-            timeParent.setVisibility(View.VISIBLE);
-            listParent.setVisibility(View.GONE);
-            */
+
         } else {
             mealTime = NOTSELECTED;
             //clear any notification time for this mealTime
@@ -304,32 +285,6 @@ public class NotificationActivity extends AppCompatActivity {
         runNotifAlarm();
     }
 
-    /*
-    @OnClick(R.id.submit)
-    public void submitClicked(Button button){
-        mealTime = NOTSELECTED;
-
-
-        timeParent.setVisibility(View.GONE);
-        listParent.setVisibility(View.VISIBLE);
-        //figure out time on time picker and associate it with given mealtime
-        //don't forget to get am or pm
-
-        int hour = timePicker.getCurrentHour();
-        int minute = timePicker.getCurrentMinute();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        String SHour = mealTime + "Hour";
-        String MHour = mealTime + "Minute";
-        editor.putInt(SHour, hour);
-        editor.putInt(MHour, minute);
-        editor.apply();
-
-        System.out.println("time: " + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
-
-    }
-    */
 
     @OnClick(R.id.cancel)
     public void cancelClicked(Button button){
@@ -355,20 +310,6 @@ public class NotificationActivity extends AppCompatActivity {
         preferences.edit().putInt(meal + "Hour", hour).apply();
         preferences.edit().putInt(meal + "Minute", minute).apply();
 
-        /*String Shour = Integer.toString(hour);
-        String Sminute = Integer.toString(minute);
-        if(hour < 10){
-            Shour = "0" + Shour;
-        }
-        if(minute < 10){
-            Sminute = "0" + Sminute;
-        }
-        String time = Shour + ":" + Sminute;
-        SharedPreferences prefs = SharedPrefsHelper.getSharedPrefs(getApplicationContext());
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(meal, time);
-        editor.apply();
-        */
     }
 
     private void runNotifAlarm(){

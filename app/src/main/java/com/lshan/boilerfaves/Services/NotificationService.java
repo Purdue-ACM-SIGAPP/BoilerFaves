@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.lshan.boilerfaves.Networking.MenuRetrievalTask;
 import com.lshan.boilerfaves.Receivers.NotificationAlarmReceiver;
+import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
 
 /**
  * Created by lshan on 3/1/2018.
@@ -39,7 +40,7 @@ public class NotificationService extends Service {
 
         System.out.println("Notif service (not job service). Type=" + notificationType);
 
-        new MenuRetrievalTask(context, null, MenuRetrievalTask.NO_NOTIFICATION).execute();
+        //new MenuRetrievalTask(context, null, MenuRetrievalTask.NO_NOTIFICATION).execute();
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);
