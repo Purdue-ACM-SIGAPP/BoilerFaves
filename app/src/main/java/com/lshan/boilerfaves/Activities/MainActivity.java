@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
 
     private FoodAdapter foodAdapter;
 
+    //Testing commit...
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
