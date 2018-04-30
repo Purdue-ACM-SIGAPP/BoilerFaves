@@ -143,7 +143,10 @@ public class SelectFoodActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 if(selectFoodAdapter != null) {
                     selectFoodAdapter.searchFoods(query);
+                }else{
+                    return false;
                 }
+
                 View view = getCurrentFocus();
                 if (view != null) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -157,10 +160,12 @@ public class SelectFoodActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String s) {
                 //change adapter model to fit query
-                selectFoodRecyclerView.scrollToPosition(0);
                 if(selectFoodAdapter != null) {
                     selectFoodAdapter.searchFoods(s);
+                }else{
+                    return false;
                 }
+                selectFoodRecyclerView.scrollToPosition(0);
                 return false;
             }
         });
