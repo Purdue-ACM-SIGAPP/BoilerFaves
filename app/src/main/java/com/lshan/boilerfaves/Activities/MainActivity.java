@@ -142,13 +142,13 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
     protected void onResume() {
         super.onResume();
 
-
         availabilitySwitch.setChecked(SharedPrefsHelper.getSharedPrefs(context).getBoolean("availabilitySwitchChecked", false));
 
         checkAndDisplayFaves();
     }
 
     private void checkAndDisplayFaves() {
+        progressLayout.setVisibility(View.VISIBLE);
         noAvailableFavesLayout.setVisibility(View.GONE);
 
         if (isOnline()) {
@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
                     SharedPrefsHelper.getFaveList(context),
                     MainActivity.this).execute();
         } else {
+            progressLayout.setVisibility(View.GONE);
             showNoInternetDialog();
         }
     }
@@ -239,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements OnMenuRetrievalCo
         if (isChecked) {
             if (availFaveList.size() == 0) {
                 progressLayout.setVisibility(View.GONE);
-
                 noAvailableFavesLayout.setVisibility(View.VISIBLE);
                 mainRecyclerView.setVisibility(View.GONE);
             } else {
