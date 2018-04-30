@@ -170,7 +170,6 @@ public class SelectFoodActivity extends AppCompatActivity {
             }
         });
 
-
         return true;
     }
 
