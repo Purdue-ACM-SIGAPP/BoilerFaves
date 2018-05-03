@@ -2,10 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background= "#00000000"
-    android:orientation="vertical"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="#00000000"
+    android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="@string/in_honor_of_lucas_shanker_the_creator_of_this_app"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"/>
 
     <TextView
         android:id="@+id/txt_dia"
@@ -31,11 +39,12 @@
         android:layout_gravity="center"
         android:background="#00000000"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:src="@drawable/ic_ford"/>
+            android:src="@drawable/ic_ford" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,7 +54,7 @@
             android:text="Ford Dining Court"
             android:textColor="@android:color/white"
             android:textSize="15dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 
@@ -60,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:src="@drawable/ic_windsor"/>
+            android:src="@drawable/ic_windsor" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,7 +79,7 @@
             android:text="Windsor Dining Court"
             android:textColor="@android:color/white"
             android:textSize="15dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
 
     </LinearLayout>
@@ -81,11 +90,13 @@
         android:layout_gravity="center"
         android:background="#00000000"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:src="@drawable/ic_earhart"/>
+            android:src="@drawable/ic_earhart" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,7 +105,7 @@
             android:text="Earhart Dining Court"
             android:textColor="@android:color/white"
             android:textSize="15dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -189,4 +200,4 @@
 
     </LinearLayout>
 
-    </LinearLayout>
+</LinearLayout>
