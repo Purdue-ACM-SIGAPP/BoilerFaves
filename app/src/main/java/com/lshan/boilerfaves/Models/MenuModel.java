@@ -7,7 +7,26 @@ import java.util.List;
  */
 
 public class MenuModel {
-    public List<BreakfastModel> Breakfast;
-    public List<LunchModel> Lunch;
-    public List<DinnerModel> Dinner;
+    public List<MealModel> Meals;
+
+    public MealModel getBreakfast() {
+        for (MealModel m : Meals) {
+            if (m.Name.equals("Breakfast")) return m;
+        }
+        return null;
+    }
+
+    public MealModel getLunch() {
+        for (MealModel m : Meals) {
+            if (m.Name.equals("Lunch")) return m;
+        }
+        return null;
+    }
+
+    public MealModel getDinner() {
+        for (MealModel m : Meals) {
+            if (m.Name.equals("Dinner")) return m;
+        }
+        return null;
+    }
 }

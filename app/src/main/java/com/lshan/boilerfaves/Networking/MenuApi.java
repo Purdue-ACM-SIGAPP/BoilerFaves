@@ -1,5 +1,6 @@
 package com.lshan.boilerfaves.Networking;
 
+import com.lshan.boilerfaves.Models.DiningCourtWrapperModel;
 import com.lshan.boilerfaves.Models.MenuModel;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import retrofit2.http.Path;
 public interface MenuApi {
 
     @GET(".")
-    Call<List<String>> getLocations();
+    Call<DiningCourtWrapperModel> getLocations();
 
     //12-01-2017
     @GET("{diningCourt}/{date}")
