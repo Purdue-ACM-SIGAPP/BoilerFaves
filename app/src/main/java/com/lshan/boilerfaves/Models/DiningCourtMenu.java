@@ -23,8 +23,8 @@ public class DiningCourtMenu {
         this.courtName = courtName;
 
         ArrayList<FoodModel> newBreakfast = new ArrayList<>();
-        if(model.Breakfast != null) {
-            for (BreakfastModel bModel : model.Breakfast) {
+        if(model.getBreakfast() != null) {
+            for (StationModel bModel : model.getBreakfast().Stations) {
                 for (FoodModel foodModel : bModel.Items) {
                     if (!newBreakfast.contains(foodModel)) {
                         newBreakfast.add(foodModel);
@@ -36,8 +36,8 @@ public class DiningCourtMenu {
 
 
         ArrayList<FoodModel> newLunch = new ArrayList<>();
-        if(model.Lunch != null) {
-            for (LunchModel lModel : model.Lunch) {
+        if(model.getLunch() != null) {
+            for (StationModel lModel : model.getLunch().Stations) {
                 for (FoodModel foodModel : lModel.Items) {
                     if (!newLunch.contains(foodModel)) {
                         newLunch.add(foodModel);
@@ -48,8 +48,8 @@ public class DiningCourtMenu {
         this.lunch = newLunch;
 
         ArrayList<FoodModel> newDinner = new ArrayList<>();
-        if(model.Dinner != null) {
-            for (DinnerModel dModel : model.Dinner) {
+        if(model.getDinner() != null) {
+            for (StationModel dModel : model.getDinner().Stations) {
                 for (FoodModel foodModel : dModel.Items) {
                     if (!newDinner.contains(foodModel)) {
                         newDinner.add(foodModel);

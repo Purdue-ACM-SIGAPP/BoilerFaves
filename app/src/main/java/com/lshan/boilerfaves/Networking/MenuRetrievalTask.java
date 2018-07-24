@@ -1,36 +1,24 @@
 package com.lshan.boilerfaves.Networking;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.google.gson.Gson;
 import com.lshan.boilerfaves.Activities.MainActivity;
 import com.lshan.boilerfaves.Adapters.FoodAdapter;
-import com.lshan.boilerfaves.Models.BreakfastModel;
-import com.lshan.boilerfaves.Models.DinnerModel;
+import com.lshan.boilerfaves.Models.DiningCourtModel;
+import com.lshan.boilerfaves.Models.DiningCourtWrapperModel;
 import com.lshan.boilerfaves.Models.FoodModel;
-import com.lshan.boilerfaves.Models.LunchModel;
 import com.lshan.boilerfaves.Models.DiningCourtMenu;
 import com.lshan.boilerfaves.Models.MenuModel;
-import com.lshan.boilerfaves.R;
 import com.lshan.boilerfaves.Utils.NotificationHelper;
 import com.lshan.boilerfaves.Utils.SharedPrefsHelper;
-import com.lshan.boilerfaves.Utils.TimeHelper;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,10 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Response;
 
 /**
@@ -116,11 +101,11 @@ public class MenuRetrievalTask extends AsyncTask<Void, Void, ArrayList<DiningCou
 
         try {
             //Synchronous retrofit call
-            Response<List<String>> locationsResponse = MenuApiHelper.getInstance().getLocations().execute();
+            Response<DiningCourtWrapperModel> locationsResponse = MenuApiHelper.getInstance().getLocations().execute();
             if (locationsResponse.isSuccessful()) {
-                for (String diningCourt : locationsResponse.body()) {
-                    Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt, date).execute();
-                    diningCourtMenus.add(new DiningCourtMenu(diningCourt, menuResponse.body()));
+                for (DiningCourtModel diningCourt : locationsResponse.body().Location) {
+                    Response<MenuModel> menuResponse = MenuApiHelper.getInstance().getMenu(diningCourt.Name, date).execute();
+                    diningCourtMenus.add(new DiningCourtMenu(diningCourt.Name, menuResponse.body()));
                 }
             } else {
                 Log.e("Retrofit synch call: ", locationsResponse.message());

@@ -14,7 +14,7 @@ public class MenuApiHelper {
     public static MenuApi getInstance() {
         if(menuApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.hfs.purdue.edu/menus/v1/locations/")
+                    .baseUrl("https://api.hfs.purdue.edu/menus/v2/locations/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
